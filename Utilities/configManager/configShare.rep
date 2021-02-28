@@ -1,0 +1,5 @@
+class ConfigShare
+{
+    SIGNAL(ConfigChanged(QString name, QByteArray content))
+    SLOT(QByteArray getConfig(QString name))
+}

@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MotionDebugger/AxisDebugger.qml</file>
+        <file>MotionDebugger/VacuumDebugger.qml</file>
+        <file>MotionDebugger/CylDebugger.qml</file>
+        <file>MotionDebugger/DebuggerItemModel.qml</file>
+        <file>MotionDebugger/IODebugger.qml</file>
+        <file>MotionDebugger/TabView14.qml</file>
+        <file>MotionDebugger/SCMotionDebugger.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>

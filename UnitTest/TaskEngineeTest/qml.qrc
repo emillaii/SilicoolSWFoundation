@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>JsCommands/LensLoaderCmds.js</file>
+        <file>JsCommands/LutCmds.js</file>
+    </qresource>
+</RCC>

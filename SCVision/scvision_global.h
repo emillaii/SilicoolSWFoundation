@@ -1,0 +1,12 @@
+#ifndef SCVISION_GLOBAL_H
+#define SCVISION_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(SCVISION_LIBRARY)
+#  define SCVISIONSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define SCVISIONSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // SCVISION_GLOBAL_H

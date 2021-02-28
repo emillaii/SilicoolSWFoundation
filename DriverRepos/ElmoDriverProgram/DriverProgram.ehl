@@ -1,0 +1,160 @@
+/*
+#@AUTOEXEC
+// Call your Auto Exec Function Here
+main()
+
+*/
+//---------------------------------------------------------------------
+// Global Variables
+
+//---------------------------------------------------------------------
+// Main Function (also the default entry point)
+function main()
+// Enter your code here
+UI[1]=0
+RM=0
+UM=5       
+ob[1]=0  
+ob[2]=0
+
+//mo=1
+//until(so==1)
+//homing(100000,5000,-5000,0.5)
+return
+
+
+//---------------------------------------------------------------------
+// User Functions
+//---------------------------------------------------------------------
+
+function sftest(int startPos,int sfVel,float sfCur, int delay, int loopT)
+int k
+for k=1:loopT
+pa=startPos
+bg
+until(ms==0)
+softlanding(sfVel,sfVel*10,sfCur)
+wait(delay)
+end
+pa=startPos
+bg
+return
+
+function homing(int homeac, int sp1, int sp2,  float maxCurRatio)
+UI[1]=UI[1] & 0XFB
+rm=0
+HM[2]=0
+HM[3]=3
+HM[4]=0
+HM[5]=0
+ac=homeac
+dc=ac
+try
+jv=sp1
+bg
+until(abs(iq)>=maxCurRatio* PL[1])
+st
+HM[1]=1
+jv=sp2
+bg
+until(HM[1]==0)
+st
+until(ms==0)
+wait(50)
+
+pa=0
+bg
+until(ms==0)
+rm=1
+UI[1]=UI[1] | 0X04
+catch
+st
+mo=0
+UI[1]=UI[1] | 0X02
+ob[2]=1
+ob[1]=0
+rm=0
+end
+return
+
+function softlanding(int vel, int acc, float current)
+//int recordPos
+try
+ac=acc
+jv=vel
+bg
+if(vel > 0)
+until(iq>=current)
+else
+until(iq<=current)
+end
+//recordPos = px
+//pa=recordPos
+//bg
+st
+//until(ms==0)
+tc=current
+until(ms==1)
+catch
+st
+mo=0
+UI[1]=UI[1] | 0X02
+ob[2]=1
+ob[1]=0
+rm=0
+end
+return
+
+#@AUTO_ER
+st
+mo=0
+UI[1]=UI[1] | 0X02
+ob[2]=1
+ob[1]=0
+return
+
+#@AUTO_PERR
+st
+mo=0
+UI[1]=UI[1] | 0X02
+ob[2]=1
+ob[1]=0
+return
+
+//---------------------------------------------------------------------
+//AUTO ROUTINES Functions
+/*
+#@AUTO_I1
+// Enter your code here
+return
+*/
+
+/*
+#@AUTO_I2
+// Enter your code here
+return
+*/
+
+/*
+#@AUTO_I3
+// Enter your code here
+return
+*/
+
+/*
+#@AUTO_I4
+// Enter your code here
+return
+*/
+
+/*
+#@AUTO_I5
+// Enter your code here
+return
+*/
+
+/*
+#@AUTO_I6
+// Enter your code here
+return
+*/

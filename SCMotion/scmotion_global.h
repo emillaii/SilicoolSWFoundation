@@ -1,0 +1,14 @@
+#ifndef SCMOTION_GLOBAL_H
+#define SCMOTION_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(SCMOTION_LIBRARY)
+#define SCMOTIONSHARED_EXPORT Q_DECL_EXPORT
+#else
+#define SCMOTIONSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#define UNKNOWN_AXIS_POS -9999
+
+#endif    // SCMOTION_GLOBAL_H

@@ -1,0 +1,19 @@
+class MotionManager
+{
+    SIGNAL(reportMotionState(QVariant motionState))
+    SIGNAL(instructionExecuteDone(QString uuid, QString errMsg, QVariant result))
+    SLOT(void setMotionStateReporter(bool enable))
+    SLOT(void setMoveProtectionEnable(bool enable))
+    SLOT(void updateMoveProtection())
+    SLOT(bool initMotionManager(QByteArray motionElementDefinition))    
+    SLOT(void setIsPaused(bool isPaused))
+    SLOT(bool waitPaused())
+    SLOT(void handleAbort())
+    SLOT(void handleReset())
+    SLOT(double getAxisFeedbackPos(QString axisName, int cacheInvalidationTime=2))
+    SLOT(double getAxisCurrentPos(QString axisName))
+    SLOT(double getAxisTargetPos(QString axisName, int cacheInvalidationTime=2))
+    SLOT(int getCylinderCurrentState(QString cylName, int cacheInvalidationTime=2))
+    SLOT(bool getDiCurrentState(QString diName, int cacheInvalidationTime=2))
+    SLOT(void onExecuteInstruction(QString uuid, int elementType, QString elementName, QString cmd, QVariantList args, bool sendbackResult=false))
+}

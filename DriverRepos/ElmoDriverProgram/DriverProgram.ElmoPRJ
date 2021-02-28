@@ -1,0 +1,16 @@
+﻿<DriveProjectModel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  ProjectID="-8585966885073160789"
+  ProjectName="DriverProgram"
+  EntryPoint="main()"
+  Mode="Release"
+  HexView="false"
+  ActiveProgramPath="DriverProgram.ehl"
+  BreakpointsChangeTime="2020-11-09T18:39:38.1664901+08:00"
+  ModificationTime="2020-11-09T18:39:38.1664901+08:00">
+  <WatchModel>
+    <WacthList />
+  </WatchModel>
+  <PathesToProgram />
+  <Breakpoints />
+  <ProjectPath>C:\Project\Hardware Doc\ELMO\DriverProgram\DriverProgram.ElmoPRJ</ProjectPath>
+</DriveProjectModel>

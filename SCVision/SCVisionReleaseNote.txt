@@ -1,0 +1,23 @@
+[V2.0.0.0]
+2021/2/28
+重构
+
+[V1.0.0.4]
+2021/1/29
+SCCamera，添加resetGotImage()和bool gotImage() const 方法。
+
+[V1.0.0.3]
+2021/1/28
+可配置PR失败后，是否存图
+
+[V1.0.0.2]
+2021/1/21
+更改prFileName的定义。现在prFileName仅表示文件名。PR文件存储路径固定为./config/DutType/{currentDut}/vision/Pr。
+
+[V1.0.0.1]
+2021/1/18
+添加多语言支持。
+
+[V1.0.0.0]
+2021/1/6
+First release

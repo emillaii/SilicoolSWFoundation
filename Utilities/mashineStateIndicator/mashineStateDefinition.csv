@@ -1,0 +1,17 @@
+BlinkConfig,OpenedTime,ClosedTime,
+"Buzzer		",0.5,0.5,
+"TowerLight		",0.5,0.5,
+,,,
+,,,
+MashineState,BuzzerState,TowerLightState,TowerLightColor
+Idle,Closed,Blink,Red
+        Initializing,Closed,Blink,Yellow
+        Initialized,Closed,Solid,Yellow
+        Purging,Closed,Solid,Green
+        Ready,Closed,Solid,"Yellow, Green"
+        Running,Closed,Solid,Green
+        Pausing,Closed,Solid,Green
+        Paused,Closed,Blink,"Yellow, Green"
+        Stopping,Closed,Solid,Green
+        Error,Blink,Solid,Red
+        Abort,Closed,Blink,Red

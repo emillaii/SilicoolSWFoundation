@@ -1,0 +1,6 @@
+class InstructionExecutor
+{
+    SIGNAL(uiResponse(QString uuid, QString option))
+    SIGNAL(instructionExecuteDone(QString uuid, QString errMsg, QVariant result))
+    SLOT(executeInstruction(QString uuid, QString targetObjName, QString cmd, QVariantList args, bool returnResult, bool async=false))
+}

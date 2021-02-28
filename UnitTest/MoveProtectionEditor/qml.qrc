@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MoveProtection/MoveProtectionEditor.qml</file>
+        <file>ConfigManager/ArrayEditor.qml</file>
+        <file>ConfigManager/BasicArrayRow.qml</file>
+        <file>ConfigManager/BasicConfigEditor.qml</file>
+        <file>ConfigManager/ConfigRow.qml</file>
+        <file>ConfigManager/ObjectArrayRow.qml</file>
+        <file>ConfigManager/ObjectEditor.qml</file>
+        <file>ConfigManager/ObjectEditorRow.qml</file>
+        <file>ConfigManager/SilicolCheckBox.qml</file>
+        <file>ConfigManager/SilicolComboBox.qml</file>
+        <file>ConfigManager/SilicolTextField.qml</file>
+        <file>ConfigManager/SimpleTypeArrayRow.qml</file>
+        <file>MoveProtection/CollisionGroupEditor.qml</file>
+        <file>MoveProtection/CmpOperationEditor/CmpWithCylState.qml</file>
+        <file>MoveProtection/CmpOperationEditor/CmpWithPos.qml</file>
+        <file>MoveProtection/CmpOperationEditor/CmpWithPosRange.qml</file>
+        <file>MoveProtection/CmpOperationEditor/ComparisonOperation.qml</file>
+        <file>MoveProtection/CollisionConditionEditor/CollisionCondition.qml</file>
+        <file>MoveProtection/CollisionConditionEditor/CylinderCollision.qml</file>
+        <file>MoveProtection/CollisionConditionEditor/SingleAxisCollision.qml</file>
+        <file>MoveProtection/CollisionConditionEditor/TwoAxisCollision.qml</file>
+        <file>MoveProtection/IgnoreCollisionConditionEditor/AxisIgnoreCollisionCondition.qml</file>
+        <file>MoveProtection/IgnoreCollisionConditionEditor/CylIgnoreCollisionCondition.qml</file>
+        <file>MoveProtection/IgnoreCollisionConditionEditor/IgnoreCollisionCondition.qml</file>
+        <file>MoveProtection/TabView14.qml</file>
+        <file>CustomizedUIElement/CustomizedTabBar.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>

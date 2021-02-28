@@ -1,0 +1,1 @@
+AdaptVisionLib SCMotionLib SCVisionLib UtilitiesLib Debug libs build*Debug build*Release Objs Mocs *.pro.user *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo __pycache__ *.rej *~ #*# .#* .*.swp .DS_Store [Tt]humbs.db

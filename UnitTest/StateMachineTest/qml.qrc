@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qml/ConfigManager/ArrayEditor.qml</file>
+        <file>qml/ConfigManager/BasicArrayRow.qml</file>
+        <file>qml/ConfigManager/BasicConfigEditor.qml</file>
+        <file>qml/ConfigManager/ConfigRow.qml</file>
+        <file>qml/ConfigManager/ObjectArrayRow.qml</file>
+        <file>qml/ConfigManager/ObjectEditor.qml</file>
+        <file>qml/ConfigManager/SilicolCheckBox.qml</file>
+        <file>qml/ConfigManager/SilicolComboBox.qml</file>
+        <file>qml/ConfigManager/SilicolTextField.qml</file>
+        <file>qml/ConfigManager/SimpleTypeArrayRow.qml</file>
+    </qresource>
+</RCC>

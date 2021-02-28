@@ -1,0 +1,27 @@
+[V2.0.0.0]
+2021/2/28
+重构
+
+[V1.0.0.5]
+2021/1/29
+XYZModule添加recordCurrentPos和moveToRecordPos方法
+
+[V1.0.0.4]
+2021/1/27
+MotionManager添加stopAllAxis和clearAllAxisAlarm方法
+
+[V1.0.0.3]
+2021/1/18
+添加多语言支持。
+
+[V1.0.0.2]
+2021/1/7
+优化MotinManager的Init方法。
+
+[V1.0.0.1]
+2021/1/6
+AxisConfig.AdvancedAxisConfig 添加参数needHome。设为False后，运动前不检测是否回零，默认为True。如多个轴带一个Chart图，可将主轴的该参数设为False，调整Chart图高度时不需要回零即可调整。
+
+[V1.0.0.0]
+2021/1/6
+First release
