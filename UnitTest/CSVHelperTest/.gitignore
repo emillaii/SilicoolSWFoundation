@@ -71,14 +71,3 @@ Thumbs.db
 *.dll
 *.exe
 
-
-Debug/
-Release/
-bin/
-.vs/
-libs/
-*.stash
-SCMotionLib/
-SCVisionLib/
-UtilitiesLib/
-*target_wrapper.bat
