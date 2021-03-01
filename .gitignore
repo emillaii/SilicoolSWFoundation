@@ -76,3 +76,8 @@ Debug/
 Release/
 bin/
 .vs/
+libs/
+*.stash
+SCMotionLib/
+SCVisionLib/
+UtilitiesLib/
