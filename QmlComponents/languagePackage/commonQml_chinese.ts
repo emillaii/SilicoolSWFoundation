@@ -4,130 +4,135 @@
 <context>
     <name>AxisDebugger</name>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="69"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="72"/>
         <source>GlobalAxisVelocity</source>
         <translation>全局轴速比率</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="170"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="173"/>
         <source>running</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="182"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="185"/>
+        <source>inPos</source>
+        <translation>到位</translation>
+    </message>
+    <message>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="197"/>
         <source>L+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="194"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="209"/>
         <source>L-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="221"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="236"/>
         <source>enable</source>
         <translation>使能</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="248"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="263"/>
         <source>Click to clear alarm. Double click to clear status.</source>
         <translation>单击清除报警,双击清除状态.</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="254"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="269"/>
         <source>alarm</source>
         <translation>报警</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="275"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="290"/>
         <source>home</source>
         <translation>回零</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="290"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="305"/>
         <source>P Pos</source>
         <translation>规划位置</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="304"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="319"/>
         <source>F Pos</source>
         <translation>实际位置</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="329"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="344"/>
         <source>Target pos</source>
         <translation>目标位置</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="342"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="357"/>
         <source>AbsMove</source>
         <translation>绝对运动</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="357"/>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="375"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="372"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="390"/>
         <source>RelMove</source>
         <translation>相对运动</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="399"/>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="468"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="414"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="483"/>
         <source>JogMoveToNegativeDirection</source>
         <translation>往负方向Jog运动</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="422"/>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="445"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="437"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="460"/>
         <source>JogMoveToPositiveDirection</source>
         <translation>往正方向Jog运动</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="487"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="502"/>
         <source>VelocityRatio</source>
         <translation>速度比率</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="517"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="532"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="527"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="542"/>
         <source>reciprocate</source>
         <translation>往复运动</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="543"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="558"/>
         <source>pos1</source>
         <translation>位置1</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="556"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="571"/>
         <source>delay1</source>
         <translation>延时1</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="568"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="583"/>
         <source>pos2</source>
         <translation>位置2</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="581"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="596"/>
         <source>delay2</source>
         <translation>延时2</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="593"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="608"/>
         <source>times</source>
         <translation>次数</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="607"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="622"/>
         <source>start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/AxisDebugger.qml" line="617"/>
+        <location filename="../MotionViewer/AxisDebugger.qml" line="632"/>
         <source>stop</source>
         <translation>停止</translation>
     </message>
@@ -135,42 +140,42 @@
 <context>
     <name>CameraViewer</name>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="54"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="55"/>
         <source>OpenMotorViewer</source>
         <translation>打开相关电机调试页面</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="262"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="272"/>
         <source>Reset image anchor and scale</source>
         <translation>重置图像位置和缩放</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="281"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="291"/>
         <source>Open/Close</source>
         <translation>打开/关闭</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="300"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="310"/>
         <source>LiveView</source>
         <translation>实时显示</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="314"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="324"/>
         <source>SingleCameraLiveView</source>
         <translation>单个相机实时显示</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="328"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="338"/>
         <source>SaveImage</source>
         <translation>保存图片</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="346"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="356"/>
         <source>CancelFullScreen</source>
         <translation>取消全屏</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/CameraViewer.qml" line="346"/>
+        <location filename="../VisionViewer/CameraViewer.qml" line="356"/>
         <source>FullScreen</source>
         <translation>全屏</translation>
     </message>
@@ -256,17 +261,17 @@
 <context>
     <name>ColumnLayoutRowColSelector2</name>
     <message>
-        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="13"/>
+        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="14"/>
         <source>UnitIndex:</source>
         <translation>单元索引:</translation>
     </message>
     <message>
-        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="30"/>
+        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="46"/>
         <source>RowIndex:</source>
         <translation>行索引:</translation>
     </message>
     <message>
-        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="46"/>
+        <location filename="../CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml" line="77"/>
         <source>ColumnIndex:</source>
         <translation>列索引:</translation>
     </message>
@@ -451,72 +456,80 @@
 <context>
     <name>MotionConfigger</name>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="210"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="197"/>
         <source>DI</source>
         <translation>输入点</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="211"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="198"/>
         <source>DO</source>
         <translation>输出点</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="212"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="199"/>
         <source>Vacuum</source>
         <translation>真空</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="213"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="200"/>
         <source>Cyl</source>
         <translation>气缸</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="214"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="201"/>
         <source>Axis</source>
         <translation>轴</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="215"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="209"/>
+        <source>ExAxis3</source>
+        <translation>扩展轴3</translation>
+    </message>
+    <message>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="212"/>
+        <source>ExAxis4</source>
+        <translation>扩展轴4</translation>
+    </message>
+    <message>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="214"/>
         <source>SingleAxis</source>
         <translation>单轴模组</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="216"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="215"/>
         <source>XyModule</source>
         <translation>XY模组</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="217"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="216"/>
         <source>XyzModule</source>
         <translation>XYZ模组</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="218"/>
         <source>VCM</source>
-        <translation>控力音圈</translation>
+        <translation type="vanished">控力音圈</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="220"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="203"/>
         <source>ExAxis</source>
         <translation>扩展轴</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="223"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="206"/>
         <source>ExAxis2</source>
         <translation>扩展轴2</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="226"/>
         <source>ExVCM</source>
-        <translation>扩展控力音圈</translation>
+        <translation type="vanished">扩展控力音圈</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="228"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="217"/>
         <source>SoftLanding</source>
         <translation>软着陆</translation>
     </message>
     <message>
-        <location filename="../MotionViewer/MotionConfigger.qml" line="229"/>
+        <location filename="../MotionViewer/MotionConfigger.qml" line="218"/>
         <source>XYZRDbg</source>
         <translation>XYZR调试器</translation>
     </message>
@@ -704,17 +717,17 @@
 <context>
     <name>VisionConfigger</name>
     <message>
-        <location filename="../VisionViewer/VisionConfigger.qml" line="55"/>
+        <location filename="../VisionViewer/VisionConfigger.qml" line="53"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionConfigger.qml" line="56"/>
+        <location filename="../VisionViewer/VisionConfigger.qml" line="54"/>
         <source>Calibration</source>
         <translation>标定</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionConfigger.qml" line="57"/>
+        <location filename="../VisionViewer/VisionConfigger.qml" line="55"/>
         <source>VisionLocation</source>
         <translation>PR</translation>
     </message>
@@ -722,42 +735,46 @@
 <context>
     <name>VisionLocationViewer</name>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="71"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="87"/>
         <source>更新图片</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="78"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="94"/>
         <source>校正</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="88"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="104"/>
         <source>执行PR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="95"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="111"/>
         <source>执行PR结果</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="102"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="118"/>
         <source>执行OriginPR结果</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="111"/>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="127"/>
         <source>StartContinuallyPerformPr</source>
         <translation>开始连续执行PR</translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="121"/>
-        <source>StartContinuallyPerformEdgeTransitionCalculation</source>
-        <translation>开始连续执行边缘过渡像素计算</translation>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="137"/>
+        <source>StartContinuallyPerformObjectSharpnessCalculation</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VisionViewer/VisionLocationViewer.qml" line="132"/>
+        <source>StartContinuallyPerformEdgeTransitionCalculation</source>
+        <translation type="vanished">开始连续执行边缘过渡像素计算</translation>
+    </message>
+    <message>
+        <location filename="../VisionViewer/VisionLocationViewer.qml" line="148"/>
         <source>StopContinuallyCalculation</source>
         <translation>停止连续计算</translation>
     </message>
@@ -773,22 +790,22 @@
 <context>
     <name>XYAndZPos</name>
     <message>
-        <location filename="../AxisModulePos/XYAndZPos.qml" line="42"/>
+        <location filename="../AxisModulePos/XYAndZPos.qml" line="45"/>
         <source>Read</source>
         <translation>读取</translation>
     </message>
     <message>
-        <location filename="../AxisModulePos/XYAndZPos.qml" line="49"/>
+        <location filename="../AxisModulePos/XYAndZPos.qml" line="52"/>
         <source>MoveTo</source>
         <translation>移动到</translation>
     </message>
     <message>
-        <location filename="../AxisModulePos/XYAndZPos.qml" line="74"/>
+        <location filename="../AxisModulePos/XYAndZPos.qml" line="77"/>
         <source>MoveXY</source>
         <translation>移动XY</translation>
     </message>
     <message>
-        <location filename="../AxisModulePos/XYAndZPos.qml" line="81"/>
+        <location filename="../AxisModulePos/XYAndZPos.qml" line="84"/>
         <source>MoveZ</source>
         <translation>移动Z</translation>
     </message>

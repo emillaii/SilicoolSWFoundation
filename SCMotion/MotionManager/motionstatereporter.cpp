@@ -49,6 +49,7 @@ void MotionStateReporter::run()
             axisState["feedbackPos"] = axis->getFeedbackPos();
             axisState["hasAlarm"] = axis->hasAlarm();
             axisState["isRunning"] = axis->isRunning();
+            axisState["isInPos"] = axis->isInPos();
             axisState["velocityRatio"] = axis->velocityRatio();
             axisState["hasMasterAxis"] = axis->hasMasterAxis();
             axisState["bindState"] = axis->hasBindedToMaterAxis();

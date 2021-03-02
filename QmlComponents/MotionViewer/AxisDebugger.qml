@@ -15,6 +15,7 @@ Item {
             "feedbackPos": 0.0,
             "hasAlarm": true,
             "isRunning": false,
+            "isInPos": false,
             "velocityRatio": 0.0,
             "hasMasterAxis": false,
             "bindState": false,
@@ -47,6 +48,8 @@ Item {
                                                 axisState["hasAlarm"])
                 itemModel.itemModel.setProperty(itemModelIndex, "isRunning",
                                                 axisState["isRunning"])
+                itemModel.itemModel.setProperty(itemModelIndex, "isInPos",
+                                                axisState["isInPos"])
                 itemModel.itemModel.setProperty(itemModelIndex,
                                                 "velocityRatio",
                                                 axisState["velocityRatio"])
@@ -168,6 +171,18 @@ Item {
                     Label {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("running")
+                    }
+
+                    Rectangle {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        radius: 15
+                        height: radius * 2
+                        width: height
+                        color: isInPos ? "green" : "gray"
+                    }
+                    Label {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        text: qsTr("inPos")
                     }
 
                     Rectangle {
