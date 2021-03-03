@@ -466,6 +466,10 @@ public:
     void waitXyArrivedPosWithOffset(QString posName, double xOffset, double yOffset);
     void setNextPosXYVelAcc(QString posName);
     void moveXY(double xTarget, double yTarget, double precision = 0.1);
+    void moveXyWithoutWait(const QPointF &xyTarget);
+    void waitXyApproachPos(const QPointF &xyTarget, double approachWindow);
+    void waitXyArrivedPos(const QPointF &xyTarget, double precision);
+    void waitXyzProfilerStopped();
     void moveToPos(QString posName, MoveSequence::Sequence safetyMoveSequence, bool waitDone = true);
 
     void recordCurrentPos();

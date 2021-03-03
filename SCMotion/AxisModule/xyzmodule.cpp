@@ -296,12 +296,35 @@ void XYZModule::setNextPosXYVelAcc(QString posName)
 
 void XYZModule::moveXY(double xTarget, double yTarget, double precision)
 {
-    qCInfo(motionCate(), N_FUNC_ARG(xTarget, yTarget, precision));
-
     m_xAxis->absMove(xTarget, false);
     m_yAxis->absMove(yTarget, false);
     m_xAxis->waitArrivedPos(xTarget, precision);
     m_yAxis->waitArrivedPos(yTarget, precision);
+}
+
+void XYZModule::moveXyWithoutWait(const QPointF &xyTarget)
+{
+    m_xAxis->absMove(xyTarget.x(), false);
+    m_yAxis->absMove(xyTarget.y(), false);
+}
+
+void XYZModule::waitXyApproachPos(const QPointF &xyTarget, double approachWindow)
+{
+    m_xAxis->waitApproachPos(xyTarget.x(), approachWindow);
+    m_yAxis->waitApproachPos(xyTarget.y(), approachWindow);
+}
+
+void XYZModule::waitXyArrivedPos(const QPointF &xyTarget, double precision)
+{
+    m_xAxis->waitArrivedPos(xyTarget.x(), precision);
+    m_yAxis->waitArrivedPos(xyTarget.y(), precision);
+}
+
+void XYZModule::waitXyzProfilerStopped()
+{
+    m_xAxis->waitProfilerStopped();
+    m_yAxis->waitProfilerStopped();
+    m_zAxis->waitProfilerStopped();
 }
 
 void XYZModule::moveToPos(QString posName, MoveSequence::Sequence safetyMoveSequence, bool waitDone)
