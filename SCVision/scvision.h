@@ -50,6 +50,14 @@ class SCVISIONSHARED_EXPORT SCVision : public QObject
 public:
     virtual ~SCVision() {}
 
+    ///
+    /// \brief performPr
+    /// \param image input image
+    /// \param prConfig input pr config
+    /// \param resultImageInfo out result image info, would be passed to drawResultImage next.
+    /// \param prResult out pr result
+    /// \return
+    ///
     virtual bool
     performPr(_IN QImage &image, _IN VisionLocationConfig *prConfig, _OUT PRResultImageInfo **resultImageInfo, _OUT PRResultStruct &prResult)
         = 0;
@@ -78,6 +86,11 @@ public:
         return 0;
     }
 
+    ///
+    /// \brief drawResultImage
+    /// \param image in and out image
+    /// \param resultImageInfo created by perform pr implementation
+    ///
     virtual void drawResultImage(_INOUT QImage &image, _IN PRResultImageInfo *resultImageInfo) = 0;
 
     virtual bool glueCheck(QImage &imageBefore,
