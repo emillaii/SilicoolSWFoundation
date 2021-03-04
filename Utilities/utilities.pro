@@ -96,7 +96,9 @@ SOURCES += \
         userManagement/mysqltablemodel.cpp \
         userManagement/usermanagement.cpp \
         zmqWrapper/publisher.cpp \
-        zmqWrapper/subscriber.cpp
+        zmqWrapper/subscriber.cpp \
+        pathCanvasEditor/pathsettingtable.cpp \
+        pathCanvasEditor/pointstablemodel.cpp
 
 HEADERS += \
         TaskEngine/commandextractor.h \
@@ -176,7 +178,9 @@ HEADERS += \
         userManagement/usermanagement.h \
         utilities_global.h  \
         zmqWrapper/publisher.h \
-        zmqWrapper/subscriber.h
+        zmqWrapper/subscriber.h \
+        pathCanvasEditor/pathsettingtable.h \
+        pathCanvasEditor/pointstablemodel.h
 
 
 
