@@ -13,10 +13,10 @@ bool GTDO::getImpl() noexcept
 {
     if (gtioConfig->ioType() == GTIOConfig::AxisIO)
     {
-        ulong value = 0;
-        short res = GTN_GetEcatAxisDO(gtioConfig->coreNo(), gtioConfig->axis(), &value);
+        char value = 0;
+        short res = GTN_GetEcatAxisDOBit(gtioConfig->coreNo(), gtioConfig->axis(), gtioConfig->index() - 1, &value);
         printError(res, QString("%1 get axis do state failed!").arg(name()));
-        return (value & (1 << (gtioConfig->index() - 1))) != 0;
+        return value != 0;
     }
     else
     {
@@ -31,23 +31,7 @@ void GTDO::setImpl(bool state) noexcept
 {
     if (gtioConfig->ioType() == GTIOConfig::AxisIO)
     {
-        QMutexLocker tmpLocker(&locker);
-        ulong value = 0;
-        short res = GTN_GetEcatAxisDO(gtioConfig->coreNo(), gtioConfig->axis(), &value);
-        printError(res, QString("%1 get axis do state failed!").arg(name()));
-        if (res != CMD_SUCCESS)
-        {
-            return;
-        }
-        if (state)
-        {
-            value |= (1 << (gtioConfig->index() - 1));
-        }
-        else
-        {
-            value &= (~(1 << (gtioConfig->index() - 1)));
-        }
-        res = GTN_SetEcatAxisDO(gtioConfig->coreNo(), gtioConfig->axis(), value);
+        short res = GTN_SetEcatAxisDOBit(gtioConfig->coreNo(), gtioConfig->axis(), gtioConfig->index() - 1, state);
         printError(res, QString("%1 set axis do state failed!").arg(name()));
     }
     else

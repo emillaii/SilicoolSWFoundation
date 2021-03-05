@@ -12,7 +12,7 @@ void GTAxis::setMoveMode(GTAxis::MoveMode mode, bool checkCurrentMode)
     {
         if (gtAxisConfig->isEthercatAxis())
         {
-            short res = GTN_SetEcatAxisMode(coreNo, index, 1);
+            short res = GTN_SetEcatAxisMode(coreNo, index, gtAxisConfig->posModeIndex());
             CheckGTAxisResult(res, "GTN_SetEcatAxisMode failed");
         }
         else
@@ -29,7 +29,7 @@ void GTAxis::setMoveMode(GTAxis::MoveMode mode, bool checkCurrentMode)
     {
         if (gtAxisConfig->isEthercatAxis())
         {
-            short res = GTN_SetEcatAxisMode(coreNo, index, 2);
+            short res = GTN_SetEcatAxisMode(coreNo, index, gtAxisConfig->jogModeIndex());
             CheckGTAxisResult(res, "GTN_SetEcatAxisMode failed");
         }
         else
@@ -44,7 +44,7 @@ void GTAxis::setMoveMode(GTAxis::MoveMode mode, bool checkCurrentMode)
     {
         if (gtAxisConfig->isEthercatAxis())
         {
-            short res = GTN_SetEcatAxisMode(coreNo, index, 3);
+            short res = GTN_SetEcatAxisMode(coreNo, index, gtAxisConfig->torModeIndex());
             CheckGTAxisResult(res, "GTN_SetEcatAxisMode failed");
         }
         else
@@ -111,6 +111,25 @@ double GTAxis::getCurrentVel() noexcept
 
 void GTAxis::clearStatus()
 {
+    //    if(isReadStatus)
+    //    {
+    //        isReadStatus = false;
+    //        return;
+    //    }
+    //    isReadStatus = true;
+
+    //    short current;
+    //    short tor;
+    //    while (isReadStatus)
+    //    {
+    //        short res = GTN_GetEcatAxisAtlCurrent(coreNo, index, &current);
+    //        printError(res, "GTN_GetEcatAxisAtlCurrent");
+    //        res = GTN_GetEcatAxisAtlTorque(coreNo, index, &tor);
+    //        printError(res, "GTN_GetEcatAxisAtlTorque");
+    //        qDebug() << "current" << current << "torque" << tor;
+    //        QThread::msleep(200);
+    //    }
+
     long status = getAxisStatus(false);
     qDebug() << QString("Axis %1 status before clear status: %2").arg(name()).arg(QString::number(status, 16));
     short res = GTN_ClrSts(coreNo, index);
@@ -136,7 +155,7 @@ void GTAxis::initImpl()
 
     if (gtAxisConfig->isEthercatAxis())
     {
-        checkResult1(GTN_SetEcatAxisMode(coreNo, index, 1));
+        checkResult1(GTN_SetEcatAxisMode(coreNo, index, gtAxisConfig->posModeIndex()));
     }
     else
     {
@@ -166,44 +185,22 @@ void GTAxis::homeImpl()
     {
         short res = GTN_SetHomingMode(coreNo, index, 6);
         CheckGTAxisResult(res, "GTN_SetHomingMode failed");
-        res = GTN_SetEcatHomingPrm(coreNo, index, homeConfig->ecatHomeMethod(), homeConfig->ecatSearchHomeSpeed() * gtAxisConfig->scale() / VelCoeff,
-                                   homeConfig->ecatSearchIndexSpeed() * gtAxisConfig->scale() / VelCoeff,
-                                   homeConfig->ecatHomeAcc() * gtAxisConfig->scale() / AccCoeff, homeConfig->ecatHomeOffset() * gtAxisConfig->scale(),
-                                   0);
+        res = GTN_SetEcatHomingPrm(coreNo, index, homeConfig->ecatHomeMethod(), homeConfig->ecatSearchHomeSpeed(), homeConfig->ecatSearchIndexSpeed(),
+                                   homeConfig->ecatHomeAcc(), homeConfig->ecatHomeOffset(), 0);
         CheckGTAxisResult(res, "GTN_SetEcatHomingPrm failed");
         res = GTN_StartEcatHoming(coreNo, index);
         CheckGTAxisResult(res, "GTN_StartEcatHoming failed");
     }
     else
     {
-        if (homeConfig->gtHomeMode() <= HOME_MODE_LIMIT_HOME_INDEX)
-        {
-            if (homeConfig->homeDir() == 1 && refreshLimitStatus(true))
-            {
-                leaveLimitPos(true);
-            }
-            if (homeConfig->homeDir() == 0 && refreshLimitStatus(false))
-            {
-                leaveLimitPos(false);
-            }
-        }
-        THomePrm homeParam;
-        short res = GTN_GetHomePrm(coreNo, index, &homeParam);
-        CheckGTAxisResult(res, "GTN_GetHomePrm failed");
-        homeParam.acc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() / AccCoeff * 0.1;
-        homeParam.dec = homeParam.acc;
-        homeParam.edge = homeConfig->edge();
-        homeParam.mode = homeConfig->gtHomeMode();
-        homeParam.velLow = homeConfig->velLow() * gtAxisConfig->scale() / VelCoeff;
-        homeParam.moveDir = homeConfig->homeDir();
-        homeParam.velHigh = homeConfig->velHigh() * gtAxisConfig->scale() / VelCoeff;
-        homeParam.escapeStep = homeConfig->escapeStep() * gtAxisConfig->scale();
-        homeParam.indexDir = homeConfig->indexDir();
-        homeParam.homeOffset = homeConfig->gtHomeOffset() * gtAxisConfig->scale();
-        homeParam.searchHomeDistance = 0;
-        homeParam.searchIndexDistance = 0;
-        res = GTN_GoHome(coreNo, index, &homeParam);
-        CheckGTAxisResult(res, "GTN_GoHome failed");
+        TTrapPrm trapParam;
+        checkResult1(GTN_GetTrapPrm(coreNo, index, &trapParam));
+        trapParam.acc = homeConfig->velHigh() * 10 * gtAxisConfig->scale() / AccCoeff;
+        checkResult1(GTN_SetTrapPrm(coreNo, index, &trapParam));
+
+        myHomeDone = false;
+        myHomeErrMsg.clear();
+        QtConcurrent::run([this] { myHomeFunc(); });
     }
 }
 
@@ -218,8 +215,7 @@ bool GTAxis::isHomeDone() noexcept
     }
     else
     {
-        GTN_GetHomeStatus(coreNo, index, &homeStatus);
-        return (homeStatus.run == 0);
+        return myHomeDone;
     }
 }
 
@@ -240,40 +236,15 @@ QString GTAxis::homeErrorMsg()
     }
     else
     {
-        GTN_GetHomeStatus(coreNo, index, &homeStatus);
-        switch (homeStatus.error)
-        {
-            case HOME_ERROR_NONE:
-                return "";
-            case HOME_ERROR_NOT_TRAP_MODE:
-                return "HOME_ERROR_NOT_TRAP_MODE";
-            case HOME_ERROR_DISABLE:
-                return "HOME_ERROR_DISABLE";
-            case HOME_ERROR_ALARM:
-                return "HOME_ERROR_ALARM";
-            case HOME_ERROR_STOP:
-                return "HOME_ERROR_STOP";
-            case HOME_ERROR_STAGE:
-                return "HOME_ERROR_STAGE";
-            case HOME_ERROR_HOME_MODE:
-                return "HOME_ERROR_HOME_MODE";
-            case HOME_ERROR_SET_CAPTURE_HOME:
-                return "HOME_ERROR_SET_CAPTURE_HOME";
-            case HOME_ERROR_NO_HOME:
-                return "HOME_ERROR_NO_HOME";
-            case HOME_ERROR_SET_CAPTURE_INDEX:
-                return "HOME_ERROR_SET_CAPTURE_INDEX";
-            case HOME_ERROR_NO_INDEX:
-                return "HOME_ERROR_NO_INDEX";
-            default:
-                return QString("Unknown error. Code: %1").arg(homeStatus.error);
-        }
+        return myHomeErrMsg;
     }
 }
 
 void GTAxis::operationAfterHome()
 {
     GTN_ClrSts(coreNo, index);
+    short res = GTN_SetHomingMode(coreNo, index, 8);
+    CheckGTAxisResult(res, "GTN_SetHomingMode failed");
 }
 
 void GTAxis::stopImpl() noexcept
@@ -575,4 +546,135 @@ long GTAxis::getAxisStatus(bool checkCache)
         lastUpdateAxisStatusCacheTime = now;
     }
     return axisStatusCache;
+}
+
+void GTAxis::myHomeFunc()
+{
+    const long LongMax = INT32_MAX / 4;
+    const long LongMin = INT32_MIN / 4;
+    try
+    {
+        auto homeConfig = gtAxisConfig->gtHomeConfig();
+        if (homeConfig->gtHomeMode() == GTHomeConfig::MODE_LIMIT_HOME
+            || homeConfig->gtHomeMode() == GTHomeConfig::MODE_LIMIT_INDEX)    // move to limit pos
+        {
+            if (homeConfig->homeDir() == homeConfig->indexDir())
+            {
+                throw SilicolAbort(tr("Error home parameter!"));
+            }
+            bool limitStatus;
+            int targetLimitPos;
+            if (homeConfig->homeDir() == 1)
+            {
+                limitStatus = true;
+                targetLimitPos = LongMax;
+            }
+            else
+            {
+                limitStatus = false;
+                targetLimitPos = LongMin;
+            }
+            if (!refreshLimitStatus(limitStatus))
+            {
+                checkResult1(GTN_SetVel(coreNo, index, homeConfig->velHigh() * gtAxisConfig->scale() / VelCoeff));
+                checkResult1(GTN_SetPos(coreNo, index, targetLimitPos));
+                checkResult1(GTN_Update(coreNo, 1 << (index - 1)));
+
+                QThread::msleep(5);
+                while (true)
+                {
+                    if (!isRunning())
+                    {
+                        if (hasStop())
+                        {
+                            throw SilicolAbort(tr("Axis has been stopped!"));
+                        }
+                        break;
+                    }
+                    QThread::msleep(1);
+                }
+            }
+        }
+
+        long encPos;
+        checkResult1(GTN_GetEcatEncPos(coreNo, index, &encPos));
+        checkResult1(GTN_SetPrfPos(coreNo, index, encPos));
+        checkResult1(GTN_SetEncPos(coreNo, index, encPos));
+        checkResult1(GTN_SynchAxisPos(coreNo, 1 << (index - 1)));
+
+        short probeParameter;
+        int targetStatusIndex;
+        if (homeConfig->gtHomeMode() == GTHomeConfig::MODE_INDEX || homeConfig->gtHomeMode() == GTHomeConfig::MODE_LIMIT_INDEX)
+        {
+            probeParameter = homeConfig->edge() == 1 ? 0x1100 : 0x2100;
+            targetStatusIndex = homeConfig->edge() == 1 ? 9 : 10;
+        }
+        else
+        {
+            probeParameter = homeConfig->edge() == 1 ? 0x11 : 0x21;
+            targetStatusIndex = homeConfig->edge() == 1 ? 1 : 2;
+        }
+        GTN_SetTouchProbeFunction(coreNo, index, 0);
+        QThread::msleep(20);
+        checkResult1(GTN_SetTouchProbeFunction(coreNo, index, probeParameter));
+
+        checkResult1(GTN_ClrSts(coreNo, index));
+        int targetIndexPos = homeConfig->indexDir() == 1 ? LongMax : LongMin;
+        checkResult1(GTN_SetVel(coreNo, index, homeConfig->velLow() * gtAxisConfig->scale() / VelCoeff));
+        checkResult1(GTN_SetPos(coreNo, index, targetIndexPos));
+        checkResult1(GTN_Update(coreNo, 1 << (index - 1)));
+
+        QThread::msleep(5);
+
+        ushort probeOldStatus = 0;
+        ushort probeStatus = 0;
+        long probe1RiseValue, probe1FallValue, probe2RiseValue, probe2FallValue;
+        qDebug(motionCate()) << name() << "Start grab";
+        while (true)
+        {
+            if (!isRunning())
+            {
+                throw SilicolAbort(tr("Axis has been stopped!"));
+            }
+            GTN_GetTouchProbeStatus(coreNo, index, &probeStatus, &probe1RiseValue, &probe1FallValue, &probe2RiseValue, &probe2FallValue);
+            if (probeStatus != probeOldStatus)
+            {
+                qDebug(motionCate()) << name() << "Probe status changed." << probeStatus;
+                probeOldStatus = probeStatus;
+            }
+            if ((probeStatus & (1 << targetStatusIndex)) != 0)
+            {
+                stopImpl();
+                break;
+            }
+            QThread::msleep(1);
+        }
+        long grabPos;
+        if (homeConfig->gtHomeMode() == GTHomeConfig::MODE_INDEX || homeConfig->gtHomeMode() == GTHomeConfig::MODE_LIMIT_INDEX)
+        {
+            grabPos = homeConfig->edge() == 1 ? probe2RiseValue : probe2FallValue;
+        }
+        else
+        {
+            grabPos = homeConfig->edge() == 1 ? probe1RiseValue : probe1FallValue;
+        }
+        qDebug(motionCate()) << name() << "Grab pos" << grabPos;
+        checkResult1(GTN_ClrSts(coreNo, index));
+        checkResult1(GTN_SetPos(coreNo, index, grabPos));
+        checkResult1(GTN_Update(coreNo, 1 << (index - 1)));
+        while (isRunning())
+        {
+            QThread::msleep(1);
+        }
+
+        GTN_SetTouchProbeFunction(coreNo, index, 0);
+        myHomeErrMsg.clear();
+        myHomeDone = true;
+    }
+    catch (SilicoolException &se)
+    {
+        GTN_SetTouchProbeFunction(coreNo, index, 0);
+        myHomeErrMsg = se.what();
+        myHomeDone = true;
+    }
 }

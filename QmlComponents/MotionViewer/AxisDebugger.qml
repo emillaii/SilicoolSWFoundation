@@ -416,7 +416,7 @@ Item {
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
-                                        "jogMove", [0, 0.3])
+                                        "jogMove", [0])
                         }
                         onReleased: {
                             motionManager.executeInstruction(
@@ -439,7 +439,7 @@ Item {
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
-                                        "jogMove", [1, 0.3])
+                                        "jogMove", [1])
                         }
                         onReleased: {
                             motionManager.executeInstruction(
@@ -462,7 +462,7 @@ Item {
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
-                                        "jogMove", [1, 0.3])
+                                        "jogMove", [1])
                         }
                         onReleased: {
                             motionManager.executeInstruction(
@@ -485,7 +485,7 @@ Item {
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
-                                        "jogMove", [0, 0.3])
+                                        "jogMove", [0])
                         }
                         onReleased: {
                             motionManager.executeInstruction(

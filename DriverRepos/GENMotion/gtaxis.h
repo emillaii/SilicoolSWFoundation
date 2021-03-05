@@ -5,6 +5,7 @@
 #include "gtaxisconfig.h"
 #include "gtresulthandler.h"
 #include "gts.h"
+#include <QtConcurrent>
 
 #define VelCoeff (1000)
 #define AccCoeff (1000000)
@@ -86,6 +87,7 @@ private:
     bool refreshLimitStatus(bool isPositiveLimit);
     void leaveLimitPos(bool isPositiveLimit);
     long getAxisStatus(bool checkCache = true);
+    void myHomeFunc();
 
 private:
     MoveMode currentMode = Unknown;
@@ -100,8 +102,13 @@ private:
     long axisStatusCache = 0;
     qint64 lastUpdateAxisStatusCacheTime = 0;
 
+    bool myHomeDone = false;
+    QString myHomeErrMsg;
+
     double startSoftLandDownPos = 0;
     double targetTorque = 0;
+
+    bool isReadStatus = false;
 };
 
 #endif    // GTAXIS_H

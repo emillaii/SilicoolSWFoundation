@@ -2,6 +2,7 @@
 #define GTAXISCONFIG_H
 
 #include "BasicElement/axisconfig.h"
+#include "enumhelper.h"
 
 class GTHomeConfig : public ConfigObject
 {
@@ -19,21 +20,22 @@ class GTHomeConfig : public ConfigObject
     Q_PROPERTY(int edge READ edge WRITE setEdge NOTIFY edgeChanged)
     Q_PROPERTY(double velHigh READ velHigh WRITE setVelHigh NOTIFY velHighChanged)
     Q_PROPERTY(double velLow READ velLow WRITE setVelLow NOTIFY velLowChanged)
-    Q_PROPERTY(double escapeStep READ escapeStep WRITE setEscapeStep NOTIFY escapeStepChanged)
-    Q_PROPERTY(double gtHomeOffset READ gtHomeOffset WRITE setGtHomeOffset NOTIFY gtHomeOffsetChanged)
 
 public:
     enum GTHomeMode
     {
-        HOME_MODE_LIMIT = 10,
-        HOME_MODE_LIMIT_HOME = 11,
-        HOME_MODE_LIMIT_INDEX = 12,
-        HOME_MODE_LIMIT_HOME_INDEX = 13,
-        HOME_MODE_HOME = 20,
-        HOME_MODE_HOME_INDEX = 22,
-        HOME_MODE_INDEX = 30,
+        MODE_LIMIT_HOME,
+        MODE_LIMIT_INDEX,
+        MODE_HOME,
+        MODE_INDEX
     };
     Q_ENUM(GTHomeMode)
+
+    static EnumHelper<GTHomeMode> &GTHomeModeEnumInfo()
+    {
+        static EnumHelper<GTHomeMode> instance(staticMetaObject, "GTHomeMode");
+        return instance;
+    }
 
     GTHomeConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
@@ -73,16 +75,6 @@ public:
     double velLow() const
     {
         return m_velLow;
-    }
-
-    double escapeStep() const
-    {
-        return m_escapeStep;
-    }
-
-    double gtHomeOffset() const
-    {
-        return m_gtHomeOffset;
     }
 
     int ecatHomeMethod() const
@@ -165,24 +157,6 @@ public slots:
         emit velLowChanged(m_velLow);
     }
 
-    void setEscapeStep(double escapeStep)
-    {
-        if (qFuzzyCompare(m_escapeStep, escapeStep))
-            return;
-
-        m_escapeStep = escapeStep;
-        emit escapeStepChanged(m_escapeStep);
-    }
-
-    void setGtHomeOffset(double gtHomeOffset)
-    {
-        if (qFuzzyCompare(m_gtHomeOffset, gtHomeOffset))
-            return;
-
-        m_gtHomeOffset = gtHomeOffset;
-        emit gtHomeOffsetChanged(m_gtHomeOffset);
-    }
-
     void setEcatHomeMethod(int ecatHomeMethod)
     {
         if (m_ecatHomeMethod == ecatHomeMethod)
@@ -241,10 +215,6 @@ signals:
 
     void velLowChanged(double velLow);
 
-    void escapeStepChanged(double escapeStep);
-
-    void gtHomeOffsetChanged(double gtHomeOffset);
-
     void ecatHomeMethodChanged(int ecatHomeMethod);
 
     void ecatSearchHomeSpeedChanged(double ecatSearchHomeSpeed);
@@ -256,14 +226,12 @@ signals:
     void ecatHomeOffsetChanged(double ecatHomeOffset);
 
 private:
-    GTHomeMode m_gtHomeMode{ HOME_MODE_LIMIT_HOME };
+    GTHomeMode m_gtHomeMode{ MODE_LIMIT_HOME };
     int m_homeDir = 0;
     int m_indexDir = 1;
     int m_edge = 1;
     double m_velHigh = 1;
     double m_velLow = 0.1;
-    double m_escapeStep = 0;
-    double m_gtHomeOffset = 0;
     int m_ecatHomeMethod = 1;
     double m_ecatSearchHomeSpeed = 1;
     double m_ecatSearchIndexSpeed = 1;
@@ -278,6 +246,9 @@ class GTAxisConfig : public AxisConfig
     Q_PROPERTY(int coreNo READ coreNo WRITE setCoreNo NOTIFY coreNoChanged)
     Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
     Q_PROPERTY(bool isEthercatAxis READ isEthercatAxis WRITE setIsEthercatAxis NOTIFY isEthercatAxisChanged)
+    Q_PROPERTY(int posModeIndex READ posModeIndex WRITE setPosModeIndex NOTIFY posModeIndexChanged)
+    Q_PROPERTY(int jogModeIndex READ jogModeIndex WRITE setJogModeIndex NOTIFY jogModeIndexChanged)
+    Q_PROPERTY(int torModeIndex READ torModeIndex WRITE setTorModeIndex NOTIFY torModeIndexChanged)
     Q_PROPERTY(int inPosBand READ inPosBand WRITE setInPosBand NOTIFY inPosBandChanged)
     Q_PROPERTY(int inPosHoldTime READ inPosHoldTime WRITE setInPosHoldTime NOTIFY inPosHoldTimeChanged)
     Q_PROPERTY(int softLandingWindowSize READ softLandingWindowSize WRITE setSoftLandingWindowSize NOTIFY softLandingWindowSizeChanged)
@@ -329,6 +300,21 @@ public:
     int softLandingWindowLen() const
     {
         return m_softLandingWindowLen;
+    }
+
+    int posModeIndex() const
+    {
+        return m_posModeIndex;
+    }
+
+    int torModeIndex() const
+    {
+        return m_torModeIndex;
+    }
+
+    int jogModeIndex() const
+    {
+        return m_jogModeIndex;
     }
 
 public slots:
@@ -395,6 +381,33 @@ public slots:
         emit softLandingWindowLenChanged(m_softLandingWindowLen);
     }
 
+    void setPosModeIndex(int posModeIndex)
+    {
+        if (m_posModeIndex == posModeIndex)
+            return;
+
+        m_posModeIndex = posModeIndex;
+        emit posModeIndexChanged(m_posModeIndex);
+    }
+
+    void setTorModeIndex(int torModeIndex)
+    {
+        if (m_torModeIndex == torModeIndex)
+            return;
+
+        m_torModeIndex = torModeIndex;
+        emit torModeIndexChanged(m_torModeIndex);
+    }
+
+    void setJogModeIndex(int jogModeIndex)
+    {
+        if (m_jogModeIndex == jogModeIndex)
+            return;
+
+        m_jogModeIndex = jogModeIndex;
+        emit jogModeIndexChanged(m_jogModeIndex);
+    }
+
 signals:
     void coreNoChanged(int coreNo);
 
@@ -410,6 +423,12 @@ signals:
 
     void softLandingWindowLenChanged(int softLandingWindowLen);
 
+    void posModeIndexChanged(int posModeIndex);
+
+    void torModeIndexChanged(int torModeIndex);
+
+    void jogModeIndexChanged(int jogModeIndex);
+
 private:
     int m_coreNo = 1;
     int m_index = 1;
@@ -419,6 +438,9 @@ private:
     bool m_isEthercatAxis = true;
     int m_softLandingWindowSize = 10;
     int m_softLandingWindowLen = 10;
+    int m_posModeIndex = 8;
+    int m_torModeIndex = 4;
+    int m_jogModeIndex = 3;
 };
 
 #endif    // GTAXISCONFIG_H
