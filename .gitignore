@@ -67,6 +67,9 @@ Thumbs.db
 # Binaries
 # --------
 *.dll
+!utilities.dll
+!SCMotion.dll
+!SCVision.dll
 *.exe
 
 
@@ -80,3 +83,6 @@ SCMotionLib/
 SCVisionLib/
 UtilitiesLib/
 *target_wrapper.bat
+
+/ignoreTest/ignoreTest1
+!ignoreTest3.txt
