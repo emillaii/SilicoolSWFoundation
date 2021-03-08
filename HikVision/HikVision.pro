@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
 QT += remoteobjects
+QT += quick
 
 TARGET = HikVision
 TEMPLATE = lib
@@ -26,6 +26,9 @@ INCLUDEPATH +=   ../Utilities     \
                  ../SCVision \
                  ../SCMotion \
                  ../ThirdPartyLib/zmq
+
+LIBS += ../SCLibs/utilities.lib
+LIBS += ../SCLibs/SCVision.lib
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.

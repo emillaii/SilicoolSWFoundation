@@ -11,7 +11,6 @@ public:
     HikVisionResultImageInfo(QObject *parent = nullptr) : PRResultImageInfo(parent) {}
 
 public:
-    double x;
 };
 
 #endif    // HIKVISIONRESULTIMAGEINFO_H

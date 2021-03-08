@@ -7,8 +7,6 @@ class HikVisionLocationConfig : public VisionLocationConfig
 {
     Q_OBJECT
 
-    Q_PROPERTY(double test READ test WRITE setTest NOTIFY testChanged)
-
 public:
     HikVisionLocationConfig(QObject *parent = nullptr) : VisionLocationConfig(parent)
     {

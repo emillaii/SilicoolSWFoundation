@@ -37,20 +37,8 @@ LIBS += -L$$PWD/../libs/AdaptiveVision/lib/x64/ -lAVL
 INCLUDEPATH += $$PWD/../libs/AdaptiveVision/include
 DEPENDPATH += $$PWD/../libs/AdaptiveVision/include
 
-CONFIG(debug, debug|release){
-    DESTDIR = ./Debug
-    OBJECTS_DIR = ./Debug/Objs
-    MOC_DIR = ./Debug/Mocs
-    LIBS += ../UtilitiesLib/Debug/utilities.lib
-    LIBS += ../SCVisionLib/Debug/SCVision.lib
-
-}else{
-    DESTDIR = ./Release
-    OBJECTS_DIR = ./Release/Objs
-    MOC_DIR = ./Release/Mocs
-    LIBS += ../UtilitiesLib/Release/utilities.lib
-    LIBS += ../SCVisionLib/Release/SCVision.lib
-}
+LIBS += ../SCLibs/utilities.lib
+LIBS += ../SCLibs/SCVision.lib
 
 SOURCES += \
         adaptvision.cpp \
