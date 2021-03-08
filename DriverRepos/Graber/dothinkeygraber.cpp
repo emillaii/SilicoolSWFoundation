@@ -279,9 +279,6 @@ QImage DothinkeyGraber::grabImage()
         GetMipiCrcErrorCount(&crcCount, CHANNEL_A, iDevID);
     }
     ImageProcess(CameraBuffer, bmpBuffer, width, height, &frameInfo, iDevID);
-    CvSize mSize;
-    mSize.height = height;
-    mSize.width = width;
     QImage image = QImage(bmpBuffer, width, height, QImage::Format_RGB888);
     delete(CameraBuffer);
     CameraBuffer = NULL;
@@ -329,9 +326,6 @@ cv::Mat DothinkeyGraber::grabImageCV()
         //grabRet = false;
     }
     ImageProcess(CameraBuffer, bmpBuffer, width, height, &frameInfo, iDevID);
-    CvSize mSize;
-    mSize.height = height;
-    mSize.width = width;
     cv::Mat img(height, width, CV_8UC3, bmpBuffer);
     delete(CameraBuffer);
     CameraBuffer = NULL;
