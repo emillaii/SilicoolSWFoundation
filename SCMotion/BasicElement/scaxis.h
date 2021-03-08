@@ -115,6 +115,10 @@ public:
     /// \return
     ///
     double getFeedbackPos(int cacheInvalidationTime = 2);
+    ///
+    /// \brief getCurrentOutputPos get profiler pos
+    /// \return
+    ///
     virtual double getCurrentOutputPos() noexcept = 0;
     double getCurrentTargetPos() const
     {
@@ -126,7 +130,15 @@ public:
 
     virtual bool hasAlarm() noexcept = 0;
     virtual bool isReady() noexcept = 0;
+    ///
+    /// \brief isInPos 反馈是否到位，一般规划正常停止，反馈位置与规划位置的误差小于设定误差带，且保持了一定时间后认为反馈到位
+    /// \return
+    ///
     virtual bool isInPos() noexcept = 0;
+    ///
+    /// \brief isRunning   规划器是否在运行
+    /// \return
+    ///
     virtual bool isRunning() noexcept = 0;
     virtual bool getNegativeLimitStatus() noexcept
     {
@@ -197,8 +209,7 @@ public:
 
     ///
     /// \brief absForceMove
-    /// If axis is running, force move will change the target pos online.
-    /// Else will call the absMove or relMove.
+    /// Not check axis is running!
     /// Force move will never wait move done!
     /// \param targetPos
     ///
@@ -283,7 +294,13 @@ protected:
     virtual void stopImpl() noexcept = 0;
     virtual void stopHome() = 0;
 
+    ///
+    /// \brief clearPosImpl clear profiler pos and feedback pos
+    ///
     virtual void clearPosImpl() = 0;
+    ///
+    /// \brief clearPosImpl set profiler pos with feedback pos
+    ///
     virtual void syncProfilerAndFeedbackPos() = 0;
 
     virtual void enableImpl() = 0;
