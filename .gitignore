@@ -70,6 +70,8 @@ Thumbs.db
 !utilities.dll
 !SCMotion.dll
 !SCVision.dll
+!libsodium.dll
+!libzmq-v141-mt-4_3_2.dll
 *.exe
 
 
