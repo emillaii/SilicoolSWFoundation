@@ -40,10 +40,8 @@
 //
 //M*/
 
-#ifndef OPENCV_MINIFLANN_HPP
-#define OPENCV_MINIFLANN_HPP
-
-//! @cond IGNORED
+#ifndef _OPENCV_MINIFLANN_HPP_
+#define _OPENCV_MINIFLANN_HPP_
 
 #include "opencv2/core.hpp"
 #include "opencv2/flann/defines.h"
@@ -53,20 +51,6 @@ namespace cv
 
 namespace flann
 {
-
-enum FlannIndexType {
-    FLANN_INDEX_TYPE_8U = CV_8U,
-    FLANN_INDEX_TYPE_8S = CV_8S,
-    FLANN_INDEX_TYPE_16U = CV_16U,
-    FLANN_INDEX_TYPE_16S = CV_16S,
-    FLANN_INDEX_TYPE_32S = CV_32S,
-    FLANN_INDEX_TYPE_32F = CV_32F,
-    FLANN_INDEX_TYPE_64F = CV_64F,
-    FLANN_INDEX_TYPE_STRING,
-    FLANN_INDEX_TYPE_BOOL,
-    FLANN_INDEX_TYPE_ALGORITHM,
-    LAST_VALUE_FLANN_INDEX_TYPE = FLANN_INDEX_TYPE_ALGORITHM
-};
 
 struct CV_EXPORTS IndexParams
 {
@@ -84,17 +68,12 @@ struct CV_EXPORTS IndexParams
     void setBool(const String& key, bool value);
     void setAlgorithm(int value);
 
-    // FIXIT: replace by void write(FileStorage& fs) const + read()
     void getAll(std::vector<String>& names,
-                std::vector<FlannIndexType>& types,
+                std::vector<int>& types,
                 std::vector<String>& strValues,
                 std::vector<double>& numValues) const;
 
     void* params;
-
-private:
-    IndexParams(const IndexParams &); // copy disabled
-    IndexParams& operator=(const IndexParams &); // assign disabled
 };
 
 struct CV_EXPORTS KDTreeIndexParams : public IndexParams
@@ -143,7 +122,6 @@ struct CV_EXPORTS SavedIndexParams : public IndexParams
 
 struct CV_EXPORTS SearchParams : public IndexParams
 {
-    SearchParams( int checks, float eps, bool sorted, bool explore_all_trees );
     SearchParams( int checks = 32, float eps = 0, bool sorted = true );
 };
 
@@ -176,7 +154,5 @@ protected:
 };
 
 } } // namespace cv::flann
-
-//! @endcond
 
 #endif

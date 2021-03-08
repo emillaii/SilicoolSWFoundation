@@ -41,8 +41,8 @@
 //
 //M*/
 
-#ifndef OPENCV_VIDEO_HPP
-#define OPENCV_VIDEO_HPP
+#ifndef __OPENCV_VIDEO_HPP__
+#define __OPENCV_VIDEO_HPP__
 
 /**
   @defgroup video Video Analysis
@@ -56,4 +56,8 @@
 #include "opencv2/video/tracking.hpp"
 #include "opencv2/video/background_segm.hpp"
 
-#endif //OPENCV_VIDEO_HPP
+#ifndef DISABLE_OPENCV_24_COMPATIBILITY
+#include "opencv2/video/tracking_c.h"
+#endif
+
+#endif //__OPENCV_VIDEO_HPP__

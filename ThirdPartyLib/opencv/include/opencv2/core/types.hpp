@@ -41,8 +41,8 @@
 //
 //M*/
 
-#ifndef OPENCV_CORE_TYPES_HPP
-#define OPENCV_CORE_TYPES_HPP
+#ifndef __OPENCV_CORE_TYPES_HPP__
+#define __OPENCV_CORE_TYPES_HPP__
 
 #ifndef __cplusplus
 #  error types.hpp header must be compiled as C++
@@ -51,7 +51,6 @@
 #include <climits>
 #include <cfloat>
 #include <vector>
-#include <limits>
 
 #include "opencv2/core/cvdef.h"
 #include "opencv2/core/cvstd.hpp"
@@ -75,7 +74,7 @@ template<typename _Tp> class Complex
 {
 public:
 
-    //! default constructor
+    //! constructors
     Complex();
     Complex( _Tp _re, _Tp _im = 0 );
 
@@ -98,23 +97,14 @@ public:
     typedef _Tp          channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 2,
-           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
-    };
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels) };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Complex<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Complex<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 2) }; };
-} // namespace
 
 
 //////////////////////////////// Point_ ////////////////////////////////
@@ -159,16 +149,14 @@ template<typename _Tp> class Point_
 public:
     typedef _Tp value_type;
 
-    //! default constructor
+    // various constructors
     Point_();
     Point_(_Tp _x, _Tp _y);
     Point_(const Point_& pt);
-    Point_(Point_&& pt) CV_NOEXCEPT;
     Point_(const Size_<_Tp>& sz);
     Point_(const Vec<_Tp, 2>& v);
 
     Point_& operator = (const Point_& pt);
-    Point_& operator = (Point_&& pt) CV_NOEXCEPT;
     //! conversion to another data type
     template<typename _Tp2> operator Point_<_Tp2>() const;
 
@@ -183,12 +171,11 @@ public:
     double cross(const Point_& pt) const;
     //! checks whether the point is inside the specified rectangle
     bool inside(const Rect_<_Tp>& r) const;
-    _Tp x; //!< x coordinate of the point
-    _Tp y; //!< y coordinate of the point
+
+    _Tp x, y; //< the point coordinates
 };
 
 typedef Point_<int> Point2i;
-typedef Point_<int64> Point2l;
 typedef Point_<float> Point2f;
 typedef Point_<double> Point2d;
 typedef Point2i Point;
@@ -201,23 +188,15 @@ public:
     typedef _Tp                                       channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 2,
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Point_<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Point_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 2) }; };
-} // namespace
 
 
 //////////////////////////////// Point3_ ////////////////////////////////
@@ -241,16 +220,14 @@ template<typename _Tp> class Point3_
 public:
     typedef _Tp value_type;
 
-    //! default constructor
+    // various constructors
     Point3_();
     Point3_(_Tp _x, _Tp _y, _Tp _z);
     Point3_(const Point3_& pt);
-    Point3_(Point3_&& pt) CV_NOEXCEPT;
     explicit Point3_(const Point_<_Tp>& pt);
     Point3_(const Vec<_Tp, 3>& v);
 
     Point3_& operator = (const Point3_& pt);
-    Point3_& operator = (Point3_&& pt) CV_NOEXCEPT;
     //! conversion to another data type
     template<typename _Tp2> operator Point3_<_Tp2>() const;
     //! conversion to cv::Vec<>
@@ -262,9 +239,8 @@ public:
     double ddot(const Point3_& pt) const;
     //! cross product of the 2 3D points
     Point3_ cross(const Point3_& pt) const;
-    _Tp x; //!< x coordinate of the 3D point
-    _Tp y; //!< y coordinate of the 3D point
-    _Tp z; //!< z coordinate of the 3D point
+
+    _Tp x, y, z; //< the point coordinates
 };
 
 typedef Point3_<int> Point3i;
@@ -279,23 +255,16 @@ public:
     typedef _Tp                                        channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 3,
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Point3_<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Point3_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 3) }; };
-} // namespace
+
 
 //////////////////////////////// Size_ ////////////////////////////////
 
@@ -317,31 +286,23 @@ template<typename _Tp> class Size_
 public:
     typedef _Tp value_type;
 
-    //! default constructor
+    //! various constructors
     Size_();
     Size_(_Tp _width, _Tp _height);
     Size_(const Size_& sz);
-    Size_(Size_&& sz) CV_NOEXCEPT;
     Size_(const Point_<_Tp>& pt);
 
     Size_& operator = (const Size_& sz);
-    Size_& operator = (Size_&& sz) CV_NOEXCEPT;
     //! the area (width*height)
     _Tp area() const;
-    //! aspect ratio (width/height)
-    double aspectRatio() const;
-    //! true if empty
-    bool empty() const;
 
     //! conversion of another data type.
     template<typename _Tp2> operator Size_<_Tp2>() const;
 
-    _Tp width; //!< the width
-    _Tp height; //!< the height
+    _Tp width, height; // the width and the height
 };
 
 typedef Size_<int> Size2i;
-typedef Size_<int64> Size2l;
 typedef Size_<float> Size2f;
 typedef Size_<double> Size2d;
 typedef Size2i Size;
@@ -354,23 +315,16 @@ public:
     typedef _Tp                                      channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 2,
-           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Size_<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Size_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 2) }; };
-} // namespace
+
 
 //////////////////////////////// Rect_ ////////////////////////////////
 
@@ -422,16 +376,14 @@ template<typename _Tp> class Rect_
 public:
     typedef _Tp value_type;
 
-    //! default constructor
+    //! various constructors
     Rect_();
     Rect_(_Tp _x, _Tp _y, _Tp _width, _Tp _height);
     Rect_(const Rect_& r);
-    Rect_(Rect_&& r) CV_NOEXCEPT;
     Rect_(const Point_<_Tp>& org, const Size_<_Tp>& sz);
     Rect_(const Point_<_Tp>& pt1, const Point_<_Tp>& pt2);
 
     Rect_& operator = ( const Rect_& r );
-    Rect_& operator = ( Rect_&& r ) CV_NOEXCEPT;
     //! the top-left corner
     Point_<_Tp> tl() const;
     //! the bottom-right corner
@@ -441,8 +393,6 @@ public:
     Size_<_Tp> size() const;
     //! area (width*height) of the rectangle
     _Tp area() const;
-    //! true if empty
-    bool empty() const;
 
     //! conversion to another data type
     template<typename _Tp2> operator Rect_<_Tp2>() const;
@@ -450,10 +400,7 @@ public:
     //! checks whether the rectangle contains the point
     bool contains(const Point_<_Tp>& pt) const;
 
-    _Tp x; //!< x coordinate of the top-left corner
-    _Tp y; //!< y coordinate of the top-left corner
-    _Tp width; //!< width of the rectangle
-    _Tp height; //!< height of the rectangle
+    _Tp x, y, width, height; //< the top-left corner, as well as width and height of the rectangle
 };
 
 typedef Rect_<int> Rect2i;
@@ -469,33 +416,40 @@ public:
     typedef _Tp                                      channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 4,
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Rect_<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Rect_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 4) }; };
-} // namespace
+
 
 ///////////////////////////// RotatedRect /////////////////////////////
 
 /** @brief The class represents rotated (i.e. not up-right) rectangles on a plane.
 
 Each rectangle is specified by the center point (mass center), length of each side (represented by
-#Size2f structure) and the rotation angle in degrees.
+cv::Size2f structure) and the rotation angle in degrees.
 
 The sample below demonstrates how to use RotatedRect:
-@snippet snippets/core_various.cpp RotatedRect_demo
+@code
+    Mat image(200, 200, CV_8UC3, Scalar(0));
+    RotatedRect rRect = RotatedRect(Point2f(100,100), Size2f(100,50), 30);
+
+    Point2f vertices[4];
+    rRect.points(vertices);
+    for (int i = 0; i < 4; i++)
+        line(image, vertices[i], vertices[(i+1)%4], Scalar(0,255,0));
+
+    Rect brect = rRect.boundingRect();
+    rectangle(image, brect, Scalar(255,0,0));
+
+    imshow("rectangles", image);
+    waitKey(0);
+@endcode
 ![image](pics/rotatedrect.png)
 
 @sa CamShift, fitEllipse, minAreaRect, CvBox2D
@@ -503,9 +457,9 @@ The sample below demonstrates how to use RotatedRect:
 class CV_EXPORTS RotatedRect
 {
 public:
-    //! default constructor
+    //! various constructors
     RotatedRect();
-    /** full constructor
+    /**
     @param center The rectangle mass center.
     @param size Width and height of the rectangle.
     @param angle The rotation angle in a clockwise direction. When the angle is 0, 90, 180, 270 etc.,
@@ -519,19 +473,15 @@ public:
     RotatedRect(const Point2f& point1, const Point2f& point2, const Point2f& point3);
 
     /** returns 4 vertices of the rectangle
-    @param pts The points array for storing rectangle vertices. The order is bottomLeft, topLeft, topRight, bottomRight.
+    @param pts The points array for storing rectangle vertices.
     */
     void points(Point2f pts[]) const;
-    //! returns the minimal up-right integer rectangle containing the rotated rectangle
+    //! returns the minimal up-right rectangle containing the rotated rectangle
     Rect boundingRect() const;
-    //! returns the minimal (exact) floating point rectangle containing the rotated rectangle, not intended for use with images
-    Rect_<float> boundingRect2f() const;
-    //! returns the rectangle mass center
-    Point2f center;
-    //! returns width and height of the rectangle
-    Size2f size;
-    //! returns the rotation angle. When the angle is 0, 90, 180, 270 etc., the rectangle becomes an up-right rectangle.
-    float angle;
+
+    Point2f center; //< the rectangle mass center
+    Size2f size;    //< width and height of the rectangle
+    float angle;    //< the rotation angle. When the angle is 0, 90, 180, 270 etc., the rectangle becomes an up-right rectangle.
 };
 
 template<> class DataType< RotatedRect >
@@ -542,23 +492,15 @@ public:
     typedef float        channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = (int)sizeof(value_type)/sizeof(channel_type), // 5
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<>
-struct Depth< RotatedRect > { enum { value = Depth<float>::value }; };
-template<>
-struct Type< RotatedRect > { enum { value = CV_MAKETYPE(Depth<float>::value, (int)sizeof(RotatedRect)/sizeof(float)) }; };
-} // namespace
 
 
 //////////////////////////////// Range /////////////////////////////////
@@ -606,46 +548,32 @@ public:
     typedef int        channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 2,
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<>
-struct Depth< Range > { enum { value = Depth<int>::value }; };
-template<>
-struct Type< Range > { enum { value = CV_MAKETYPE(Depth<int>::value, 2) }; };
-} // namespace
 
 
 //////////////////////////////// Scalar_ ///////////////////////////////
 
 /** @brief Template class for a 4-element vector derived from Vec.
 
-Being derived from Vec\<_Tp, 4\> , Scalar\_ and Scalar can be used just as typical 4-element
+Being derived from Vec\<_Tp, 4\> , Scalar_ and Scalar can be used just as typical 4-element
 vectors. In addition, they can be converted to/from CvScalar . The type Scalar is widely used in
 OpenCV to pass pixel values.
 */
 template<typename _Tp> class Scalar_ : public Vec<_Tp, 4>
 {
 public:
-    //! default constructor
+    //! various constructors
     Scalar_();
     Scalar_(_Tp v0, _Tp v1, _Tp v2=0, _Tp v3=0);
     Scalar_(_Tp v0);
-
-    Scalar_(const Scalar_& s);
-    Scalar_(Scalar_&& s) CV_NOEXCEPT;
-
-    Scalar_& operator=(const Scalar_& s);
-    Scalar_& operator=(Scalar_&& s) CV_NOEXCEPT;
 
     template<typename _Tp2, int cn>
     Scalar_(const Vec<_Tp2, cn>& v);
@@ -659,10 +587,10 @@ public:
     //! per-element product
     Scalar_<_Tp> mul(const Scalar_<_Tp>& a, double scale=1 ) const;
 
-    //! returns (v0, -v1, -v2, -v3)
+    // returns (v0, -v1, -v2, -v3)
     Scalar_<_Tp> conj() const;
 
-    //! returns true iff v1 == v2 == v3 == 0
+    // returns true iff v1 == v2 == v3 == 0
     bool isReal() const;
 };
 
@@ -676,23 +604,15 @@ public:
     typedef _Tp                                        channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = 4,
-           fmt          = traits::SafeFmt<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
 
-namespace traits {
-template<typename _Tp>
-struct Depth< Scalar_<_Tp> > { enum { value = Depth<_Tp>::value }; };
-template<typename _Tp>
-struct Type< Scalar_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 4) }; };
-} // namespace
 
 
 /////////////////////////////// KeyPoint ////////////////////////////////
@@ -700,13 +620,14 @@ struct Type< Scalar_<_Tp> > { enum { value = CV_MAKETYPE(Depth<_Tp>::value, 4) }
 /** @brief Data structure for salient point detectors.
 
 The class instance stores a keypoint, i.e. a point feature found by one of many available keypoint
-detectors, such as Harris corner detector, #FAST, %StarDetector, %SURF, %SIFT etc.
+detectors, such as Harris corner detector, cv::FAST, cv::StarDetector, cv::SURF, cv::SIFT,
+cv::LDetector etc.
 
 The keypoint is characterized by the 2D position, scale (proportional to the diameter of the
 neighborhood that needs to be taken into account), orientation and some other parameters. The
 keypoint neighborhood is then analyzed by another algorithm that builds a descriptor (usually
 represented as a feature vector). The keypoints representing the same object in different images
-can then be matched using %KDTree or another method.
+can then be matched using cv::KDTree or another method.
 */
 class CV_EXPORTS_W_SIMPLE KeyPoint
 {
@@ -778,7 +699,6 @@ public:
     CV_PROP_RW int class_id; //!< object class (if the keypoints need to be clustered by an object they belong to)
 };
 
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
 template<> class DataType<KeyPoint>
 {
 public:
@@ -795,7 +715,7 @@ public:
 
     typedef Vec<channel_type, channels> vec_type;
 };
-#endif
+
 
 
 //////////////////////////////// DMatch /////////////////////////////////
@@ -812,9 +732,9 @@ public:
     CV_WRAP DMatch(int _queryIdx, int _trainIdx, float _distance);
     CV_WRAP DMatch(int _queryIdx, int _trainIdx, int _imgIdx, float _distance);
 
-    CV_PROP_RW int queryIdx; //!< query descriptor index
-    CV_PROP_RW int trainIdx; //!< train descriptor index
-    CV_PROP_RW int imgIdx;   //!< train image index
+    CV_PROP_RW int queryIdx; // query descriptor index
+    CV_PROP_RW int trainIdx; // train descriptor index
+    CV_PROP_RW int imgIdx;   // train image index
 
     CV_PROP_RW float distance;
 
@@ -822,7 +742,6 @@ public:
     bool operator<(const DMatch &m) const;
 };
 
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
 template<> class DataType<DMatch>
 {
 public:
@@ -839,7 +758,7 @@ public:
 
     typedef Vec<channel_type, channels> vec_type;
 };
-#endif
+
 
 
 ///////////////////////////// TermCriteria //////////////////////////////
@@ -871,16 +790,9 @@ public:
     */
     TermCriteria(int type, int maxCount, double epsilon);
 
-    inline bool isValid() const
-    {
-        const bool isCount = (type & COUNT) && maxCount > 0;
-        const bool isEps = (type & EPS) && !cvIsNaN(epsilon);
-        return isCount || isEps;
-    }
-
     int type; //!< the type of termination criteria: COUNT, EPS or COUNT + EPS
-    int maxCount; //!< the maximum number of iterations/elements
-    double epsilon; //!< the desired accuracy
+    int maxCount; // the maximum number of iterations/elements
+    double epsilon; // the desired accuracy
 };
 
 
@@ -960,23 +872,14 @@ public:
     typedef double      channel_type;
 
     enum { generic_type = 0,
+           depth        = DataType<channel_type>::depth,
            channels     = (int)(sizeof(value_type)/sizeof(channel_type)), // 24
-           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8)
-#ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           ,depth        = DataType<channel_type>::depth
-           ,type         = CV_MAKETYPE(depth, channels)
-#endif
+           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           type         = CV_MAKETYPE(depth, channels)
          };
 
     typedef Vec<channel_type, channels> vec_type;
 };
-
-namespace traits {
-template<>
-struct Depth< Moments > { enum { value = Depth<double>::value }; };
-template<>
-struct Type< Moments > { enum { value = CV_MAKETYPE(Depth<double>::value, (int)(sizeof(Moments)/sizeof(double))) }; };
-} // namespace
 
 //! @} imgproc_shape
 
@@ -1128,8 +1031,7 @@ Complex<_Tp> operator / (const Complex<_Tp>& a, const Complex<_Tp>& b)
 template<typename _Tp> static inline
 Complex<_Tp>& operator /= (Complex<_Tp>& a, const Complex<_Tp>& b)
 {
-    a = a / b;
-    return a;
+    return (a = a / b);
 }
 
 template<typename _Tp> static inline
@@ -1169,10 +1071,6 @@ Point_<_Tp>::Point_(const Point_& pt)
     : x(pt.x), y(pt.y) {}
 
 template<typename _Tp> inline
-Point_<_Tp>::Point_(Point_&& pt) CV_NOEXCEPT
-    : x(std::move(pt.x)), y(std::move(pt.y)) {}
-
-template<typename _Tp> inline
 Point_<_Tp>::Point_(const Size_<_Tp>& sz)
     : x(sz.width), y(sz.height) {}
 
@@ -1184,13 +1082,6 @@ template<typename _Tp> inline
 Point_<_Tp>& Point_<_Tp>::operator = (const Point_& pt)
 {
     x = pt.x; y = pt.y;
-    return *this;
-}
-
-template<typename _Tp> inline
-Point_<_Tp>& Point_<_Tp>::operator = (Point_&& pt) CV_NOEXCEPT
-{
-    x = std::move(pt.x); y = std::move(pt.y);
     return *this;
 }
 
@@ -1215,7 +1106,7 @@ _Tp Point_<_Tp>::dot(const Point_& pt) const
 template<typename _Tp> inline
 double Point_<_Tp>::ddot(const Point_& pt) const
 {
-    return (double)x*(double)(pt.x) + (double)y*(double)(pt.y);
+    return (double)x*pt.x + (double)y*pt.y;
 }
 
 template<typename _Tp> inline
@@ -1406,20 +1297,6 @@ Point_<_Tp> operator / (const Point_<_Tp>& a, double b)
 }
 
 
-template<typename _AccTp> static inline _AccTp normL2Sqr(const Point_<int>& pt);
-template<typename _AccTp> static inline _AccTp normL2Sqr(const Point_<int64>& pt);
-template<typename _AccTp> static inline _AccTp normL2Sqr(const Point_<float>& pt);
-template<typename _AccTp> static inline _AccTp normL2Sqr(const Point_<double>& pt);
-
-template<> inline int normL2Sqr<int>(const Point_<int>& pt) { return pt.dot(pt); }
-template<> inline int64 normL2Sqr<int64>(const Point_<int64>& pt) { return pt.dot(pt); }
-template<> inline float normL2Sqr<float>(const Point_<float>& pt) { return pt.dot(pt); }
-template<> inline double normL2Sqr<double>(const Point_<int>& pt) { return pt.dot(pt); }
-
-template<> inline double normL2Sqr<double>(const Point_<float>& pt) { return pt.ddot(pt); }
-template<> inline double normL2Sqr<double>(const Point_<double>& pt) { return pt.ddot(pt); }
-
-
 
 //////////////////////////////// 3D Point ///////////////////////////////
 
@@ -1434,10 +1311,6 @@ Point3_<_Tp>::Point3_(_Tp _x, _Tp _y, _Tp _z)
 template<typename _Tp> inline
 Point3_<_Tp>::Point3_(const Point3_& pt)
     : x(pt.x), y(pt.y), z(pt.z) {}
-
-template<typename _Tp> inline
-Point3_<_Tp>::Point3_(Point3_&& pt) CV_NOEXCEPT
-    : x(std::move(pt.x)), y(std::move(pt.y)), z(std::move(pt.z)) {}
 
 template<typename _Tp> inline
 Point3_<_Tp>::Point3_(const Point_<_Tp>& pt)
@@ -1463,13 +1336,6 @@ template<typename _Tp> inline
 Point3_<_Tp>& Point3_<_Tp>::operator = (const Point3_& pt)
 {
     x = pt.x; y = pt.y; z = pt.z;
-    return *this;
-}
-
-template<typename _Tp> inline
-Point3_<_Tp>& Point3_<_Tp>::operator = (Point3_&& pt) CV_NOEXCEPT
-{
-    x = std::move(pt.x); y = std::move(pt.y); z = std::move(pt.z);
     return *this;
 }
 
@@ -1690,10 +1556,6 @@ Size_<_Tp>::Size_(const Size_& sz)
     : width(sz.width), height(sz.height) {}
 
 template<typename _Tp> inline
-Size_<_Tp>::Size_(Size_&& sz) CV_NOEXCEPT
-    : width(std::move(sz.width)), height(std::move(sz.height)) {}
-
-template<typename _Tp> inline
 Size_<_Tp>::Size_(const Point_<_Tp>& pt)
     : width(pt.x), height(pt.y) {}
 
@@ -1711,33 +1573,10 @@ Size_<_Tp>& Size_<_Tp>::operator = (const Size_<_Tp>& sz)
 }
 
 template<typename _Tp> inline
-Size_<_Tp>& Size_<_Tp>::operator = (Size_<_Tp>&& sz) CV_NOEXCEPT
-{
-    width = std::move(sz.width); height = std::move(sz.height);
-    return *this;
-}
-
-template<typename _Tp> inline
 _Tp Size_<_Tp>::area() const
 {
-    const _Tp result = width * height;
-    CV_DbgAssert(!std::numeric_limits<_Tp>::is_integer
-        || width == 0 || result / width == height); // make sure the result fits in the return value
-    return result;
+    return width * height;
 }
-
-template<typename _Tp> inline
-double Size_<_Tp>::aspectRatio() const
-{
-    return width / static_cast<double>(height);
-}
-
-template<typename _Tp> inline
-bool Size_<_Tp>::empty() const
-{
-    return width <= 0 || height <= 0;
-}
-
 
 template<typename _Tp> static inline
 Size_<_Tp>& operator *= (Size_<_Tp>& a, _Tp b)
@@ -1832,10 +1671,6 @@ Rect_<_Tp>::Rect_(const Rect_<_Tp>& r)
     : x(r.x), y(r.y), width(r.width), height(r.height) {}
 
 template<typename _Tp> inline
-Rect_<_Tp>::Rect_(Rect_<_Tp>&& r) CV_NOEXCEPT
-    : x(std::move(r.x)), y(std::move(r.y)), width(std::move(r.width)), height(std::move(r.height)) {}
-
-template<typename _Tp> inline
 Rect_<_Tp>::Rect_(const Point_<_Tp>& org, const Size_<_Tp>& sz)
     : x(org.x), y(org.y), width(sz.width), height(sz.height) {}
 
@@ -1855,16 +1690,6 @@ Rect_<_Tp>& Rect_<_Tp>::operator = ( const Rect_<_Tp>& r )
     y = r.y;
     width = r.width;
     height = r.height;
-    return *this;
-}
-
-template<typename _Tp> inline
-Rect_<_Tp>& Rect_<_Tp>::operator = ( Rect_<_Tp>&& r ) CV_NOEXCEPT
-{
-    x = std::move(r.x);
-    y = std::move(r.y);
-    width = std::move(r.width);
-    height = std::move(r.height);
     return *this;
 }
 
@@ -1889,16 +1714,7 @@ Size_<_Tp> Rect_<_Tp>::size() const
 template<typename _Tp> inline
 _Tp Rect_<_Tp>::area() const
 {
-    const _Tp result = width * height;
-    CV_DbgAssert(!std::numeric_limits<_Tp>::is_integer
-        || width == 0 || result / width == height); // make sure the result fits in the return value
-    return result;
-}
-
-template<typename _Tp> inline
-bool Rect_<_Tp>::empty() const
-{
-    return width <= 0 || height <= 0;
+    return width * height;
 }
 
 template<typename _Tp> template<typename _Tp2> inline
@@ -1941,11 +1757,8 @@ Rect_<_Tp>& operator += ( Rect_<_Tp>& a, const Size_<_Tp>& b )
 template<typename _Tp> static inline
 Rect_<_Tp>& operator -= ( Rect_<_Tp>& a, const Size_<_Tp>& b )
 {
-    const _Tp width = a.width - b.width;
-    const _Tp height = a.height - b.height;
-    CV_DbgAssert(width >= 0 && height >= 0);
-    a.width = width;
-    a.height = height;
+    a.width -= b.width;
+    a.height -= b.height;
     return a;
 }
 
@@ -1966,17 +1779,12 @@ Rect_<_Tp>& operator &= ( Rect_<_Tp>& a, const Rect_<_Tp>& b )
 template<typename _Tp> static inline
 Rect_<_Tp>& operator |= ( Rect_<_Tp>& a, const Rect_<_Tp>& b )
 {
-    if (a.empty()) {
-        a = b;
-    }
-    else if (!b.empty()) {
-        _Tp x1 = std::min(a.x, b.x);
-        _Tp y1 = std::min(a.y, b.y);
-        a.width = std::max(a.x + a.width, b.x + b.width) - x1;
-        a.height = std::max(a.y + a.height, b.y + b.height) - y1;
-        a.x = x1;
-        a.y = y1;
-    }
+    _Tp x1 = std::min(a.x, b.x);
+    _Tp y1 = std::min(a.y, b.y);
+    a.width = std::max(a.x + a.width, b.x + b.width) - x1;
+    a.height = std::max(a.y + a.height, b.y + b.height) - y1;
+    a.x = x1;
+    a.y = y1;
     return a;
 }
 
@@ -2011,15 +1819,6 @@ Rect_<_Tp> operator + (const Rect_<_Tp>& a, const Size_<_Tp>& b)
 }
 
 template<typename _Tp> static inline
-Rect_<_Tp> operator - (const Rect_<_Tp>& a, const Size_<_Tp>& b)
-{
-    const _Tp width = a.width - b.width;
-    const _Tp height = a.height - b.height;
-    CV_DbgAssert(width >= 0 && height >= 0);
-    return Rect_<_Tp>( a.x, a.y, width, height );
-}
-
-template<typename _Tp> static inline
 Rect_<_Tp> operator & (const Rect_<_Tp>& a, const Rect_<_Tp>& b)
 {
     Rect_<_Tp> c = a;
@@ -2033,26 +1832,7 @@ Rect_<_Tp> operator | (const Rect_<_Tp>& a, const Rect_<_Tp>& b)
     return c |= b;
 }
 
-/**
- * @brief measure dissimilarity between two sample sets
- *
- * computes the complement of the Jaccard Index as described in <https://en.wikipedia.org/wiki/Jaccard_index>.
- * For rectangles this reduces to computing the intersection over the union.
- */
-template<typename _Tp> static inline
-double jaccardDistance(const Rect_<_Tp>& a, const Rect_<_Tp>& b) {
-    _Tp Aa = a.area();
-    _Tp Ab = b.area();
 
-    if ((Aa + Ab) <= std::numeric_limits<_Tp>::epsilon()) {
-        // jaccard_index = 1 -> distance = 0
-        return 0.0;
-    }
-
-    double Aab = (a & b).area();
-    // distance = 1 - jaccard_index
-    return 1.0 - Aab / (Aa + Ab - Aab);
-}
 
 ////////////////////////////// RotatedRect //////////////////////////////
 
@@ -2063,6 +1843,8 @@ RotatedRect::RotatedRect()
 inline
 RotatedRect::RotatedRect(const Point2f& _center, const Size2f& _size, float _angle)
     : center(_center), size(_size), angle(_angle) {}
+
+
 
 ///////////////////////////////// Range /////////////////////////////////
 
@@ -2161,36 +1943,6 @@ Scalar_<_Tp>::Scalar_(_Tp v0, _Tp v1, _Tp v2, _Tp v3)
     this->val[1] = v1;
     this->val[2] = v2;
     this->val[3] = v3;
-}
-
-template<typename _Tp> inline
-Scalar_<_Tp>::Scalar_(const Scalar_<_Tp>& s) : Vec<_Tp, 4>(s) {
-}
-
-template<typename _Tp> inline
-Scalar_<_Tp>::Scalar_(Scalar_<_Tp>&& s) CV_NOEXCEPT {
-    this->val[0] = std::move(s.val[0]);
-    this->val[1] = std::move(s.val[1]);
-    this->val[2] = std::move(s.val[2]);
-    this->val[3] = std::move(s.val[3]);
-}
-
-template<typename _Tp> inline
-Scalar_<_Tp>& Scalar_<_Tp>::operator=(const Scalar_<_Tp>& s) {
-    this->val[0] = s.val[0];
-    this->val[1] = s.val[1];
-    this->val[2] = s.val[2];
-    this->val[3] = s.val[3];
-    return *this;
-}
-
-template<typename _Tp> inline
-Scalar_<_Tp>& Scalar_<_Tp>::operator=(Scalar_<_Tp>&& s) CV_NOEXCEPT {
-    this->val[0] = std::move(s.val[0]);
-    this->val[1] = std::move(s.val[1]);
-    this->val[2] = std::move(s.val[2]);
-    this->val[3] = std::move(s.val[3]);
-    return *this;
 }
 
 template<typename _Tp> template<typename _Tp2, int cn> inline
@@ -2473,4 +2225,4 @@ TermCriteria::TermCriteria(int _type, int _maxCount, double _epsilon)
 
 } // cv
 
-#endif //OPENCV_CORE_TYPES_HPP
+#endif //__OPENCV_CORE_TYPES_HPP__

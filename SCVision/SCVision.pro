@@ -70,7 +70,7 @@ INCLUDEPATH += ../utilities     \
                ../ThirdPartyLib/zmq \
                ../ThirdPartyLib/opencv/include
 
-LIBS += ../ThirdPartyLib/opencv/lib/opencv_world450.lib
+LIBS += ../ThirdPartyLib/opencv/lib/opencv_world310.lib
 
 CONFIG(debug, debug|release){
     DESTDIR = ./Debug

@@ -41,10 +41,12 @@
 //
 //M*/
 
-#ifndef OPENCV_OBJDETECT_DBT_HPP
-#define OPENCV_OBJDETECT_DBT_HPP
+#ifndef __OPENCV_OBJDETECT_DBT_HPP__
+#define __OPENCV_OBJDETECT_DBT_HPP__
 
-#include <opencv2/core.hpp>
+// After this condition removal update blacklist for bindings: modules/python/common.cmake
+#if defined(__linux__) || defined(LINUX) || defined(__APPLE__) || defined(__ANDROID__) || \
+  (defined(__cplusplus) &&  __cplusplus > 201103L) || (defined(_MSC_VER) && _MSC_VER >= 1700)
 
 #include <vector>
 
@@ -57,7 +59,7 @@ namespace cv
 class CV_EXPORTS DetectionBasedTracker
 {
     public:
-        struct CV_EXPORTS Parameters
+        struct Parameters
         {
             int maxTrackLifetime;
             int minDetectionPeriod; //the minimal time between run of the big object detector (on the whole frame) in ms (1000 mean 1 sec), default=0
@@ -218,5 +220,6 @@ class CV_EXPORTS DetectionBasedTracker
 //! @} objdetect
 
 } //end of cv namespace
+#endif
 
 #endif
