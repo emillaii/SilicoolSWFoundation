@@ -1,7 +1,7 @@
 #ifndef ROLLBACKFILE_H
 #define ROLLBACKFILE_H
 
-#include "../utilities_global.h"
+#include "utilities_global.h"
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>

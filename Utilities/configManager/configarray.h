@@ -1,10 +1,10 @@
 #ifndef CONFIGARRAY_H
 #define CONFIGARRAY_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
+#include "commonmethod.h"
 #include "configbase.h"
 #include "configmanager.h"
+#include "utilities_global.h"
 
 class UTILITIESSHARED_EXPORT ConfigArray;
 

@@ -1,11 +1,11 @@
 #ifndef SCVACUUM_H
 #define SCVACUUM_H
 
-#include "../BasicElement/scdi.h"
-#include "../BasicElement/scdo.h"
-#include "../MotionManager/motionelementcontainer.h"
-#include "../motionutility.h"
+#include "BasicElement/scdi.h"
+#include "BasicElement/scdo.h"
+#include "MotionManager/motionelementcontainer.h"
 #include "extendedqtimer.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include "vacuumconfig.h"
 #include <QObject>

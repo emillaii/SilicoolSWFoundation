@@ -1,8 +1,8 @@
 #ifndef CONFIGMANAGER_H
 #define CONFIGMANAGER_H
 
-#include "../loging/rollbackfile.h"
-#include "../utilities_global.h"
+#include "loging/rollbackfile.h"
+#include "utilities_global.h"
 #include <QObject>
 #include <QStack>
 

@@ -1,7 +1,7 @@
 #ifndef LOGMODEL_H
 #define LOGMODEL_H
 
-#include "../utilities_global.h"
+#include "utilities_global.h"
 #include <QAbstractListModel>
 
 struct LogItem

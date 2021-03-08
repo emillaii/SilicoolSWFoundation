@@ -1,10 +1,10 @@
 #ifndef PUBLISHER_H
 #define PUBLISHER_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
 #include "QJsonDocument"
 #include "QJsonObject"
+#include "commonmethod.h"
+#include "utilities_global.h"
 #include "zmq.hpp"
 #include <QMutex>
 #include <QMutexLocker>

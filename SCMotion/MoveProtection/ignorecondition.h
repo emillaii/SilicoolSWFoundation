@@ -1,10 +1,10 @@
 #ifndef IGNORECONDITION_H
 #define IGNORECONDITION_H
 
+#include "MotionManager/globalmotionelements.h"
 #include "MotionManager/motionstategetter.h"
 #include "configManager/configobject.h"
 #include "enumhelper.h"
-#include "globalmotionelements.h"
 #include "rep_motionManager_source.h"
 #include "scmotion_global.h"
 #include <QObject>
@@ -13,8 +13,8 @@ class SCMOTIONSHARED_EXPORT IgnoreCollisionCondition : public ConfigObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString ignoreCollisionConditionType READ ignoreCollisionConditionType WRITE
-                   setIgnoreCollisionConditionType NOTIFY ignoreCollisionConditionTypeChanged)
+    Q_PROPERTY(QString ignoreCollisionConditionType READ ignoreCollisionConditionType WRITE setIgnoreCollisionConditionType NOTIFY
+                   ignoreCollisionConditionTypeChanged)
 
 public:
     enum Type

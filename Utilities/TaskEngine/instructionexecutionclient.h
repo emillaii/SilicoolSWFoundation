@@ -1,10 +1,10 @@
 #ifndef INSTRUCTIONEXECUTIONCLIENT_H
 #define INSTRUCTIONEXECUTIONCLIENT_H
 
-#include "./loging/Logger.h"
 #include "commonmethod.h"
 #include "errorHandling/silicolerror.h"
 #include "instructionexecutionresult.h"
+#include "loging/Logger.h"
 #include "rep_instructionExecutor_replica.h"
 #include "utilities_global.h"
 #include <QMap>

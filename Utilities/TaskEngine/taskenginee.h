@@ -1,8 +1,8 @@
 #ifndef TASKENGINEE_H
 #define TASKENGINEE_H
 
-#include "./loging/Logger.h"
 #include "instruction.h"
+#include "loging/Logger.h"
 #include "uiHelper/uioperation.h"
 #include <QThread>
 

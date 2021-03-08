@@ -1,16 +1,16 @@
 #ifndef SCCYLINDER_H
 #define SCCYLINDER_H
 
-#include "../BasicElement/scdi.h"
-#include "../BasicElement/scdo.h"
-#include "../MotionManager/motionelementcontainer.h"
-#include "../motionutility.h"
 #include "BasicElement/globalstate.h"
+#include "BasicElement/scdi.h"
+#include "BasicElement/scdo.h"
+#include "MotionManager/motionelementcontainer.h"
 #include "MoveProtection/moveprotection.h"
 #include "QDataStream"
 #include "cylinderconfig.h"
 #include "errorHandling/silicolerror.h"
 #include "loghelper.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include <QThread>
 

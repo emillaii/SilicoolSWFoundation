@@ -1,8 +1,8 @@
 #ifndef LANGUAGEMANAGER_H
 #define LANGUAGEMANAGER_H
 
-#include "../utilities_global.h"
 #include "languageconfig.h"
+#include "utilities_global.h"
 #include <QGuiApplication>
 #include <QObject>
 #include <QQmlApplicationEngine>
@@ -45,9 +45,7 @@ private slots:
 
         for (int i = 0; i < languageConfig->languagePackageNames()->count(); i++)
         {
-            QString langPackName = QString(":/languagePackage/%1_%2")
-                                       .arg(languageConfig->languagePackageNames()->at(i).toString())
-                                       .arg(suffix);
+            QString langPackName = QString(":/languagePackage/%1_%2").arg(languageConfig->languagePackageNames()->at(i).toString()).arg(suffix);
             QTranslator *translator = new QTranslator();
             if (translator->load(langPackName))
             {

@@ -1,9 +1,9 @@
 #ifndef MSGBOXMODEL_H
 #define MSGBOXMODEL_H
 
-#include "../utilities_global.h"
 #include "commonmethod.h"
 #include "enumhelper.h"
+#include "utilities_global.h"
 #include <QAbstractListModel>
 #include <QObject>
 
@@ -44,11 +44,7 @@ class MsgBoxItem
 public:
     MsgBoxItem() = default;
 
-    MsgBoxItem(const QString &uuid,
-               const QString &title,
-               MsgBoxIcon::Icon icon,
-               const QString &content,
-               const QList<QString> &buttons)
+    MsgBoxItem(const QString &uuid, const QString &title, MsgBoxIcon::Icon icon, const QString &content, const QList<QString> &buttons)
     {
         this->uuid = uuid;
         this->title = title;

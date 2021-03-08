@@ -1,9 +1,9 @@
 ﻿#ifndef SINGLETOWERLIGHT_H
 #define SINGLETOWERLIGHT_H
 
-#include "../BasicElement/scdo.h"
-#include "../motionutility.h"
+#include "BasicElement/scdo.h"
 #include "mashineStateIndicator/buzzer.h"
+#include "motionutility.h"
 #include <QObject>
 #include <QTimer>
 

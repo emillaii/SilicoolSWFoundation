@@ -1,8 +1,8 @@
 #ifndef INSTRUCTIONEXECUTIONSERVER_H
 #define INSTRUCTIONEXECUTIONSERVER_H
 
-#include "./loging/Logger.h"
 #include "instruction.h"
+#include "loging/Logger.h"
 #include "rep_instructionExecutor_source.h"
 #include "utilities_global.h"
 #include <QMap>

@@ -3,12 +3,12 @@
 
 #include "MotionManager/motionconfigmanager.h"
 #include "MotionManager/motionelementuilayout.h"
+#include "MotionManager/motionmanager.h"
 #include "MotionManager/motionstatepublisher.h"
 #include "TaskEngine/objectlivedthreadinstructionexecutor.h"
 #include "XYZRDebugger/xyzrdebuggermanager.h"
 #include "configManager/configobjectarray.h"
 #include "motionelementdefinition.h"
-#include "motionmanager.h"
 #include "rep_motionManager_replica.h"
 #include "scmotion_global.h"
 #include <QObject>

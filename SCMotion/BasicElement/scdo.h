@@ -1,11 +1,11 @@
 #ifndef SCDO_H
 #define SCDO_H
 
-#include "../MotionManager/motionelementcontainer.h"
-#include "../motionutility.h"
+#include "MotionManager/motionelementcontainer.h"
 #include "configManager/configobject.h"
 #include "errorHandling/silicolerror.h"
 #include "ioconfig.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include <QObject>
 

@@ -1,9 +1,9 @@
 #ifndef USERMANAGEMENT_H
 #define USERMANAGEMENT_H
 
-#include "../uiHelper/uioperation.h"
-#include "../utilities_global.h"
 #include "mysqltablemodel.h"
+#include "uiHelper/uioperation.h"
+#include "utilities_global.h"
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QObject>
@@ -36,8 +36,7 @@ public:
 
     Q_PROPERTY(QString currentUserName READ currentUserName WRITE setCurrentUserName NOTIFY currentUserNameChanged)
     Q_PROPERTY(Authority currentAuthority READ currentAuthority WRITE setCurrentAuthority NOTIFY currentAuthorityChanged)
-    Q_PROPERTY(QString currentAuthorityName READ currentAuthorityName WRITE setCurrentAuthorityName NOTIFY
-                   currentAuthorityNameChanged)
+    Q_PROPERTY(QString currentAuthorityName READ currentAuthorityName WRITE setCurrentAuthorityName NOTIFY currentAuthorityNameChanged)
     Q_PROPERTY(bool hasLogin READ hasLogin WRITE setHasLogin NOTIFY hasLoginChanged)
 
     void init();
@@ -45,8 +44,7 @@ public:
     Q_INVOKABLE int userCount() const;
     Q_INVOKABLE void addUser(QString userName, QString password, Authority authority);
     Q_INVOKABLE void removeUser(QString userName);
-    Q_INVOKABLE bool
-    changePassword(QString userName, QString oldPassword, QString newPassword, QString newPasswordRepeat);
+    Q_INVOKABLE bool changePassword(QString userName, QString oldPassword, QString newPassword, QString newPasswordRepeat);
 
     Q_INVOKABLE bool login(QString userName, QString password);
     Q_INVOKABLE void logout();
@@ -127,8 +125,7 @@ private:
     bool hasUser(QString userName);
     bool isTableExist(QString tableName);
     bool verifyUserPsw(QString userName, QString password);
-    bool
-    getUserInfo(QString userName, QString &password, Authority &authority, bool showMsgBoxAsUserDidNotExist = true);
+    bool getUserInfo(QString userName, QString &password, Authority &authority, bool showMsgBoxAsUserDidNotExist = true);
 
 public:
     MySqlTableModel *userModel;

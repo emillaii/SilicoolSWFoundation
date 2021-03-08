@@ -1,7 +1,7 @@
 #ifndef SILICOLERROR_H
 #define SILICOLERROR_H
 
-#include "../commonmethod.h"
+#include "commonmethod.h"
 #include "errorhandlingoption.h"
 #include "utilities_global.h"
 #include <QUuid>
@@ -139,8 +139,7 @@ class UTILITIESSHARED_EXPORT UnhandledError : public SilicoolException
 {
 public:
     UnhandledError(SilicolError &se, const QString &errHandlingOption)
-        : SilicoolException(
-            QString("UnHandled error: %1, Error handling option: %2").arg(se.what()).arg(errHandlingOption)),
+        : SilicoolException(QString("UnHandled error: %1, Error handling option: %2").arg(se.what()).arg(errHandlingOption)),
           errHandlingOption(errHandlingOption)
     {
     }
@@ -152,10 +151,7 @@ public:
 class GeneralError : public SilicolError
 {
 public:
-    GeneralError(const QString &moduleName,
-                 const QString &errorMsg,
-                 bool canIgnore = false,
-                 const QString &suggestion = "")
+    GeneralError(const QString &moduleName, const QString &errorMsg, bool canIgnore = false, const QString &suggestion = "")
         : SilicolError(moduleName, errorMsg, suggestion)
     {
         appendErrorHandlingOption(Retry_);

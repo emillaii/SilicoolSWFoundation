@@ -1,10 +1,10 @@
 #ifndef SUBSCRIBER_H
 #define SUBSCRIBER_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
 #include "QJsonDocument"
 #include "QJsonObject"
+#include "commonmethod.h"
+#include "utilities_global.h"
 #include "zmq.hpp"
 #include <QMutex>
 #include <QMutexLocker>
@@ -18,11 +18,7 @@ class UTILITIESSHARED_EXPORT Subscriber : public QThread
     Q_OBJECT
 
 public:
-    explicit Subscriber(QObject *parent,
-                        QString endMark,
-                        QString messagePrefix = "",
-                        int receiveTimeout = 100,
-                        int bufferLen = 1024 * 100);
+    explicit Subscriber(QObject *parent, QString endMark, QString messagePrefix = "", int receiveTimeout = 100, int bufferLen = 1024 * 100);
 
     void subscribe(QString address);
 

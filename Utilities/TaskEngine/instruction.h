@@ -1,7 +1,7 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 
-#include "./errorHandling/silicolerror.h"
+#include "errorHandling/silicolerror.h"
 #include "instructionexecutionresult.h"
 #include "utilities_global.h"
 #include <QMetaMethod>

@@ -12,13 +12,13 @@
 #if !defined(LOGSERVER_H)
 #define LOGSERVER_H
 
-#include "../utilities_global.h"
 #include "LogCollector.h"
 #include "configManager/configarray.h"
 #include "configManager/configfile.h"
 #include "configManager/configobject.h"
 #include "consoleoutputer.h"
 #include "rollbackfile.h"
+#include "utilities_global.h"
 
 class LogToFileConfig : public ConfigObject
 {

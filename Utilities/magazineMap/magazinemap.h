@@ -1,8 +1,8 @@
 #ifndef MAGAZINEMAP_H
 #define MAGAZINEMAP_H
 
-#include "configfile.h"
-#include "configobjectarray.h"
+#include "configManager/configfile.h"
+#include "configManager/configobjectarray.h"
 #include "errorHandling/silicolerror.h"
 #include "magazineconfig.h"
 #include "traydata.h"

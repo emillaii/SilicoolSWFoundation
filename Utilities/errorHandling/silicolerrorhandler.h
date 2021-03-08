@@ -1,9 +1,9 @@
 #ifndef SILICOLERRORHANDLER_H
 #define SILICOLERRORHANDLER_H
 
-#include "../uiHelper/uioperation.h"
 #include "errorreporter.h"
 #include "silicolerror.h"
+#include "uiHelper/uioperation.h"
 
 class UTILITIESSHARED_EXPORT ErrorHandler
 {

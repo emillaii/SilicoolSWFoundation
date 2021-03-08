@@ -1,10 +1,10 @@
 #ifndef SCDI_H
 #define SCDI_H
 
-#include "../MotionManager/motionelementcontainer.h"
-#include "../motionutility.h"
+#include "MotionManager/motionelementcontainer.h"
 #include "configManager/configobject.h"
 #include "ioconfig.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include <QObject>
 

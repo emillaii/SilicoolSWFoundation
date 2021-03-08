@@ -1,12 +1,12 @@
 #ifndef MASHINESTATEINDICATOR_H
 #define MASHINESTATEINDICATOR_H
 
-#include "../commonmethod.h"
-#include "../configManager/configarray.h"
-#include "../configManager/configobjectarray.h"
-#include "../systemCore/statemashinedefinition.h"
 #include "buzzer.h"
+#include "commonmethod.h"
+#include "configManager/configarray.h"
+#include "configManager/configobjectarray.h"
 #include "enumhelper.h"
+#include "systemCore/statemashinedefinition.h"
 #include "towerlight.h"
 #include <QObject>
 
@@ -16,8 +16,7 @@ class UTILITIESSHARED_EXPORT StateIndicatorConfig : public ConfigObject
 
     Q_PROPERTY(SMD::State state READ state WRITE setState NOTIFY stateChanged)
     Q_PROPERTY(Buzzer::BuzzerState buzzerState READ buzzerState WRITE setBuzzerState NOTIFY buzzerStateChanged)
-    Q_PROPERTY(
-        TowerLight::TLState towerLightState READ towerLightState WRITE setTowerLightState NOTIFY towerLightStateChanged)
+    Q_PROPERTY(TowerLight::TLState towerLightState READ towerLightState WRITE setTowerLightState NOTIFY towerLightStateChanged)
     Q_PROPERTY(bool red READ red WRITE setRed NOTIFY redChanged)
     Q_PROPERTY(bool green READ green WRITE setGreen NOTIFY greenChanged)
     Q_PROPERTY(bool yellow READ yellow WRITE setYellow NOTIFY yellowChanged)
@@ -189,19 +188,14 @@ class UTILITIESSHARED_EXPORT MachineStateIndicator : public QObject
 {
     Q_OBJECT
 public:
-    explicit MachineStateIndicator(Buzzer *buzzer,
-                                   TowerLight *towerLight,
-                                   MachineStateIndicatorConfig *config,
-                                   QObject *parent = nullptr)
+    explicit MachineStateIndicator(Buzzer *buzzer, TowerLight *towerLight, MachineStateIndicatorConfig *config, QObject *parent = nullptr)
         : QObject(parent), buzzer(buzzer), towerLight(towerLight), config(config)
     {
         buzzer->setBlinkConfig(config->buzzerBlinkConfig());
         towerLight->setBlinkConfig(config->towerLightBlinkConfig());
         mapStateIndicator();
-        connect(config->stateIndicatorConfigs(), &ConfigObjectArray::configInserted, this,
-                &MachineStateIndicator::onStateConfigInserted);
-        connect(config->stateIndicatorConfigs(), &ConfigObjectArray::configRemoved, this,
-                &MachineStateIndicator::onStateConfigRemoved);
+        connect(config->stateIndicatorConfigs(), &ConfigObjectArray::configInserted, this, &MachineStateIndicator::onStateConfigInserted);
+        connect(config->stateIndicatorConfigs(), &ConfigObjectArray::configRemoved, this, &MachineStateIndicator::onStateConfigRemoved);
     }
 
 public slots:
@@ -251,8 +245,7 @@ private:
     {
         for (int i = 0; i < config->stateIndicatorConfigs()->count(); i++)
         {
-            StateIndicatorConfig *stateIndocatorConfig
-                = qobject_cast<StateIndicatorConfig *>(config->stateIndicatorConfigs()->at(i));
+            StateIndicatorConfig *stateIndocatorConfig = qobject_cast<StateIndicatorConfig *>(config->stateIndicatorConfigs()->at(i));
             stateIndicatorConfigs[stateIndocatorConfig->state()] = stateIndocatorConfig;
         }
     }

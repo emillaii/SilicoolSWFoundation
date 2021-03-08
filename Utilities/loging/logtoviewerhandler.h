@@ -1,14 +1,14 @@
 #ifndef LOGTOVIEWERHANDLER_H
 #define LOGTOVIEWERHANDLER_H
 
-#include "../utilities_global.h"
-#include "../zmqWrapper/publisher.h"
 #include "LogCollector.h"
 #include "configManager/configarray.h"
 #include "configManager/configfile.h"
 #include "configManager/configobject.h"
 #include "loglevel.h"
 #include "logmodel.h"
+#include "utilities_global.h"
+#include "zmqWrapper/publisher.h"
 
 class LogToViewerConfig : public ConfigObject
 {

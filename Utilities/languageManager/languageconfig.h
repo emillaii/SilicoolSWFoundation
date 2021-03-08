@@ -1,9 +1,9 @@
 #ifndef LANGUAGECONFIG_H
 #define LANGUAGECONFIG_H
 
-#include "../configManager/configarray.h"
-#include "../configManager/configobject.h"
-#include "../utilities_global.h"
+#include "configManager/configarray.h"
+#include "configManager/configobject.h"
+#include "utilities_global.h"
 
 class UTILITIESSHARED_EXPORT LanguageConfig : public ConfigObject
 {

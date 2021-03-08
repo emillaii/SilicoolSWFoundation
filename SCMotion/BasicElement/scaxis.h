@@ -1,8 +1,7 @@
 #ifndef SCAXIS_H
 #define SCAXIS_H
 
-#include "../MotionManager/motionelementcontainer.h"
-#include "../motionutility.h"
+#include "MotionManager/motionelementcontainer.h"
 #include "MoveProtection/moveprotection.h"
 #include "TaskEngine/instruction.h"
 #include "axisconfig.h"
@@ -10,6 +9,7 @@
 #include "errorHandling/silicolerror.h"
 #include "globalstate.h"
 #include "loghelper.h"
+#include "motionutility.h"
 #include "scdi.h"
 #include "scdo.h"
 #include "scmotion_global.h"

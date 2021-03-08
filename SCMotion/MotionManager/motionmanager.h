@@ -1,7 +1,6 @@
 #ifndef MOTIONMANAGER_H
 #define MOTIONMANAGER_H
 
-#include "../motionelementdefinition.h"
 #include "AxisModule/singleaxis.h"
 #include "AxisModule/xymodule.h"
 #include "AxisModule/xyzmodule.h"
@@ -15,6 +14,7 @@
 #include "configManager/configobjectarray.h"
 #include "configManager/configshareclient.h"
 #include "distatemonitor.h"
+#include "motionelementdefinition.h"
 #include "motionmanagerconfig.h"
 #include "motionstategetter.h"
 #include "motionstatereporter.h"

@@ -1,9 +1,9 @@
 #ifndef LOGPARAMETER_H
 #define LOGPARAMETER_H
 
-#include "../configManager/configfile.h"
-#include "../configManager/configobjectarray.h"
-#include "../utilities_global.h"
+#include "configManager/configfile.h"
+#include "configManager/configobjectarray.h"
+#include "utilities_global.h"
 
 class UTILITIESSHARED_EXPORT LogCategoryConfig : public ConfigObject
 {

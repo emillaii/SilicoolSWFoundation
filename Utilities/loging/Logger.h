@@ -12,14 +12,14 @@
 #if !defined(LOGGER_H)
 #define LOGGER_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
-#include "../zmqWrapper/publisher.h"
-#include "../zmqWrapper/subscriber.h"
 #include "LoggerConfig.h"
+#include "commonmethod.h"
 #include "consoleoutputer.h"
 #include "functional"
 #include "loglevel.h"
+#include "utilities_global.h"
+#include "zmqWrapper/publisher.h"
+#include "zmqWrapper/subscriber.h"
 #include <QDateTime>
 
 class UTILITIESSHARED_EXPORT Logger : public QObject

@@ -1,11 +1,11 @@
 #ifndef UIOPERATION_H
 #define UIOPERATION_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
 #include "TaskEngine/instructionexecutionclient.h"
 #include "btnnamedefinition.h"
+#include "commonmethod.h"
 #include "msgboxmodel.h"
+#include "utilities_global.h"
 #include <QDebug>
 #include <QObject>
 #include <QQuickItem>

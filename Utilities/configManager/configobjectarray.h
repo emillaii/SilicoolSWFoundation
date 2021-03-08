@@ -1,9 +1,9 @@
 #ifndef CONFIGOBJECTARRAY_H
 #define CONFIGOBJECTARRAY_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
+#include "commonmethod.h"
 #include "configobject.h"
+#include "utilities_global.h"
 #include <QAbstractTableModel>
 
 class UTILITIESSHARED_EXPORT ConfigObjectArray;

@@ -1,7 +1,7 @@
 ﻿#ifndef BUZZER_H
 #define BUZZER_H
 
-#include "../configManager/configobject.h"
+#include "configManager/configobject.h"
 #include "enumhelper.h"
 
 class MachineStateIndicator;

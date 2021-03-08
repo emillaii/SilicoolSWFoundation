@@ -12,8 +12,8 @@
 #if !defined(LOGCOLLECTOR_H)
 #define LOGCOLLECTOR_H
 
-#include "../configManager/configarray.h"
-#include "../zmqWrapper/subscriber.h"
+#include "configManager/configarray.h"
+#include "zmqWrapper/subscriber.h"
 
 class LogCollector
 {

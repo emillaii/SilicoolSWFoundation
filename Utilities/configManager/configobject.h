@@ -1,11 +1,11 @@
 #ifndef CONFIGOBJECT_H
 #define CONFIGOBJECT_H
 
-#include "../commonmethod.h"
-#include "../utilities_global.h"
+#include "commonmethod.h"
 #include "configbase.h"
 #include "configmanager.h"
 #include "configobjectlanguagemanager.h"
+#include "utilities_global.h"
 #include <QDebug>
 #include <QDir>
 #include <QJsonObject>

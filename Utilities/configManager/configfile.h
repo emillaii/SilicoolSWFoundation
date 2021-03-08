@@ -1,9 +1,9 @@
 #ifndef CONFIGFILE_H
 #define CONFIGFILE_H
 
-#include "../utilities_global.h"
 #include "commonmethod.h"
 #include "configobject.h"
+#include "utilities_global.h"
 #include <QDateTime>
 #include <QDir>
 #include <QFile>

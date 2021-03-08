@@ -1,11 +1,11 @@
 #ifndef COLLISIONCONDITION_H
 #define COLLISIONCONDITION_H
 
+#include "MotionManager/globalmotionelements.h"
 #include "MotionManager/motionstategetter.h"
 #include "comparisonoperation.h"
 #include "configManager/configobject.h"
 #include "errorHandling/actionerror.h"
-#include "globalmotionelements.h"
 #include "rep_motionManager_source.h"
 #include "scmotion_global.h"
 #include <QDebug>
@@ -14,8 +14,7 @@ class SCMOTIONSHARED_EXPORT CollisionCondition : public ConfigObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString collisionConditionType READ collisionConditionType WRITE setcollisionConditionType NOTIFY
-                   collisionConditionTypeChanged)
+    Q_PROPERTY(QString collisionConditionType READ collisionConditionType WRITE setcollisionConditionType NOTIFY collisionConditionTypeChanged)
     Q_PROPERTY(ComparisonOperation *cmpOperation READ cmpOperation WRITE setCmpOperation)
 
 public:

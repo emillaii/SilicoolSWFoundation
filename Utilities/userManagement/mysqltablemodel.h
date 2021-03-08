@@ -1,7 +1,7 @@
 #ifndef USERTABLEMODEL_H
 #define USERTABLEMODEL_H
 
-#include "../utilities_global.h"
+#include "utilities_global.h"
 #include <QObject>
 #include <qsqlfield.h>
 #include <qsqlrecord.h>

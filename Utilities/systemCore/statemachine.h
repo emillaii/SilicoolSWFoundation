@@ -1,8 +1,8 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
-#include "../errorHandling/silicolerror.h"
 #include "dispatcher.h"
+#include "errorHandling/silicolerror.h"
 #include "loging/Logger.h"
 #include "statemashinedefinition.h"
 #include <QObject>

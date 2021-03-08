@@ -1,10 +1,10 @@
 ﻿#ifndef SCTOWERLIGHT_H
 #define SCTOWERLIGHT_H
 
-#include "../BasicElement/scdo.h"
-#include "../motionutility.h"
+#include "BasicElement/scdo.h"
 #include "buzzerconfig.h"
 #include "mashineStateIndicator/towerlight.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include "singletowerlight.h"
 #include <QMap>

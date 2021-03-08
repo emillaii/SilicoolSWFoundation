@@ -1,10 +1,10 @@
 ﻿#ifndef SCBUZZER_H
 #define SCBUZZER_H
 
-#include "../BasicElement/scdo.h"
-#include "../motionutility.h"
+#include "BasicElement/scdo.h"
 #include "buzzerconfig.h"
 #include "mashineStateIndicator/buzzer.h"
+#include "motionutility.h"
 #include "scmotion_global.h"
 #include "singletowerlight.h"
 #include <QObject>

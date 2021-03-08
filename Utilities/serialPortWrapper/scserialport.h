@@ -1,11 +1,11 @@
 #ifndef SCSERIALPORT_H
 #define SCSERIALPORT_H
 
+#include "TaskEngine/objectlivedthreadinstructionexecutor.h"
 #include "configManager/configobject.h"
 #include "errorHandling/scassert.h"
 #include "errorHandling/silicolerror.h"
 #include "highpricisiontimer.h"
-#include "objectlivedthreadinstructionexecutor.h"
 #include "utilities_global.h"
 #include <QObject>
 #include <QSerialPort>

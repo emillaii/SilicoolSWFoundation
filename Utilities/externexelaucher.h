@@ -1,13 +1,13 @@
 #ifndef EXTERNEXELAUCHER_H
 #define EXTERNEXELAUCHER_H
 
-#include "configfile.h"
+#include "configManager/configfile.h"
+#include "configManager/configobjectarray.h"
 #include "uiHelper/uioperation.h"
 #include "utilities_global.h"
 #include <QFileInfo>
 #include <QObject>
 #include <QProcess>
-#include <configobjectarray.h>
 #include <qmap.h>
 
 class UTILITIESSHARED_EXPORT ExternExeConfig : public ConfigObject
@@ -73,7 +73,7 @@ public:
 private:
     ConfigObjectArray *externExeConfigs;
     ConfigFile *externExeConfigsFile;
-    QMap<QString, ExternExeConfig*> externExes;
+    QMap<QString, ExternExeConfig *> externExes;
 };
 
 #endif    // EXTERNEXELAUCHER_H

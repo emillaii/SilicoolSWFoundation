@@ -1,7 +1,7 @@
 #ifndef CONFIGBASE_H
 #define CONFIGBASE_H
 
-#include "../utilities_global.h"
+#include "utilities_global.h"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
