@@ -74,7 +74,7 @@ private slots:
 private:
     void showPrImage(QImage &image, const QString &imgProcessingResult = "");
     void savePrFailedImage(QImage &image);
-    void drawSaveShowResultImage(QImage &image, PRResultImageInfo *prResultImageInfo, QString imgProcessingResult = "");
+    void drawSaveShowResultImage(QImage image, PRResultImageInfo *prResultImageInfo, QString imgProcessingResult = "");
 
 private:
     bool isContinuallyCalculation = false;

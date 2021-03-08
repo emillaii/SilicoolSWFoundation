@@ -11,6 +11,26 @@ ElmoDriver::~ElmoDriver()
     elmo_deleteInstance(nameBuf);
 }
 
+void ElmoDriver::setCurrent(double current)
+{
+    ErrorHandler::tryToHandleError([this, current] {
+        sendCommand(QString("TC=%1").arg(current));
+        while (true)
+        {
+            int ms = getMotionStatus();
+            if (ms == 1)
+            {
+                return;
+            }
+            if (ms == 3)
+            {
+                throw GeneralError(name(), tr("Set current failed! Motro is disabled!"));
+            }
+            QThread::msleep(1);
+        }
+    });
+}
+
 double ElmoDriver::getCurrentOutputPos() noexcept
 {
     return getFeedbackPosImpl();

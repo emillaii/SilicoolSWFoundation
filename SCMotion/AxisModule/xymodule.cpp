@@ -21,9 +21,8 @@ void XYModule::moveToWithOffset(QString posName, QPointF offset, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName, offset.x(), offset.y()));
 
     XYModulePos *pos = xyModuleConfig->getPos<XYModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
+    setNextPosVelAcc(pos);
     m_xAxis->absMove(pos->xPos() + offset.x(), false);
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
     m_yAxis->absMove(pos->yPos() + offset.y(), false);
     if (waitDone)
     {
@@ -42,8 +41,7 @@ void XYModule::waitArrivedPosWithOffset(QString posName, QPointF offset)
 void XYModule::setNextPosVelAcc(QString posName)
 {
     XYModulePos *pos = xyModuleConfig->getPos<XYModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
+    setNextPosVelAcc(pos);
 }
 
 void XYModule::moveTo(QPointF pos, bool waitDone, double precision)
@@ -94,9 +92,8 @@ void XYModule::moveTo(QString posName, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName));
 
     XYModulePos *pos = xyModuleConfig->getPos<XYModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
+    setNextPosVelAcc(pos);
     m_xAxis->absMove(pos->xPos(), false);
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
     m_yAxis->absMove(pos->yPos(), false);
     if (waitDone)
     {

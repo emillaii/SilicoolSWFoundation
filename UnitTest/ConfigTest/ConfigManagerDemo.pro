@@ -28,6 +28,10 @@ RESOURCES += qml.qrc \
 
 INCLUDEPATH +=   ../../Utilities
 
+INCLUDEPATH +=   ../../ThirdPartyLib/zmq
+LIBS += ../../ThirdPartyLib/zmq/libzmq-v141-mt-4_3_2.lib
+
+
 CONFIG(debug, debug|release){
     DESTDIR = ./Debug
     OBJECTS_DIR = ./Debug/Objs

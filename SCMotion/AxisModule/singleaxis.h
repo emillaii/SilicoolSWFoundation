@@ -179,6 +179,14 @@ public:
     virtual void waitArrivedPos(QString posName) override;
 
 private:
+    void setNextPosVelAcc(SingleAxisPos *pos)
+    {
+        double velRatio = useVelInPosCfg() ? pos->velRatio() : -1;
+        double accRatio = useAccInPosCfg() ? pos->accRatio() : -1;
+        m_axis->setNextMoveVelAccRatio(velRatio, accRatio);
+    }
+
+private:
     SingleAxisConfig *sAxisConfig = nullptr;
     SCAxis *m_axis = nullptr;
 };

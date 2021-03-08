@@ -4,6 +4,7 @@
 #include "../MotionManager/motionelementcontainer.h"
 #include "../motionutility.h"
 #include "MoveProtection/moveprotection.h"
+#include "TaskEngine/instruction.h"
 #include "axisconfig.h"
 #include "errorHandling/scassert.h"
 #include "errorHandling/silicolerror.h"
@@ -88,6 +89,8 @@ public:
     {
         return m_config->velocityRatio();
     }
+
+    QVariant invoke(const QString &cmd, const QVariantList &args = QVariantList());
 
     ///
     /// \brief needReHome
@@ -183,6 +186,7 @@ public:
     void waitInPos(double precision = 0.1, int timeout = 3000);
     // 等待反馈位置变化量，在配置的window内小于precision
     void waitSettling(double precision = 0.01, int timeout = 3000);
+    void waitSettling(int window, double precision, int timeout);    // No error handling
     // 先等待规划停止，若配置了settlingByAppLayer，则waitSettling，否则waitInPos
     void waitArrivedPos(double targetPos, double precision = 0.1, int timeout = 3000);
     void waitArrivedPos(double precision = 0.1, int timeout = 3000);
@@ -261,7 +265,6 @@ protected:
     void checkState(bool checkHasHome = true);
     void checkIsRunning();
     void checkInLimitRange(double targetPos) const;
-    void waitSettling(int window, double precision, int timeout);    // No error handling
 
     ///
     /// \brief initImpl
@@ -329,6 +332,10 @@ public:
     void waitSoftLandDownFinished(double vel, double targetPos, double force, double margin, int timeout = 30000);
     void waitSoftLandUpFinished(int timeout = 30000);
     void softLandUp(bool waitDone = true, int timeout = 30000);
+    void setIsSoftlandingDown(bool value)    // SCAxis will auto set 'm_isSoftLandDown' while you calling 'softLandDown' or 'softLandUp'
+    {
+        m_isSoftLandDown = value;
+    }
     bool isSoftlandingDown() const
     {
         return m_isSoftLandDown;

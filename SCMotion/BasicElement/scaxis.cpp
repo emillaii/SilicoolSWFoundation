@@ -18,6 +18,12 @@ SCAxis::SCAxis(QString name, QObject *parent) : QObject(parent)
     MotionElementContainer::getIns()->registerItem<SCAxis>(name, this);
 }
 
+QVariant SCAxis::invoke(const QString &cmd, const QVariantList &args)
+{
+    Instruction ins(this, cmd, args);
+    return ins.execute();
+}
+
 void SCAxis::needReHome()
 {
     m_hasHome = false;

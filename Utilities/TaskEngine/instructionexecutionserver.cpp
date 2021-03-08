@@ -32,13 +32,16 @@ void InstructionExecutionServer::executeInstruction(QString uuid, QString target
 {
     if (objs.contains(targetObjName))
     {
-        Instruction ins(objs[targetObjName], cmd, args);
         if (async)
         {
-            QtConcurrent::run([&] { executeInstructionImpl(uuid, returnResult, ins); });
+            QtConcurrent::run([this, targetObjName, cmd, args, uuid, returnResult] {
+                Instruction ins(objs[targetObjName], cmd, args);
+                executeInstructionImpl(uuid, returnResult, ins);
+            });
         }
         else
         {
+            Instruction ins(objs[targetObjName], cmd, args);
             executeInstructionImpl(uuid, returnResult, ins);
         }
     }

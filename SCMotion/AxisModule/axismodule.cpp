@@ -51,3 +51,23 @@ void AxisModule::init()
     qCDebug(motionCate()) << "Init" << axisModuleConfig->moduleName();
     initImpl();
 }
+
+bool AxisModule::useVelInPosCfg() const
+{
+    return m_useVelInPosCfg;
+}
+
+void AxisModule::setUseVelInPosCfg(bool useVelInPosCfg)
+{
+    m_useVelInPosCfg = useVelInPosCfg;
+}
+
+bool AxisModule::useAccInPosCfg() const
+{
+    return m_useAccInPosCfg;
+}
+
+void AxisModule::setUseAccInPosCfg(bool useAccInPosCfg)
+{
+    m_useAccInPosCfg = useAccInPosCfg;
+}

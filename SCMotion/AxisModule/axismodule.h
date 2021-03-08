@@ -184,6 +184,11 @@ public:
         return axisModuleConfig->getPos<T>(posName);
     }
 
+    bool useVelInPosCfg() const;
+    void setUseVelInPosCfg(bool useVelInPosCfg);
+    bool useAccInPosCfg() const;
+    void setUseAccInPosCfg(bool useAccInPosCfg);
+
 public slots:
     virtual void moveTo(QString posName, bool waitDone = true) = 0;
     virtual QVariantMap getModuleCurrentPos() = 0;
@@ -196,6 +201,8 @@ protected:
 
 private:
     AxisModuleConfig *axisModuleConfig;
+    bool m_useVelInPosCfg = true;
+    bool m_useAccInPosCfg = true;
 };
 
 #endif    // AXISMODULE_H

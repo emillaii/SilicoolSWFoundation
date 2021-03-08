@@ -21,7 +21,7 @@ void SingleAxis::moveToWithOffset(QString posName, double offset, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName, offset));
 
     SingleAxisPos *pos = sAxisConfig->getPos<SingleAxisPos>(posName);
-    m_axis->setNextMoveVelAccRatio(pos->velRatio(), pos->accRatio());
+    setNextPosVelAcc(pos);
     m_axis->absMove(pos->pos() + offset, waitDone, pos->precision());
 }
 
@@ -34,7 +34,7 @@ void SingleAxis::waitArrivedPosWithOffset(QString posName, double offset)
 void SingleAxis::tryToMove(QString posName, uint checkInterval, uint stepCount)
 {
     SingleAxisPos *pos = sAxisConfig->getPos<SingleAxisPos>(posName);
-    m_axis->setNextMoveVelAccRatio(pos->velRatio(), pos->accRatio());
+    setNextPosVelAcc(pos);
     m_axis->tryToMove(pos->pos(), checkInterval, stepCount, pos->precision());
 }
 
@@ -79,7 +79,7 @@ void SingleAxis::moveTo(QString posName, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName));
 
     SingleAxisPos *pos = sAxisConfig->getPos<SingleAxisPos>(posName);
-    m_axis->setNextMoveVelAccRatio(pos->velRatio(), pos->accRatio());
+    setNextPosVelAcc(pos);
     m_axis->absMove(pos->pos(), waitDone, pos->precision());
 }
 

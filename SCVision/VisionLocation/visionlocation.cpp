@@ -436,7 +436,7 @@ void VisionLocation::savePrFailedImage(QImage &image)
     }
 }
 
-void VisionLocation::drawSaveShowResultImage(QImage &image, PRResultImageInfo *prResultImageInfo, QString imgProcessingResult)
+void VisionLocation::drawSaveShowResultImage(QImage image, PRResultImageInfo *prResultImageInfo, QString imgProcessingResult)
 {
     if (m_config->showPrImage() || m_config->saveResultImage())
     {

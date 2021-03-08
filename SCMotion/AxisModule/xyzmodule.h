@@ -487,6 +487,25 @@ public:
     virtual void waitArrivedPos(QString posName) override;
 
 private:
+    void setNextPosXyVelAcc(XYZModulePos *pos)
+    {
+        double xVelRatio = useVelInPosCfg() ? pos->xVelRatio() : -1;
+        double xAccRatio = useAccInPosCfg() ? pos->xAccRatio() : -1;
+        double yVelRatio = useVelInPosCfg() ? pos->yVelRatio() : -1;
+        double yAccRatio = useAccInPosCfg() ? pos->yAccRatio() : -1;
+
+        m_xAxis->setNextMoveVelAccRatio(xVelRatio, xAccRatio);
+        m_yAxis->setNextMoveVelAccRatio(yVelRatio, yAccRatio);
+    }
+    void setNextPosZVelAcc(XYZModulePos *pos)
+    {
+        double zVelRatio = useVelInPosCfg() ? pos->zVelRatio() : -1;
+        double zAccRatio = useAccInPosCfg() ? pos->zAccRatio() : -1;
+
+        m_zAxis->setNextMoveVelAccRatio(zVelRatio, zAccRatio);
+    }
+
+private:
     const QString RecordPosName = "__RecordPos";
     XYZModuleConfig *xyzModuleConfig;
     XYZModulePos *recordPos = nullptr;

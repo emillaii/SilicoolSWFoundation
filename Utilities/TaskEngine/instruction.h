@@ -22,6 +22,7 @@ class UTILITIESSHARED_EXPORT Instruction
 {
 public:
     Instruction(QObject *target, const QString &cmd, const QVariantList &args);
+    Instruction(const Instruction &other);
 
     QVariant execute();
 
@@ -48,9 +49,9 @@ private:
 
 private:
     QObject *target;
-    QString className;
     QString cmd;
     QVariantList args;
+    QString className;
 
     QVariantList typeConvertedArgs;
     QList<QGenericArgument> genericArgs;

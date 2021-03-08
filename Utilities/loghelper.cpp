@@ -7,8 +7,7 @@ SCTimer::SCTimer(const QString &msg, bool showLog) : m_msg(msg), m_showLog(showL
     timer.start();
 }
 
-SCTimer::SCTimer(const QString &msg, const QLoggingCategory &logCate, bool showLog)
-    : m_msg(msg), m_logCate(&logCate), m_showLog(showLog)
+SCTimer::SCTimer(const QString &msg, const QLoggingCategory &logCate, bool showLog) : m_msg(msg), m_logCate(&logCate), m_showLog(showLog)
 {
     timer.start();
 }
@@ -26,4 +25,14 @@ SCTimer::~SCTimer()
             qCDebug((*m_logCate)) << QString("%1 Timecost: %2ms").arg(m_msg).arg(timer.elapsedMs());
         }
     }
+}
+
+SCTimerEx::SCTimerEx(QObject *target, const char *propertyName) : target(target), propertyName(propertyName)
+{
+    timer.start();
+}
+
+SCTimerEx::~SCTimerEx()
+{
+    target->setProperty(propertyName, timer.elapsedMs());
 }

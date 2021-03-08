@@ -57,8 +57,8 @@ QString formatArgs(const char *argNames, Args... args)
 #define MSG_ARG(message, ...) "%s, %s", message, formatArgs(#__VA_ARGS__, __VA_ARGS__).toUtf8().data()
 
 #define N_FUNC "%s: %s.", (staticMetaObject.className() + QString(".") + objectName()).toUtf8().data(), __FUNCTION__
-#define N_FUNC_ARG(...)                                                                                                \
-    "%s: %s, Args: %s.", (staticMetaObject.className() + QString(".") + objectName()).toUtf8().data(), __FUNCTION__,   \
+#define N_FUNC_ARG(...)                                                                                                                              \
+    "%s: %s, Args: %s.", (staticMetaObject.className() + QString(".") + objectName()).toUtf8().data(), __FUNCTION__,                                 \
         formatArgs(#__VA_ARGS__, __VA_ARGS__).toUtf8().data()
 
 SILICOOL_DECLARE_LOGGING_CATEGORY(timerCate, )
@@ -77,6 +77,19 @@ private:
     QString m_msg;
     const QLoggingCategory *m_logCate = nullptr;
     bool m_showLog;
+};
+
+class UTILITIESSHARED_EXPORT SCTimerEx
+{
+public:
+    SCTimerEx(QObject *target, const char *propertyName);
+
+    ~SCTimerEx();
+
+private:
+    HighPrecisionTimer timer;
+    QObject *target;
+    const char *propertyName;
 };
 
 #endif    // LOGHELPER_H

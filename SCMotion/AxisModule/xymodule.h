@@ -275,6 +275,18 @@ public:
     virtual void waitArrivedPos(QString posName) override;
 
 private:
+    void setNextPosVelAcc(XYModulePos *pos)
+    {
+        double xVelRatio = useVelInPosCfg() ? pos->xVelRatio() : -1;
+        double xAccRatio = useAccInPosCfg() ? pos->xAccRatio() : -1;
+        double yVelRatio = useVelInPosCfg() ? pos->yVelRatio() : -1;
+        double yAccRatio = useAccInPosCfg() ? pos->yAccRatio() : -1;
+
+        m_xAxis->setNextMoveVelAccRatio(xVelRatio, xAccRatio);
+        m_yAxis->setNextMoveVelAccRatio(yVelRatio, yAccRatio);
+    }
+
+private:
     XYModuleConfig *xyModuleConfig;
     SCAxis *m_xAxis = nullptr;
     SCAxis *m_yAxis = nullptr;

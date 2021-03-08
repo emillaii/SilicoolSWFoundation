@@ -3,14 +3,18 @@
 QMutex Instruction::locker;
 QMap<QString, ClassMetaMethods> Instruction::methodCache;
 
-Instruction::Instruction(QObject *target, const QString &cmd, const QVariantList &args)
-    : target(target), cmd(cmd), args(args)
+Instruction::Instruction(QObject *target, const QString &cmd, const QVariantList &args) : target(target), cmd(cmd), args(args)
 {
     className = target->metaObject()->className();
     for (int i = 0; i < 10; i++)
     {
         genericArgs.append(QGenericArgument(nullptr));
     }
+}
+
+Instruction::Instruction(const Instruction &other)
+    : target(other.target), cmd(other.cmd), args(other.args), className(other.className), genericArgs(other.genericArgs)
+{
 }
 
 QVariant Instruction::execute()
@@ -26,9 +30,8 @@ QVariant Instruction::execute()
         {
             if (method.returnType() == QMetaType::Void)
             {
-                if (method.invoke(target, Qt::DirectConnection, genericArgs[0], genericArgs[1], genericArgs[2],
-                                  genericArgs[3], genericArgs[4], genericArgs[5], genericArgs[6], genericArgs[7],
-                                  genericArgs[8], genericArgs[9]))
+                if (method.invoke(target, Qt::DirectConnection, genericArgs[0], genericArgs[1], genericArgs[2], genericArgs[3], genericArgs[4],
+                                  genericArgs[5], genericArgs[6], genericArgs[7], genericArgs[8], genericArgs[9]))
                 {
                     return QVariant();
                 }
@@ -36,10 +39,9 @@ QVariant Instruction::execute()
             else
             {
                 QVariant result(method.returnType(), nullptr);
-                if (method.invoke(target, Qt::DirectConnection,
-                                  QGenericReturnArgument(QVariant::typeToName(method.returnType()), result.data()),
-                                  genericArgs[0], genericArgs[1], genericArgs[2], genericArgs[3], genericArgs[4],
-                                  genericArgs[5], genericArgs[6], genericArgs[7], genericArgs[8], genericArgs[9]))
+                if (method.invoke(target, Qt::DirectConnection, QGenericReturnArgument(QVariant::typeToName(method.returnType()), result.data()),
+                                  genericArgs[0], genericArgs[1], genericArgs[2], genericArgs[3], genericArgs[4], genericArgs[5], genericArgs[6],
+                                  genericArgs[7], genericArgs[8], genericArgs[9]))
 
                 {
                     return result;

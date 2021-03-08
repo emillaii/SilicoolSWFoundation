@@ -137,7 +137,9 @@ void XYZModule::moveToWithOffset(
             }
             else
             {
-                axisTargetInfo.axis->setNextMoveVelAccRatio(axisTargetInfo.velRatio, axisTargetInfo.accRatio);
+                double velRatio = useVelInPosCfg() ? axisTargetInfo.velRatio : -1;
+                double accRatio = useAccInPosCfg() ? axisTargetInfo.accRatio : -1;
+                axisTargetInfo.axis->setNextMoveVelAccRatio(velRatio, accRatio);
                 axisTargetInfo.axis->absMove(axisTargetInfo.targetPos, false);
             }
         }
@@ -227,9 +229,8 @@ void XYZModule::moveXYToPos(QString posName, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName));
 
     XYZModulePos *pos = xyzModuleConfig->getPos<XYZModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
+    setNextPosXyVelAcc(pos);
     m_xAxis->absMove(pos->xPos(), false);
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
     m_yAxis->absMove(pos->yPos(), false);
     if (waitDone)
     {
@@ -243,7 +244,7 @@ void XYZModule::moveZToPos(QString posName, bool waitDone)
     qCInfo(motionCate(), N_FUNC_ARG(posName));
 
     XYZModulePos *pos = xyzModuleConfig->getPos<XYZModulePos>(posName);
-    m_zAxis->setNextMoveVelAccRatio(pos->zVelRatio(), pos->zAccRatio());
+    setNextPosZVelAcc(pos);
     m_zAxis->absMove(pos->zPos(), false);
     if (waitDone)
     {
@@ -269,9 +270,8 @@ void XYZModule::moveXyToPosWithOffset(QString posName, double xOffset, double yO
     qCInfo(motionCate(), N_FUNC_ARG(posName, xOffset, yOffset));
 
     XYZModulePos *pos = xyzModuleConfig->getPos<XYZModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
+    setNextPosXyVelAcc(pos);
     m_xAxis->absMove(pos->xPos() + xOffset, false);
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
     m_yAxis->absMove(pos->yPos() + yOffset, false);
     if (waitDone)
     {
@@ -290,8 +290,7 @@ void XYZModule::waitXyArrivedPosWithOffset(QString posName, double xOffset, doub
 void XYZModule::setNextPosXYVelAcc(QString posName)
 {
     XYZModulePos *pos = xyzModuleConfig->getPos<XYZModulePos>(posName);
-    m_xAxis->setNextMoveVelAccRatio(pos->xVelRatio(), pos->xAccRatio());
-    m_yAxis->setNextMoveVelAccRatio(pos->yVelRatio(), pos->yAccRatio());
+    setNextPosXyVelAcc(pos);
 }
 
 void XYZModule::moveXY(double xTarget, double yTarget, double precision)

@@ -13,6 +13,8 @@ public:
     explicit ElmoDriver(QString name, QObject *parent = nullptr);
     ~ElmoDriver() override;
 
+    Q_INVOKABLE void setCurrent(double current);
+
     // SCAxis interface
 public:
     virtual double getCurrentOutputPos() noexcept override;
