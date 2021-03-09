@@ -1,6 +1,9 @@
 #ifndef DUMMYVISIONFACTORY_H
 #define DUMMYVISIONFACTORY_H
 
+#include "Camera/baslercamera.h"
+#include "Camera/dvp_camera.h"
+#include "Camera/hikcamera.h"
 #include "LightSourceController/wordoplightsourcecontroller.h"
 #include "VisionManager/visionconfigmanager.h"
 #include "adaptvision.h"

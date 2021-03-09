@@ -29,6 +29,9 @@ LibsDir = ../libs/
 HEADERS += \
     $${SWFoundationDir}DriverRepos/LightSourceController/wordoplightsourcecontroller.h \
     $${SWFoundationDir}WorkerRepos/PressureMonitor/pressuremonitor.h \
+    $${SWFoundationDir}DriverRepos/Camera/baslercamera.h \
+    $${SWFoundationDir}DriverRepos/Camera/dvp_camera.h \
+    $${SWFoundationDir}DriverRepos/Camera/hikcamera.h \
     Tray/dutstate.h \
     Tray/duttraymap.h \
     Vision/dummyvisionfactory.h \
@@ -42,6 +45,9 @@ HEADERS += \
 SOURCES += \
         $${SWFoundationDir}DriverRepos/LightSourceController/wordoplightsourcecontroller.cpp \
         $${SWFoundationDir}WorkerRepos/PressureMonitor/pressuremonitor.cpp \
+        $${SWFoundationDir}DriverRepos/Camera/baslercamera.cpp \
+        $${SWFoundationDir}DriverRepos/Camera/dvp_camera.cpp \
+        $${SWFoundationDir}DriverRepos/Camera/hikcamera.cpp \
         Vision/dummyvisionfactory.cpp \
         Workers/PickArm/pickarm.cpp \
         Workers/TrayLoader/trayloader.cpp \
@@ -67,6 +73,14 @@ INCLUDEPATH +=  $${SWFoundationDir}ThirdPartyLib/zmq    \
 
 INCLUDEPATH += $${LibsDir}/AdaptiveVision/include
 LIBS += $${LibsDir}/AdaptiveVision/lib/x64/AVL.lib
+
+INCLUDEPATH += $${LibsDir}basler/include    \
+               $${LibsDir}dvp/include    \
+               $${LibsDir}hik/Includes
+
+LIBS += $${LibsDir}dvp/lib/x64/DVPCamera64.lib    \
+        $${LibsDir}hik/lib/win64/MvCameraControl.lib
+
 
 LIBS += $${LibsDir}basler/lib/x64/PylonBase_v5_2.lib    \
         $${LibsDir}basler/lib/x64/GCBase_MD_VC141_v3_1_Basler_pylon.lib    \

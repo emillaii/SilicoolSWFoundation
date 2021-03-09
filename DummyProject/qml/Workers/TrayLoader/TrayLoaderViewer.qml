@@ -26,8 +26,8 @@ Item {
         }
 
         VisionLocationViewer {
-            calibrationName: "TrayRawSensorCalibration"
-            visionLocationName: "TrayRawSensorLocation"
+            calibrationName: "DutDownlookCalibration"
+            visionLocationName: "DutDownlookLocation"
             performOriginPrResultVisible: true
         }
         ConfigRow {

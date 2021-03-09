@@ -37,5 +37,15 @@ LightSourceController *DummyVisionFactory::createLSC(QString lscName)
 
 SCCamera *DummyVisionFactory::createCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent)
 {
+    switch (cameraConfig->cameraVendor())
+    {
+        case CameraConfig::Hik:
+            return new HikCamera(cameraName, cameraConfig, parent);
+        case CameraConfig::Basler:
+            return new BaslerCamera(cameraName, cameraConfig, parent);
+        case CameraConfig::DVP:
+            return new DVP_Camera(cameraName, cameraConfig, parent);
+    }
+    qCCritical(visionCate()) << "Unknown camera vendor:" << cameraConfig->cameraVendor();
     return new DummyCamera(cameraName, cameraConfig, parent);
 }

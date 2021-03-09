@@ -34,5 +34,8 @@ SCTimerEx::SCTimerEx(QObject *target, const char *propertyName) : target(target)
 
 SCTimerEx::~SCTimerEx()
 {
-    target->setProperty(propertyName, timer.elapsedMs());
+    if (!target->setProperty(propertyName, timer.elapsedMs()))
+    {
+        qCritical() << QString("Set %1::%2 failed!").arg(target->metaObject()->className()).arg(propertyName);
+    }
 }

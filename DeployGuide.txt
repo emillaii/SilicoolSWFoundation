@@ -1,0 +1,10 @@
+define qtPath = D:\Qt\Qt5.12.3\5.12.3\msvc2017_64
+define targetPath
+
+1. 新建文件夹targetPath，将exe拷入
+2. cmd: qtPath/bin/windeployqt.exe --qmldir qtPath/qml  targetPath/*.exe
+3. 将qtPath/bin目录下，Qt5SerialPort.dll，Qt5Sql.dll，Qt5RemoteObjects.dll 拷入targetPath
+4. 将qtPath/qml/QtRemoteObjects 拷入targetPath
+5. 将qtPath/plugins/sqldrivers 拷入targetPath
+6. 视需要将 qtPath/bin/Qt5Charts.dll和qtPath/qml/QtCharts 拷入targetPath
+7. 将exe依赖的相关dll及config拷入
