@@ -9,7 +9,8 @@ QT += remoteobjects
 
 TARGET = AdaptVision
 TEMPLATE = lib
-
+VERSION = 2.0.0.0
+CONFIG += skip_target_version_ext
 DEFINES += ADAPTVISION_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
