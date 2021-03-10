@@ -82,7 +82,7 @@ private:
 class UTILITIESSHARED_EXPORT SCTimerEx
 {
 public:
-    SCTimerEx(QObject *target, const char *propertyName);
+    SCTimerEx(QObject *target, const char *propertyName, bool enable = true);
 
     ~SCTimerEx();
 
@@ -90,6 +90,7 @@ private:
     HighPrecisionTimer timer;
     QObject *target;
     const char *propertyName;
+    bool enable;
 };
 
 #endif    // LOGHELPER_H

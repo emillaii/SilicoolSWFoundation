@@ -26,6 +26,8 @@ public:
         return objectName();
     }
 
+    VacuumConfig *config() const;
+
     void setConfig(VacuumConfig *config);
 
     void init();

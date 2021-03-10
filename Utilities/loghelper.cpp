@@ -27,15 +27,18 @@ SCTimer::~SCTimer()
     }
 }
 
-SCTimerEx::SCTimerEx(QObject *target, const char *propertyName) : target(target), propertyName(propertyName)
+SCTimerEx::SCTimerEx(QObject *target, const char *propertyName, bool enable) : target(target), propertyName(propertyName), enable(enable)
 {
     timer.start();
 }
 
 SCTimerEx::~SCTimerEx()
 {
-    if (!target->setProperty(propertyName, timer.elapsedMs()))
+    if (enable)
     {
-        qCritical() << QString("Set %1::%2 failed!").arg(target->metaObject()->className()).arg(propertyName);
+        if (!target->setProperty(propertyName, timer.elapsedMs()))
+        {
+            qCritical() << QString("Set %1::%2 failed!").arg(target->metaObject()->className()).arg(propertyName);
+        }
     }
 }

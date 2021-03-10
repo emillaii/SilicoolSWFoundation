@@ -7,6 +7,11 @@ SCVacuum::SCVacuum(QString name, QObject *parent) : QObject(parent)
     connect(&schedulingTimer, &QTimer::timeout, this, &SCVacuum::closeBlowOutput, Qt::DirectConnection);
 }
 
+VacuumConfig *SCVacuum::config() const
+{
+    return m_config;
+}
+
 void SCVacuum::setConfig(VacuumConfig *config)
 {
     m_config = config;
