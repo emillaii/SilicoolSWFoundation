@@ -156,6 +156,19 @@ QObject *ConfigObjectArray::getConfig(int index) const
     return this->at(index);
 }
 
+void ConfigObjectArray::batchSetConfig(QString configName, QVariant value)
+{
+    if (templateObject->isReadOnly(configName))
+    {
+        qCritical() << "Can not set readonly property!";
+        return;
+    }
+    for (int i = 0; i < count(); i++)
+    {
+        at(i)->setConfig(configName, value);
+    }
+}
+
 QString ConfigObjectArray::translate(QString configName) const
 {
     return templateObject->translate(configName);

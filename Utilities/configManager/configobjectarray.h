@@ -92,6 +92,8 @@ public:
 
     Q_INVOKABLE QObject *getConfig(int index) const;
 
+    Q_INVOKABLE void batchSetConfig(QString configName, QVariant value);
+
     Q_INVOKABLE QString translate(QString configName) const;
 
     template <typename T>

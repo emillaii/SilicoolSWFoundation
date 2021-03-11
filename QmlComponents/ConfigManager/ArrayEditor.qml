@@ -10,7 +10,53 @@ BasicConfigEditor{
         property var events: []
         property int elementType: -1
         property var configNames: []
+        property var configTitleToConfigName: []
         property bool arrayItemAddRemovable: true
+    }
+
+    Popup{
+        id: batchSetCfg
+
+        property string selectedConfig: ""
+
+        anchors.centerIn: Overlay.overlay
+
+        onOpened: {
+            txtBatchSetValue.clear()
+        }
+
+        contentItem: ColumnLayout{
+            spacing: 20
+            Label {
+                Layout.fillWidth: true
+                font.pixelSize: 20
+                color: "Black"
+                text: qsTr("配置批量设置")
+                background: Rectangle{
+                    color: "lightGreen"
+                }
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            RowLayout{
+                spacing: 10
+                Label{
+                    text: batchSetCfg.selectedConfig + ":"
+                }
+                TextField{
+                    id: txtBatchSetValue
+                    implicitWidth: 300
+                    selectByMouse: true
+                }
+                Button{
+                    text: qsTr("设置")
+                    onClicked: {
+                        configModel.batchSetConfig(self.configTitleToConfigName[batchSetCfg.selectedConfig], txtBatchSetValue.text)
+                        batchSetCfg.close()
+                    }
+                }
+            }
+        }
     }
 
     function init(_isExpand=true)
@@ -24,7 +70,9 @@ BasicConfigEditor{
             var configTitles = []
             configTitles.push("index")
             for(var i in self.configNames){
-                configTitles.push(configModel.translate(self.configNames[i]))
+                var cfgTitle = configModel.translate(self.configNames[i])
+                configTitles.push(cfgTitle)
+                self.configTitleToConfigName[cfgTitle] = self.configNames[i]
             }
             titleRepeter.model = configTitles
         }else{
@@ -126,6 +174,7 @@ BasicConfigEditor{
         implicitWidth: configNodes.implicitWidth
         height: 15
         clip: true
+        interactive: false
         contentX: hbar.position * configNodes.contentWidth
 
         Row{
@@ -151,6 +200,13 @@ BasicConfigEditor{
                         id: mouseArea
                         hoverEnabled: true
                         anchors.fill: parent
+                        onDoubleClicked: {
+                            if(index == 0){
+                                return
+                            }
+                            batchSetCfg.selectedConfig = modelData
+                            batchSetCfg.open()
+                        }
                     }
                 }
             }
@@ -161,6 +217,7 @@ BasicConfigEditor{
                 var itemsSpacing = item.getItemsSpacing()
                 for(var i in subItemsWidth){
                     children[i].width = subItemsWidth[i] + itemsSpacing
+                    children[i].implicitWidth = subItemsWidth[i] + itemsSpacing
                 }
             }
         }
