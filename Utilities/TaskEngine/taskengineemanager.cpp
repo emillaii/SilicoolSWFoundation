@@ -11,9 +11,9 @@ TaskEngineeManager::TaskEngineeManager(QObject *parent, int nTaskEnginee) : QObj
     }
 }
 
-void TaskEngineeManager::runSingleCmd(QObject *target, QString cmd, QVariantList args)
+void TaskEngineeManager::runSingleCmd(QObject *target, QString cmd, QVariantList args, bool checkWorkerInited)
 {
-    if (!checkWorkerInited(target))
+    if (checkWorkerInited && !this->checkWorkerInited(target))
     {
         return;
     }

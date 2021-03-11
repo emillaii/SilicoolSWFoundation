@@ -33,7 +33,7 @@ public:
     /// \param cmd command name
     /// \param args command argument
     ///
-    Q_INVOKABLE void runSingleCmd(QObject *target, QString cmd, QVariantList args = QVariantList());
+    Q_INVOKABLE void runSingleCmd(QObject *target, QString cmd, QVariantList args = QVariantList(), bool checkWorkerInited = true);
 
     ///
     /// \brief runMultiCmdsNoArg run multi commands without argument on single object
