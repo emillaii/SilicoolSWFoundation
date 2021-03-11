@@ -9,10 +9,10 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../configManager/configobject.cpp" line="165"/>
-        <location filename="../configManager/configobject.cpp" line="264"/>
-        <location filename="../configManager/configobject.cpp" line="279"/>
-        <source>Undefined configName! ClassName: %1, configName: %2</source>
+        <location filename="../configManager/configobject.cpp" line="179"/>
+        <location filename="../configManager/configobject.cpp" line="282"/>
+        <location filename="../configManager/configobject.cpp" line="297"/>
+        <source>Undefined configName! %1::%2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -34,24 +34,29 @@
         <translation>回零...</translation>
     </message>
     <message>
-        <location filename="../systemCore/dispatcher.cpp" line="172"/>
+        <location filename="../systemCore/dispatcher.cpp" line="187"/>
         <source>Not all workers home successful!</source>
         <translation>不是所有模块均回零成功!</translation>
     </message>
     <message>
-        <location filename="../systemCore/dispatcher.cpp" line="177"/>
+        <location filename="../systemCore/dispatcher.cpp" line="193"/>
         <source>Home all motor successful!</source>
         <translation>所有电机回零成功!</translation>
     </message>
     <message>
         <location filename="../systemCore/dispatcher.cpp" line="253"/>
+        <source>以下模块还未处理完该事件:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../systemCore/dispatcher.cpp" line="279"/>
         <source>Unknown expected handled event:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemCore/dispatcher.cpp" line="263"/>
-        <location filename="../systemCore/dispatcher.cpp" line="279"/>
         <location filename="../systemCore/dispatcher.cpp" line="289"/>
+        <location filename="../systemCore/dispatcher.cpp" line="305"/>
+        <location filename="../systemCore/dispatcher.cpp" line="315"/>
         <source>Unknown worker name:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -88,7 +93,7 @@
         <source>Remove dut type will delete all related config files!
 Are you sure to do that?</source>
         <translation>删除物料类型将删除所有相关的配置文件!
-您确定要这样做吗?</translation>
+您确定要执行操作?</translation>
     </message>
     <message>
         <location filename="../duttypemanager.cpp" line="48"/>
@@ -112,13 +117,8 @@ Are you sure to do that?</source>
 <context>
     <name>InstructionExecutionClient</name>
     <message>
-        <location filename="../TaskEngine/instructionexecutionclient.cpp" line="78"/>
+        <location filename="../TaskEngine/instructionexecutionclient.cpp" line="60"/>
         <source>Instruction with uuid %1 was not watched!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../TaskEngine/instructionexecutionclient.cpp" line="108"/>
-        <source>Get InstructionExecutionServer response timeout! targetObj: %1, cmd: %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -159,17 +159,17 @@ Are you sure to do that?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../TaskEngine/instruction.cpp" line="21"/>
+        <location filename="../TaskEngine/instruction.cpp" line="25"/>
         <source>Did not find method: %1 in class %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../TaskEngine/instruction.cpp" line="115"/>
+        <location filename="../TaskEngine/instruction.cpp" line="117"/>
         <source>Did not find matched method. Calling signature: %1(%2), substitutes: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../TaskEngine/instruction.h" line="38"/>
+        <location filename="../TaskEngine/instruction.h" line="39"/>
         <source>Error return type!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -195,33 +195,61 @@ Are you sure to do that?</source>
     </message>
     <message>
         <location filename="../errorHandling/errorhandlingoption.h" line="13"/>
+        <source>Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../errorHandling/errorhandlingoption.h" line="14"/>
         <source>Abort</source>
         <translation>终止</translation>
     </message>
     <message>
-        <location filename="../errorHandling/errorhandlingoption.h" line="14"/>
+        <location filename="../errorHandling/errorhandlingoption.h" line="15"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../errorHandling/errorhandlingoption.h" line="15"/>
+        <location filename="../errorHandling/errorhandlingoption.h" line="16"/>
         <source>Skip</source>
         <translation>跳过</translation>
     </message>
     <message>
-        <location filename="../errorHandling/errorhandlingoption.h" line="16"/>
+        <location filename="../errorHandling/errorhandlingoption.h" line="17"/>
         <source>手动拿走</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../errorHandling/errorhandlingoption.h" line="17"/>
+        <location filename="../errorHandling/errorhandlingoption.h" line="18"/>
         <source>手动放好</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../errorHandling/errorhandlingoption.h" line="18"/>
+        <location filename="../errorHandling/errorhandlingoption.h" line="19"/>
         <source>盲放</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../errorHandling/silicolerrorhandler.h" line="37"/>
+        <source>User selected abort!</source>
+        <translation>用户选择了终止!</translation>
+    </message>
+    <message>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="108"/>
+        <source>Open serial port failed! Device: %1 Port: %2, errMsg: %3</source>
+        <translation>打开串口失败! 设备: %1 端口号: %2, 错误消息: %3</translation>
+    </message>
+    <message>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="37"/>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="53"/>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="70"/>
+        <source>SerialPort is not opened!</source>
+        <translation>串口未打开!</translation>
+    </message>
+    <message>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="61"/>
+        <location filename="../serialPortWrapper/scserialport.cpp" line="78"/>
+        <source>Read data timeout!</source>
+        <translation>读取数据超时!</translation>
     </message>
     <message>
         <location filename="../errorHandling/silicolerrorhandler.cpp" line="65"/>
@@ -232,43 +260,7 @@ Are you sure to ignore this error?</source>
         <translation>检测到您试图忽略此错误
 (%1)
 这可能导致危险的行为.
-您确定要忽略此错误吗?</translation>
-    </message>
-    <message>
-        <location filename="../errorHandling/silicolerrorhandler.h" line="37"/>
-        <source>User selected abort!</source>
-        <translation>用户选择了终止!</translation>
-    </message>
-    <message>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="38"/>
-        <source>Open serial port failed! Device: %1 Port: %2, errMsg: %3</source>
-        <translation>打开串口失败! 设备: %1 端口号: %2, 错误消息: %3</translation>
-    </message>
-    <message>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="52"/>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="84"/>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="116"/>
-        <source>SerialPort is not opened!</source>
-        <translation>串口未打开!</translation>
-    </message>
-    <message>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="66"/>
-        <source>Wait for writing data timeout!</source>
-        <translation>等待写入数据超时!</translation>
-    </message>
-    <message>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="93"/>
-        <location filename="../serialPortWrapper/scserialport.cpp" line="125"/>
-        <source>Read data timeout!</source>
-        <translation>读取数据超时!</translation>
-    </message>
-</context>
-<context>
-    <name>SameThreadInstructionExecutor</name>
-    <message>
-        <location filename="../TaskEngine/samethreadinstructionexecutor.cpp" line="113"/>
-        <source>Instruction with uuid %1 was not watched!</source>
-        <translation type="unfinished"></translation>
+您确定要忽略该错误嘛?</translation>
     </message>
 </context>
 <context>
@@ -297,9 +289,14 @@ Are you sure to ignore this error?</source>
 <context>
     <name>TaskEngineeManager</name>
     <message>
-        <location filename="../TaskEngine/taskengineemanager.cpp" line="143"/>
+        <location filename="../TaskEngine/taskengineemanager.cpp" line="155"/>
         <source>All task enginees were buzy!</source>
         <translation>所有任务引擎均繁忙!</translation>
+    </message>
+    <message>
+        <location filename="../TaskEngine/taskengineemanager.cpp" line="164"/>
+        <source>%1未初始化!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -370,7 +367,7 @@ Are you sure to ignore this error?</source>
     <message>
         <location filename="../trayMap/traymap.h" line="34"/>
         <source>Column index exceeded limit! TrayMap: %1, Columns: %2, ColumnIndex: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>列索引超出限制! TrayMap: %1, 总列数: %2, 列索引: %3</translation>
     </message>
 </context>
 <context>
@@ -485,7 +482,7 @@ Are you sure to ignore this error?</source>
         <translation>用户 %1 不存在</translation>
     </message>
     <message>
-        <location filename="../userManagement/usermanagement.h" line="117"/>
+        <location filename="../userManagement/usermanagement.h" line="115"/>
         <source>Open db failed: </source>
         <translation>打开数据库失败: </translation>
     </message>
@@ -502,8 +499,7 @@ Are you sure to ignore this error?</source>
         <location filename="../systemCore/worker.cpp" line="21"/>
         <source>%1 is buzy! Are you sure to push event &apos;%2&apos; to %1?
 If yes, event &apos;%2&apos; will be handled after all other events being handled!</source>
-        <translation>%1 正繁忙! 您确定要推送事件 &apos;%2&apos; 到 %1?
-如果是, 事件 &apos;%2&apos; 将在所有其它事件被处理后处理!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../systemCore/worker.cpp" line="45"/>
@@ -516,27 +512,27 @@ If yes, event &apos;%2&apos; will be handled after all other events being handle
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemCore/worker.cpp" line="117"/>
+        <location filename="../systemCore/worker.cpp" line="139"/>
         <source>Process event:</source>
         <translation>处理事件:</translation>
     </message>
     <message>
-        <location filename="../systemCore/worker.cpp" line="117"/>
+        <location filename="../systemCore/worker.cpp" line="139"/>
         <source>FromEventQueue:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemCore/worker.cpp" line="136"/>
+        <location filename="../systemCore/worker.cpp" line="159"/>
         <source>Unmatched parameter type! Expected type: bool, given type: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemCore/worker.cpp" line="192"/>
+        <location filename="../systemCore/worker.cpp" line="220"/>
         <source>Unhandled framework event: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../systemCore/worker.cpp" line="199"/>
+        <location filename="../systemCore/worker.cpp" line="227"/>
         <source>Unhandled custom event: %1</source>
         <translation type="unfinished"></translation>
     </message>

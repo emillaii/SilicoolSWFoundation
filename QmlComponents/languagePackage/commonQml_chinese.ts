@@ -327,7 +327,7 @@
     <message>
         <location filename="../DispatcherBuzyIndicator.qml" line="36"/>
         <source>Elapsed: </source>
-        <translation>耗时:</translation>
+        <translation>耗时: </translation>
     </message>
 </context>
 <context>
@@ -506,10 +506,6 @@
         <translation>XYZ模组</translation>
     </message>
     <message>
-        <source>VCM</source>
-        <translation type="vanished">控力音圈</translation>
-    </message>
-    <message>
         <location filename="../MotionViewer/MotionConfigger.qml" line="203"/>
         <source>ExAxis</source>
         <translation>扩展轴</translation>
@@ -518,10 +514,6 @@
         <location filename="../MotionViewer/MotionConfigger.qml" line="206"/>
         <source>ExAxis2</source>
         <translation>扩展轴2</translation>
-    </message>
-    <message>
-        <source>ExVCM</source>
-        <translation type="vanished">扩展控力音圈</translation>
     </message>
     <message>
         <location filename="../MotionViewer/MotionConfigger.qml" line="217"/>
@@ -563,6 +555,91 @@
         <location filename="../MoveProtection/MoveProtectionEditor.qml" line="56"/>
         <source>Update</source>
         <translation>更新</translation>
+    </message>
+</context>
+<context>
+    <name>PathEditor</name>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="56"/>
+        <source>选择加载Image</source>
+        <translation>选择加载图像</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="74"/>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="114"/>
+        <source>Save Dispense Path</source>
+        <translation>保存点胶路径</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="87"/>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="120"/>
+        <source>Load Dispense Path</source>
+        <translation>加载点胶路径</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="102"/>
+        <source>Load Image</source>
+        <translation>加载图像</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="134"/>
+        <source>Clear All</source>
+        <translation>清空</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="151"/>
+        <source>0.0001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="161"/>
+        <source>0.001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="172"/>
+        <source>0.01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="184"/>
+        <source> 图像 XY 拖拽/缩放</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="189"/>
+        <source>Zoom in</source>
+        <translation>放大</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="196"/>
+        <source>Zoom out</source>
+        <translation>缩小</translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="227"/>
+        <source> 整体拖拽/旋转</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="251"/>
+        <source>+X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="261"/>
+        <source>-X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="271"/>
+        <source>+Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="281"/>
+        <source>-Y</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -767,11 +844,7 @@
     <message>
         <location filename="../VisionViewer/VisionLocationViewer.qml" line="137"/>
         <source>StartContinuallyPerformObjectSharpnessCalculation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>StartContinuallyPerformEdgeTransitionCalculation</source>
-        <translation type="vanished">开始连续执行边缘过渡像素计算</translation>
+        <translation>开始连续执行对象对比度计算</translation>
     </message>
     <message>
         <location filename="../VisionViewer/VisionLocationViewer.qml" line="148"/>
@@ -823,27 +896,27 @@
     <message>
         <location filename="../XYZRDebugger/XYZRDebugger.qml" line="285"/>
         <source>XStep:</source>
-        <translation type="unfinished"></translation>
+        <translation>X步数:</translation>
     </message>
     <message>
         <location filename="../XYZRDebugger/XYZRDebugger.qml" line="292"/>
         <source>YStep:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y步数:</translation>
     </message>
     <message>
         <location filename="../XYZRDebugger/XYZRDebugger.qml" line="299"/>
         <source>Calculate</source>
-        <translation type="unfinished"></translation>
+        <translation>计算</translation>
     </message>
     <message>
         <location filename="../XYZRDebugger/XYZRDebugger.qml" line="308"/>
         <source>XInterval:</source>
-        <translation type="unfinished"></translation>
+        <translation>X间隔:</translation>
     </message>
     <message>
         <location filename="../XYZRDebugger/XYZRDebugger.qml" line="314"/>
         <source>YInterval:</source>
-        <translation type="unfinished"></translation>
+        <translation>Y间隔:</translation>
     </message>
 </context>
 <context>

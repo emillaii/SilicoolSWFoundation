@@ -558,6 +558,91 @@
     </message>
 </context>
 <context>
+    <name>PathEditor</name>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="56"/>
+        <source>选择加载Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="74"/>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="114"/>
+        <source>Save Dispense Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="87"/>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="120"/>
+        <source>Load Dispense Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="102"/>
+        <source>Load Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="134"/>
+        <source>Clear All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="151"/>
+        <source>0.0001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="161"/>
+        <source>0.001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="172"/>
+        <source>0.01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="184"/>
+        <source> 图像 XY 拖拽/缩放</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="189"/>
+        <source>Zoom in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="196"/>
+        <source>Zoom out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="227"/>
+        <source> 整体拖拽/旋转</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="251"/>
+        <source>+X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="261"/>
+        <source>-X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="271"/>
+        <source>+Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PathCanvasEditor/PathEditor.qml" line="281"/>
+        <source>-Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>RowColSelector2</name>
     <message>
         <location filename="../CustomizedUIElement/RowColumnSelectorView/RowColSelector2.qml" line="12"/>
