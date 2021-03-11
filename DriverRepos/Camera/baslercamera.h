@@ -11,6 +11,7 @@ class BaslerCamera : public SCCamera
 {
 public:
     BaslerCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent = nullptr);
+    ~BaslerCamera() override;
 
     // SCCamera interface
 public:

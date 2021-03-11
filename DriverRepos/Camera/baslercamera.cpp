@@ -5,6 +5,12 @@ BaslerCamera::BaslerCamera(QString cameraName, CameraConfig *cameraConfig, QObje
     PylonInitialize();
 }
 
+BaslerCamera::~BaslerCamera()
+{
+    close();
+    PylonTerminate();
+}
+
 void BaslerCamera::openImpl()
 {
     bool foundCamera = false;
