@@ -29,9 +29,11 @@ bool ACSAxis::hasAlarm() noexcept
         return false;
     else
         return true;
+    
     int Error;
-    char ErrorMsg[256];
-    CheckACSCResult(acsc_GetMotionError(hComm));
+    char ErrorMsg[256];/*
+    CheckACSCResult(acsc_GetMotionError(hComm, 
+                                        ));*/
 }
 
 bool ACSAxis::isInPos() noexcept
