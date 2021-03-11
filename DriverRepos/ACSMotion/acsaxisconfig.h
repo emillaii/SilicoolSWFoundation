@@ -7,23 +7,14 @@ class ACSAxisConfig : public AxisConfig
 {
     Q_OBJECT
 
-    Q_PROPERTY(int channel READ channel WRITE setChannel NOTIFY channelChanged)
-    Q_PROPERTY(int rate READ rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
+    Q_PROPERTY(int homeBfIndex READ homeBfIndex WRITE setHomeBfIndex NOTIFY homeBfIndexChanged)
+    Q_PROPERTY(int initBfIndex READ initBfIndex WRITE setInitBfIndex NOTIFY initBfIndexChanged)
 public:
 
     Q_INVOKABLE ACSAxisConfig(QObject *parent = nullptr) : AxisConfig(parent)
     {
-    }
-
-    int channel() const
-    {
-        return m_channel;
-    }
-
-    int rate() const
-    {
-        return m_rate;
+       init();
     }
 
     int index() const
@@ -31,24 +22,17 @@ public:
         return m_index;
     }
 
+    int homeBfIndex() const
+    {
+        return m_homeBfIndex;
+    }
+
+    int initBfIndex() const
+    {
+        return m_initBfIndex;
+    }
+
 public slots:
-    void setChannel(int channel)
-    {
-        if (m_channel == channel)
-            return;
-
-        m_channel = channel;
-        emit channelChanged(m_channel);
-    }
-
-    void setRate(int rate)
-    {
-        if (m_rate == rate)
-            return;
-
-        m_rate = rate;
-        emit rateChanged(m_rate);
-    }
 
     void setIndex(int index)
     {
@@ -59,17 +43,36 @@ public slots:
         emit indexChanged(m_index);
     }
 
-signals:
-    void channelChanged(int channel);
+    void setHomeBfIndex(int homeBfIndex)
+    {
+        if (m_homeBfIndex == homeBfIndex)
+            return;
 
-    void rateChanged(int rate);
+        m_homeBfIndex = homeBfIndex;
+        emit homeBfIndexChanged(m_homeBfIndex);
+    }
+
+    void setInitBfIndex(int initBfIndex)
+    {
+        if (m_initBfIndex == initBfIndex)
+            return;
+
+        m_initBfIndex = initBfIndex;
+        emit initBfIndexChanged(m_initBfIndex);
+    }
+
+signals:
 
     void indexChanged(int index);
 
+    void homeBfIndexChanged(int homeBfIndex);
+
+    void initBfIndexChanged(int initBfIndex);
+
 private:
-    int m_channel = 0;
-    int m_rate = 0;
     int m_index = 0;
+    int m_homeBfIndex = 2;
+    int m_initBfIndex = 1;
 };
 
 #endif    // ACSAXISCONFIG_H
