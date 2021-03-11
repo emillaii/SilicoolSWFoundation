@@ -54,7 +54,7 @@ void PIAxis::stopImpl() noexcept
 {
     if(PI_STP(m_controllerID) != TRUE)
     {
-        qCritical() << tr("PI_STP() excute failed in %1 stopImpl()").arg(piAxisConfig->name());
+        qCritical() << tr("PI_STP() excute failed in %1 stopImpl()").arg(piAxisConfig->piAxisName());
     }
 }
 
@@ -95,48 +95,20 @@ void PIAxis::clearErrorImpl()
 
 void PIAxis::moveToImpl(double targetPos)
 {
-    /*
-    //get current pos and handle targetPos
-    double dPos[6] = { 0, 0 ,0 , 0, 0, 0 };
-    if(PI_qPOS(m_controllerID, "X Y Z U V W", dPos) != TRUE)
-    {
-        throw SilicolAbort(tr("excute PI_qPOS() failed in moveToImpl() !"));
-    }
-
-    QString axisName = piAxisConfig->name();
-    int posIndex = getAxisIndexByName(axisName);
-    dPos[posIndex] = targetPos;
-    qInfo() << tr("finish handle Axis positions, reult: x: %1, y: %2, z:%3,"
-                  " u: %4, v: %5, w: %6").arg(dPos[0]).arg(dPos[1]).arg(dPos[2]).arg(dPos[3]).arg(dPos[4]).arg(dPos[5]);
-    //manager positions is possible
-    BOOL bMovePossible = FALSE;
-    if(PI_qVMO(m_controllerID, "X Y Z U V W", dPos, &bMovePossible) != TRUE)
-    {
-        throw SilicolAbort(tr("excute PI_qVMO() failed in moveToImpl() !"));
-    }
-    if(bMovePossible == FALSE)
-    {
-        throw SilicolAbort(tr("can not move to Position: x: %1, y: %2, z:%3,"
-                              " u: %4, v: %5, w: %6").arg(dPos[0]).arg(dPos[1]).arg(dPos[2]).arg(dPos[3]).arg(dPos[4]).arg(dPos[5]));
-    }
-
-    moveToPosition(dPos);
-    */
-
     double dPos[1] = {0};
     dPos[0] = targetPos;
     BOOL bMovePossible = FALSE;
-    if(PI_qVMO(m_controllerID, piAxisConfig->name().toUtf8(), dPos, &bMovePossible) != TRUE)
+    if(PI_qVMO(m_controllerID, piAxisConfig->piAxisName().toUtf8(), dPos, &bMovePossible) != TRUE)
     {
-        throw SilicolAbort(tr("excute PI_qVMO() failed in %1 moveToImpl() !").arg(piAxisConfig->name()));
+        throw SilicolAbort(tr("excute PI_qVMO() failed in %1 moveToImpl() !").arg(piAxisConfig->piAxisName()));
     }
     if(bMovePossible == FALSE)
     {
-        throw SilicolAbort(tr("can not move to Position: %1: %2").arg(piAxisConfig->name()).arg(dPos[0]));
+        throw SilicolAbort(tr("can not move to Position: %1: %2").arg(piAxisConfig->piAxisName()).arg(dPos[0]));
     }
-    if (PI_MOV ( m_controllerID, piAxisConfig->name().toUtf8(), dPos) != TRUE)
+    if (PI_MOV ( m_controllerID, piAxisConfig->piAxisName().toUtf8(), dPos) != TRUE)
     {
-        throw SilicolAbort(tr("excute PI_MOV() failed, in %1!").arg(piAxisConfig->name()));
+        throw SilicolAbort(tr("excute PI_MOV() failed, in %1!").arg(piAxisConfig->piAxisName()));
     }
 
     BOOL bIsMoving[1] = { TRUE};
@@ -146,15 +118,15 @@ void PIAxis::moveToImpl(double targetPos)
 
     while (TRUE == bIsMoving[0])
     {
-        if (PI_IsMoving ( m_controllerID, piAxisConfig->name().toUtf8(), bIsMoving ) != TRUE)
+        if (PI_IsMoving ( m_controllerID, piAxisConfig->piAxisName().toUtf8(), bIsMoving ) != TRUE)
         {
-            throw SilicolAbort(tr("Excute PI_IsMoving() failed in %1 moveToPosition()!").arg(piAxisConfig->name()));
+            throw SilicolAbort(tr("Excute PI_IsMoving() failed in %1 moveToPosition()!").arg(piAxisConfig->piAxisName()));
         }
 
         if(timer.elapsed() > piAxisConfig->moveOverTime())
         {
             PI_STP(m_controllerID);
-            throw SilicolAbort(tr("wait for PI %1 axis finish moving overtime, Overtime: %2").arg(piAxisConfig->name()).arg(piAxisConfig->moveOverTime()));
+            throw SilicolAbort(tr("wait for PI %1 axis finish moving overtime, Overtime: %2").arg(piAxisConfig->piAxisName()).arg(piAxisConfig->moveOverTime()));
         }
         Sleep (10);
     }
@@ -162,22 +134,11 @@ void PIAxis::moveToImpl(double targetPos)
 
 double PIAxis::getFeedbackPosImpl() noexcept
 {
-    /*double dPos[6] = { 0, 0 ,0 , 0, 0, 0 };
-    if(PI_qPOS(m_controllerID, "X Y Z U V W", dPos) != TRUE)
-    {
-        throw SilicolAbort(tr("excute PI_qPOS() failed in moveToImpl() !"));
-    }
-
-    QString axisName = piAxisConfig->name();
-    int posIndex = getAxisIndexByName(axisName);
-    return dPos[posIndex];
-    */
-
     double dPos[1] = {0};
 
-    if(PI_qPOS(m_controllerID, piAxisConfig->name().toUtf8(), dPos) != TRUE)
+    if(PI_qPOS(m_controllerID, piAxisConfig->piAxisName().toUtf8(), dPos) != TRUE)
     {
-        throw SilicolAbort(tr("excute PI_qPOS() failed in %1 moveToImpl() !").arg(piAxisConfig->name()));
+        throw SilicolAbort(tr("excute PI_qPOS() failed in %1 moveToImpl() !").arg(piAxisConfig->piAxisName()));
     }
 
     const int Precision = 100000;
@@ -284,7 +245,7 @@ int PIAxis::getAxisIndexByName(QString axisName)
 bool PIAxis::isInPos() noexcept
 {
     BOOL bIsMoving = FALSE;
-    BOOL ret = PI_IsMoving( m_controllerID, piAxisConfig->name().toUtf8(), &bIsMoving);
+    BOOL ret = PI_IsMoving( m_controllerID, piAxisConfig->piAxisName().toUtf8(), &bIsMoving);
     if (ret != TRUE)
     {
         qCCritical(motionCate()) << tr("PI_IsMoving() in %1 isInPos() failed!").arg(name());
@@ -301,7 +262,7 @@ bool PIAxis::isRunning() noexcept
 double PIAxis::getCurrentVel() noexcept
 {
     double currentVel = 0;
-    BOOL ret = PI_qVEL(m_controllerID, piAxisConfig->name().toUtf8().data(), &currentVel);
+    BOOL ret = PI_qVEL(m_controllerID, piAxisConfig->piAxisName().toUtf8().data(), &currentVel);
     if (ret != TRUE)
     {
         qCCritical(motionCate()) << tr("PI_qVEL() in %1 getCurrentVel() failed!").arg(name());

@@ -1,5 +1,5 @@
-﻿#ifndef PICONTROLCARD_H
-#define PICONTROLCARD_H
+#ifndef ACSCARD_H
+#define ACSCARD_H
 
 #include "BasicElement/controlcard.h"
 #include "configManager/configfile.h"
@@ -10,23 +10,23 @@
 #include "motionutility.h"
 #include "processkiller.h"
 #include <QtConcurrent>
-#include "PI_GCS2_DLL.h"
-#include "picontrolcardconfig.h"
+#include "ACSC.h"
+#include "acscardconfig.h"
 
-class PIControlCard : public ControlCard
+class ACSCard : public ControlCard
 {
     Q_OBJECT
 public:
-    PIControlCard(QObject *parent = nullptr);
+    ACSCard(QObject *parent = nullptr);
 
 public:
     virtual void preInit() override {}
     virtual void postInit() override;
     virtual void dispose() override;
-    int getControllerID();
+    int getHandle();
 private:
     bool isConnect = false;
-    int m_controllerID = -1;
+    HANDLE m_handle = ACSC_INVALID;
 };
 
-#endif // PICONTROLCARD_H
+#endif // ACSCARD_H

@@ -36,7 +36,7 @@ void PIControlCard::dispose()
     PI_CloseConnection ( m_controllerID );
 }
 
-int PIControlCard::GetControllerID()
+int PIControlCard::getControllerID()
 {
     return m_controllerID;
 }

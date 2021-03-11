@@ -4,6 +4,13 @@
 #include "BasicElement/scaxis.h"
 #include "acsaxisconfig.h"
 #include "ACSC.h"
+#include "acscardconfig.h"
+
+#define CheckACSCResult(res, errMsg)                                                                                                               \
+    if (res == 0)                                                                                                                          \
+    {                                                                                                                                                \
+        throw ActionError(name(), QString("%1. Error code: %2").arg(errMsg).arg(res));                                                               \
+    }
 
 class ACSAxis : public SCAxis
 {
@@ -21,7 +28,10 @@ public:
 
     // SCAxis interface
 public:
-    virtual double getCurrentOutputPos() noexcept override{return 0;}
+    virtual double getCurrentOutputPos() noexcept override
+    {
+        return getFeedbackPosImpl();
+    }
     virtual bool hasAlarm() noexcept override;
     virtual bool isReady() noexcept override
     {
