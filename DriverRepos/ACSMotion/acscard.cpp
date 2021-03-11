@@ -28,6 +28,8 @@ void ACSCard::postInit()
     acsCoreCfg->setHandle((int)m_handle);
     qInfo() << tr("connect to ACSC successful!! control ID: %1").arg((int)m_handle);
     isConnect = true;
+
+    acsc_RunBuffer(m_handle, 1, NULL, NULL);
 }
 
 void ACSCard::dispose()
