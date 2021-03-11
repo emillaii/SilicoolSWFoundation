@@ -19,6 +19,15 @@ Flickable {
     property int __value: -1
     property string __imgProcessingRes: ""
     property double __lblBackgrountOpacity: 0.6
+    property bool __needRefreshImage: false
+
+    onUpdateImageChanged: {
+        if(updateImage && __needRefreshImage){
+            image.source = ""
+            image.source = imageSource
+            __needRefreshImage = false
+        }
+    }
 
     function init(){
         cameraConn.target = camera
@@ -157,10 +166,12 @@ Flickable {
                 }
             }
             onImageChanged: {
+                __imgProcessingRes = imgProcessingResult
                 if(updateImage){
-                    __imgProcessingRes = imgProcessingResult
                     image.source = ""
                     image.source = imageSource
+                }else{
+                    __needRefreshImage = true
                 }
             }
         }
