@@ -1,6 +1,17 @@
 #include "acsaxis.h"
 
-ACSAxis::ACSAxis(QString name, QObject *parent) : SCAxis(name, parent){}
+ACSAxis::ACSAxis(QString name, QObject *parent) : SCAxis(name, parent)
+{
+    hComm = (HANDLE)ACSCardConfigManage::getIns().getACSCardCfg()->handle();
+
+    acsAxisConfig = qobject_cast<ACSAxisConfig *>(config());
+    if(acsAxisConfig == nullptr)
+    {
+        throw SilicolAbort(QString("Can not cast AxisConfig to ACSAxisConfig! AxisConfig type: %1")
+                               .arg(config()->metaObject()->className()),
+                           EX_LOCATION);
+    }
+}
 
 void ACSAxis::kill() noexcept
 {
@@ -18,6 +29,11 @@ bool ACSAxis::hasAlarm() noexcept
         return false;
     else
         return true;
+    
+    int Error;
+    char ErrorMsg[256];/*
+    CheckACSCResult(acsc_GetMotionError(hComm, 
+                                        ));*/
 }
 
 bool ACSAxis::isInPos() noexcept
