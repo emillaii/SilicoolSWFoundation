@@ -48,6 +48,8 @@ public:
         return pageInfo;
     }
 
+    Q_INVOKABLE void generateMotionElementUILayoutConfigFile();
+
     Q_INVOKABLE void setAxisVelocityRatio(QString axisName, double ratio);
 
     double globalVelocityRatio() const
@@ -93,6 +95,7 @@ private:
     void subscribePosReq();
     void subscribeModulePosReq(AxisModuleConfig *axisModuleConfig);
     void subscribeMeasureHeightReq(ConfigObjectArray *axisConfigs);
+    void addPage(QString elementType, QString pageName, const QStringList &names, ConfigObjectArray *uiLayouts);
 
 private:
     const QString medsConfigFileName = "./config/platformConfig/motionElementDefinition.json";

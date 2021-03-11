@@ -48,6 +48,18 @@ Item {
                 id: tip
                 visible: text != ""
             }
+
+            Rectangle{
+                color: "transparent"
+                width: 100
+                height: 10
+            }
+            Button{
+                text: qsTr("自动生成motionElementUILayout文件")
+                onClicked: {
+                    tem.runSingleCmd(masterMotionManager, "generateMotionElementUILayoutConfigFile")
+                }
+            }
         }
 
         MyTabView{

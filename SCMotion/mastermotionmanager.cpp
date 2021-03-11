@@ -72,6 +72,53 @@ void MasterMotionManager::setContextProperty(QQmlApplicationEngine &engine)
     engine.rootContext()->setContextProperty("softLandingConfigs", m_motionConfigManager->m_softLandingConfigs);
 }
 
+void MasterMotionManager::generateMotionElementUILayoutConfigFile()
+{
+    if (!UIOperation::getIns()->okCancelConfirm(tr("此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(meUILayoutsConfigFileName)))
+    {
+        return;
+    }
+    QStringList t_diNames, t_doNames, t_axisNames, t_vacuumNames, t_cylNames;
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        MotionElementDefinition *med = m_meds->getConfig<MotionElementDefinition>(i);
+        t_diNames.append(unpackVariantList<QString>(med->diNames()->members()));
+        t_doNames.append(unpackVariantList<QString>(med->doNames()->members()));
+        t_vacuumNames.append(unpackVariantList<QString>(med->vacuumNames()->members()));
+        t_cylNames.append(unpackVariantList<QString>(med->cylNames()->members()));
+        auto axisDefs = med->axisDefinitions();
+        for (int j = 0; j < axisDefs->count(); j++)
+        {
+            auto axisDef = axisDefs->getConfig<AxisDefinition>(j);
+            t_axisNames.append(axisDef->axisName());
+        }
+    }
+
+    ConfigObjectArray *t_meUILayouts = new ConfigObjectArray(&MotionElementUILayout::staticMetaObject);
+    ConfigFile *t_meUILayoutsConfigFile = new ConfigFile("motionElementUILayout", t_meUILayouts, meUILayoutsConfigFileName, false);
+    t_meUILayoutsConfigFile->setAutoSave(false);
+    addPage("DI", "DI", t_diNames, t_meUILayouts);
+    addPage("DO", "DO", t_doNames, t_meUILayouts);
+    addPage("Vacuum", "Vacuum", t_vacuumNames, t_meUILayouts);
+    addPage("Cylinder", "Cylinder", t_cylNames, t_meUILayouts);
+    const int MaxMotorForEachPage = 7;
+    if (t_axisNames.count() <= MaxMotorForEachPage)
+    {
+        addPage("Axis", "Motor", t_axisNames, t_meUILayouts);
+    }
+    else
+    {
+        int motorPageCount = (t_axisNames.count() - 1) / MaxMotorForEachPage + 1;
+        for (int i = 0; i < motorPageCount; i++)
+        {
+            addPage("Axis", QString("Motor%1").arg(i + 1),
+                    t_axisNames.mid(i * MaxMotorForEachPage, qMin(MaxMotorForEachPage, t_axisNames.count() - i * MaxMotorForEachPage)),
+                    t_meUILayouts);
+        }
+    }
+    t_meUILayoutsConfigFile->save();
+}
+
 void MasterMotionManager::setAxisVelocityRatio(QString axisName, double ratio)
 {
     m_motionConfigManager->setAxisVelocityRatio(axisName, ratio);
@@ -186,27 +233,29 @@ void MasterMotionManager::onMoveToReq(QString moduleName, MotionElement::Type mo
 
 void MasterMotionManager::onMeasureHeightReq(QString axisName, QString softLandingPosName, double vel, double force, int holdTime)
 {
-    try
-    {
-        QVariantList args;
-        args << vel << force << holdTime;
-        auto pos = MotionManager::getIns().runInstruction(MotionElement::Axis, axisName, "measureHeight", args);
-        if (UIOperation::getIns()->getUIResponse("Confirm",
-                                                 tr("Are you sure to apply this config?\r\naxisName: %1, softLandingPosName: %2, targetPos: %3")
-                                                     .arg(axisName)
-                                                     .arg(softLandingPosName)
-                                                     .arg(pos.toDouble()),
-                                                 MsgBoxIcon::Question, YesNoBtns)
-            == YesBtn)
+    QtConcurrent::run([this, axisName, softLandingPosName, vel, force, holdTime] {
+        try
         {
-            auto axisConfig = (motionConfigManager()->axisConfigMap[axisName]);
-            axisConfig->getPos(softLandingPosName)->setConfig("targetPos", pos);
+            QVariantList args;
+            args << vel << force << holdTime;
+            auto pos = MotionManager::getIns().runInstruction(MotionElement::Axis, axisName, "measureHeight", args);
+            if (UIOperation::getIns()->getUIResponse("Confirm",
+                                                     tr("Are you sure to apply this config?\r\naxisName: %1, softLandingPosName: %2, targetPos: %3")
+                                                         .arg(axisName)
+                                                         .arg(softLandingPosName)
+                                                         .arg(pos.toDouble()),
+                                                     MsgBoxIcon::Question, YesNoBtns)
+                == YesBtn)
+            {
+                auto axisConfig = (motionConfigManager()->axisConfigMap[axisName]);
+                axisConfig->getPos(softLandingPosName)->setConfig("targetPos", pos);
+            }
         }
-    }
-    catch (SilicoolException &se)
-    {
-        qCritical() << se.what();
-    }
+        catch (SilicoolException &se)
+        {
+            qCritical() << se.what();
+        }
+    });
 }
 
 void MasterMotionManager::subscribeMotionState(QQuickItem *subscriber, QString functionName)
@@ -441,4 +490,18 @@ void MasterMotionManager::subscribeMeasureHeightReq(ConfigObjectArray *axisConfi
             connect(softLandingPos, &SoftLandingPos::measureHeightReq, this, &MasterMotionManager::onMeasureHeightReq);
         }
     }
+}
+
+void MasterMotionManager::addPage(QString elementType, QString pageName, const QStringList &names, ConfigObjectArray *uiLayouts)
+{
+    MotionElementUILayout *page = new MotionElementUILayout();
+    page->setElementType(elementType);
+    page->setPageName(pageName);
+    auto pageElements = page->pageElements();
+    for (int i = 0; i < names.count(); i++)
+    {
+        pageElements->add(i);
+        pageElements->setConfig(i, names[i]);
+    }
+    uiLayouts->executeAddConfigObject(uiLayouts->count(), page);
 }
