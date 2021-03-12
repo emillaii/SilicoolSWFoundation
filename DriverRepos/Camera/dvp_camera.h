@@ -28,6 +28,9 @@ public:
 protected:
     QImage getImageImpl() override;
 
+private slots:
+    void onExposureTimeChanged(double exposureTime);
+
 private:
     dvpHandle handle = 0;
 };

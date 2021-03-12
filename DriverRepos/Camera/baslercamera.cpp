@@ -3,6 +3,7 @@
 BaslerCamera::BaslerCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent)
 {
     PylonInitialize();
+    connect(cameraConfig, &CameraConfig::exposureTimeChanged, this, &BaslerCamera::onExposureTimeChanged);
 }
 
 BaslerCamera::~BaslerCamera()
@@ -52,9 +53,7 @@ void BaslerCamera::openImpl()
                 ptrTrigger->SetIntValue(1);
                 CEnumerationPtr ptrTriggerSource = cameraNodeMap.GetNode("TriggerSource");
                 ptrTriggerSource->FromString("Software");
-                const char *exposureNodeName = config()->cameraType() == CameraConfig::GigE ? "ExposureTimeAbs" : "ExposureTime";
-                CFloatPtr ptrExposureTime = cameraNodeMap.GetNode(exposureNodeName);
-                ptrExposureTime->SetValue(config()->exposureTime());
+                setExposureTime();
                 if (config()->cameraType() == CameraConfig::GigE)
                 {
                     camera.StartGrabbing(GrabStrategy_UpcomingImage, GrabLoop_ProvidedByUser);
@@ -128,4 +127,28 @@ QImage BaslerCamera::getImageImpl()
     }
 
     return image;
+}
+
+void BaslerCamera::onExposureTimeChanged(double exposureTime)
+{
+    Q_UNUSED(exposureTime)
+    if (isOpened())
+    {
+        try
+        {
+            setExposureTime();
+        }
+        catch (const GenericException &e)
+        {
+            qCCritical(visionCate()) << e.what();
+        }
+    }
+}
+
+void BaslerCamera::setExposureTime()
+{
+    INodeMap &cameraNodeMap = camera.GetNodeMap();
+    const char *exposureNodeName = config()->cameraType() == CameraConfig::GigE ? "ExposureTimeAbs" : "ExposureTime";
+    CFloatPtr ptrExposureTime = cameraNodeMap.GetNode(exposureNodeName);
+    ptrExposureTime->SetValue(config()->exposureTime());
 }

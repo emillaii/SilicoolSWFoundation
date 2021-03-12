@@ -21,6 +21,12 @@ public:
 protected:
     virtual QImage getImageImpl() override;
 
+private slots:
+    void onExposureTimeChanged(double exposureTime);
+
+private:
+    void setExposureTime();
+
 private:
     CInstantCamera camera;
 };

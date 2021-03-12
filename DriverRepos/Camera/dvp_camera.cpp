@@ -1,6 +1,9 @@
 #include "dvp_camera.h"
 
-DVP_Camera::DVP_Camera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent) {}
+DVP_Camera::DVP_Camera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent)
+{
+    connect(cameraConfig, &CameraConfig::exposureTimeChanged, this, &DVP_Camera::onExposureTimeChanged);
+}
 
 void DVP_Camera::openImpl()
 {
@@ -48,4 +51,13 @@ QImage DVP_Camera::getImageImpl()
         memcpy(img.bits(), buffer, frameInfo.uBytes);
     }
     return img;
+}
+
+void DVP_Camera::onExposureTimeChanged(double exposureTime)
+{
+    Q_UNUSED(exposureTime)
+    if (isOpened())
+    {
+        dvpSetExposure(handle, config()->exposureTime());
+    }
 }

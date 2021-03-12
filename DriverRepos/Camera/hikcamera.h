@@ -6,6 +6,16 @@
 #include <QElapsedTimer>
 #include <QObject>
 
+#define HIK_RESULT_HANDLE(calling)                                                                                                                   \
+    {                                                                                                                                                \
+        int res = calling;                                                                                                                           \
+        if (res != MV_OK)                                                                                                                            \
+        {                                                                                                                                            \
+            throw SilicolAbort(QString("%1 failed! Error code: %2, camera: %3").arg(#calling).arg(res, 8, 16, QChar(QChar('0'))).arg(cameraName()),  \
+                               EX_LOCATION);                                                                                                         \
+        }                                                                                                                                            \
+    }
+
 class HikCamera : public SCCamera
 {
     Q_OBJECT
@@ -22,6 +32,9 @@ public:
 
 protected:
     virtual QImage getImageImpl() override;
+
+private slots:
+    void onExposureTimeChanged(double exposureTime);
 
 private:
     int getIntValue(const char *strKey);

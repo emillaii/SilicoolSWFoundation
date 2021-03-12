@@ -1,6 +1,9 @@
 #include "hikcamera.h"
 
-HikCamera::HikCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent) {}
+HikCamera::HikCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent)
+{
+    connect(cameraConfig, &CameraConfig::exposureTimeChanged, this, &HikCamera::onExposureTimeChanged);
+}
 
 HikCamera::~HikCamera()
 {
@@ -15,11 +18,7 @@ void HikCamera::openImpl()
 {
     int nRet = MV_OK;
     MV_CC_DEVICE_INFO_LIST m_stDevList;
-    nRet = MV_CC_EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &m_stDevList);
-    if (nRet != MV_OK)
-    {
-        throw SilicolAbort(tr("Enum device failed! Error code: %1").arg(nRet, 8, 16, QChar(QChar('0'))), EX_LOCATION);
-    }
+    HIK_RESULT_HANDLE(MV_CC_EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &m_stDevList))
 
     bool foundCamera = false;
     for (size_t i = 0; i < m_stDevList.nDeviceNum; i++)
@@ -120,16 +119,19 @@ QImage HikCamera::getImageImpl()
     return imgBuff;
 }
 
+void HikCamera::onExposureTimeChanged(double exposureTime)
+{
+    if (isOpened())
+    {
+        MV_CC_SetFloatValue(m_hDevHandle, "ExposureTime", config()->exposureTime());
+    }
+}
+
 int HikCamera::getIntValue(const char *strKey)
 {
     MVCC_INTVALUE stParam;
     memset(&stParam, 0, sizeof(MVCC_INTVALUE));
-    int nRet = MV_CC_GetIntValue(m_hDevHandle, strKey, &stParam);
-    if (MV_OK != nRet)
-    {
-        throw SilicolAbort(tr("Get int value failed! Camera: %1, Key: %2, Error code: %3").arg(cameraName()).arg(strKey).arg(nRet, 8, 16, QChar('0')),
-                           EX_LOCATION);
-    }
+    HIK_RESULT_HANDLE(MV_CC_GetIntValue(m_hDevHandle, strKey, &stParam))
     return stParam.nCurValue;
 }
 
@@ -169,21 +171,10 @@ void HikCamera::openCamera(MV_CC_DEVICE_INFO *pstDeviceInfo)
         destroyHandle();
         throw SilicolAbort(tr("Open camera failed! Camera: %1, Error code: %2").arg(cameraName()).arg(res, 8, 16, QChar('0')));
     }
-    res = MV_CC_SetTriggerMode(m_hDevHandle, MV_TRIGGER_MODE_ON);
-    if (res != MV_OK)
-    {
-        throw SilicolAbort(tr("Set trigger mode failed! Camera: %1 Error code: %2").arg(cameraName()).arg(res, 8, 16, QChar('0')));
-    }
-    res = MV_CC_SetTriggerSource(m_hDevHandle, MV_TRIGGER_SOURCE_SOFTWARE);
-    if (res != MV_OK)
-    {
-        throw SilicolAbort(tr("Set trigger source failed! Camera: %1 Error code: %2").arg(cameraName()).arg(res, 8, 16, QChar('0')));
-    }
-    res = MV_CC_SetGrabStrategy(m_hDevHandle, MV_GrabStrategy_UpcomingImage);
-    if (res != MV_OK)
-    {
-        throw SilicolAbort(tr("Set grab strategy failed! Camera: %1 Error code: %2").arg(cameraName()).arg(res, 8, 16, QChar('0')));
-    }
+    HIK_RESULT_HANDLE(MV_CC_SetTriggerMode(m_hDevHandle, MV_TRIGGER_MODE_ON))
+    HIK_RESULT_HANDLE(MV_CC_SetTriggerSource(m_hDevHandle, MV_TRIGGER_SOURCE_SOFTWARE))
+    HIK_RESULT_HANDLE(MV_CC_SetGrabStrategy(m_hDevHandle, MV_GrabStrategy_UpcomingImage))
+    HIK_RESULT_HANDLE(MV_CC_SetFloatValue(m_hDevHandle, "ExposureTime", config()->exposureTime()))
     mallocBufferForDriver();
     StartGrabbing();
 }
@@ -207,11 +198,7 @@ void HikCamera::StartGrabbing()
     {
         return;
     }
-    int res = MV_CC_StartGrabbing(m_hDevHandle);
-    if (res != MV_OK)
-    {
-        throw SilicolAbort(tr("Start grabbing failed! Camera: %1, Error code: %2").arg(cameraName()).arg(res, 8, 16, QChar('0')));
-    }
+    HIK_RESULT_HANDLE(MV_CC_StartGrabbing(m_hDevHandle))
     isGrabbing = true;
 }
 
