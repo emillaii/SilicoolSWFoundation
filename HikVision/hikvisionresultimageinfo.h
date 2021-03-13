@@ -2,8 +2,9 @@
 #define HIKVISIONRESULTIMAGEINFO_H
 
 #include "scvision.h"
+#include "hikvision_global.h"
 
-class HikVisionResultImageInfo : public PRResultImageInfo
+class HIKVISIONSHARED_EXPORT HikVisionResultImageInfo : public PRResultImageInfo
 {
     Q_OBJECT
 

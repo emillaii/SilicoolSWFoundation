@@ -6,6 +6,7 @@
 
 QT += remoteobjects
 QT += quick
+CONFIG += console
 
 TARGET = HikVision
 TEMPLATE = lib
@@ -25,20 +26,25 @@ INCLUDEPATH +=  ../UtilitiesLib
 INCLUDEPATH +=   ../Utilities     \
                  ../SCVision \
                  ../SCMotion \
-                 ../ThirdPartyLib/zmq
+                 ../ThirdPartyLib/zmq \
+                 ../Libs/HikLibs/Includes \
+                 ../Libs/HikLibs/Libraries/Common/MvRender/include
 
-LIBS += ../SCLibs/utilities.lib
-LIBS += ../SCLibs/SCVision.lib
+#QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator' uiAccess='false'"
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+DESTDIR = ./Release
+OBJECTS_DIR = ./Release/Objs
+MOC_DIR = ./Release/Mocs
+LIBS += ../../SCLibs/utilities.lib
+LIBS += ../../SCLibs/SCVision.lib
+LIBS += ../../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
+LIBS += ../../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
 
 SOURCES += \
         hikvision.cpp
 
 HEADERS += \
+        defineforhik.h \
         hikvision.h \
         hikvision_global.h  \
         hikvisionlocationconfig.h \
@@ -48,3 +54,10 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+CONFIG(debug, debug|release){
+    DESTDIR =$$PWD/../VisionMasterTest/xdebug
+}else{
+    DESTDIR =$$PWD/../VisionMasterTest/xrelease
+}
+

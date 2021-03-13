@@ -6,33 +6,25 @@
 #include "hikvisionresultimageinfo.h"
 #include "scvision.h"
 #include <QObject>
+#include "hikvision_global.h"
+#include "defineforhik.h"
+#include "QThread"
+#include  <QtDebug>
 
-class HikVision : public SCVision
+class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
     Q_OBJECT
 public:
-    explicit HikVision(QObject *parent = nullptr)
-    {
-        // load vision master
-    }
-    ~HikVision()
-    {
-        // unload vision master
-    }
+    //HikVision();
+    explicit HikVision(QObject *parent = nullptr);
+
+    ~HikVision();
+
 
     // SCVision interface
 public:
-    bool performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
-    {
-        HikVisionLocationConfig *hikVLCfg = qobject_cast<HikVisionLocationConfig *>(prConfig);
-        SC_ASSERT(hikVLCfg != nullptr);
+    bool performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult);
 
-        HikVisionResultImageInfo *hikResultImageInfo = new HikVisionResultImageInfo();
-        (*resultImageInfo) = hikResultImageInfo;
-
-        // TBD
-        return true;
-    }
     bool performPr(QImage &image,
                    VisionLocationConfig *prConfig,
                    PRResultImageInfo **resultImageInfo,
@@ -74,6 +66,26 @@ public:
         // TBD
         return true;
     }
+
+public:
+    void Close();
+
+private:
+    void*    m_handle = nullptr;            // CH: 操作句柄
+    unsigned int m_nMatchPtNum;    // CH: 匹配点数量 | EN: Number of matching points
+    CDefine nCDfine;
+
+    int Init();
+    static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO * const pstInputPlatformInfo, void * const pUser);
+    int CallBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO * const pstInputPlatformInfo);
+
+    int CopyModuResultByModu(IMVS_PF_MODU_RES_INFO * const pstPFModuResInfoList);
+    int CopyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST * const pstPFModuResInfoList);
+
+    const QString mHikVisionMasterServerPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\Server\\VisionMasterServer.exe";
+
+    const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
+    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\baslerTestGray8.sol";
 };
 
 #endif    // HIKVISION_H
