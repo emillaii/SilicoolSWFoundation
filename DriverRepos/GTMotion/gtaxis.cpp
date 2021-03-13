@@ -263,7 +263,7 @@ void GTAxis::velocityMoveImpl(Direction dir, double vel, double acc)
     {
         TJogPrm jogParam;
         checkResult1(GTN_GetJogPrm(coreNo, index, &jogParam));
-        jogParam.acc = acc / AccCoeff;
+        jogParam.acc = acc * gtAxisConfig->scale() / AccCoeff;
         jogParam.dec = jogParam.acc;
         checkResult1(GTN_SetJogPrm(coreNo, index, &jogParam));
     }
@@ -272,7 +272,7 @@ void GTAxis::velocityMoveImpl(Direction dir, double vel, double acc)
         qCCritical(motionCate()) << se.what();
     }
 
-    vel /= VelCoeff;
+    vel = vel * gtAxisConfig->scale() / VelCoeff;
     if (dir == Direction::Negative)
     {
         vel *= -1;
