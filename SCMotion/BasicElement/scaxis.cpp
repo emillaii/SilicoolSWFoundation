@@ -276,6 +276,7 @@ void SCAxis::stepMove(double step, bool waitDone, double precision, int timeout)
             scaleMaxAcc(nextMoveAccRatio);
         }
         currentTargetPos = targetPos;
+        axisMoveTimer.start();
         moveToImpl(targetPos);
     });
     m_hasStop = false;
@@ -363,9 +364,26 @@ void SCAxis::tryToMove(double targetPos, uint checkInterval, int stepCount, doub
 
 void SCAxis::waitProfilerStopped(double targetPos)
 {
-    if (!isRunning() && isArrivedPos(targetPos, getCurrentOutputPos(), getProfilerPrecision()))
+    const int CheckRunningDelayAfterMove = 3;
+    int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
+    if(remainedDelay > 0)
     {
-        return;
+        QThread::msleep(remainedDelay);
+    }
+
+    if (!isRunning())
+    {
+        if(m_config->advancedAxisConfig()->checkProfilerPrecision())
+        {
+            if(isArrivedPos(targetPos, getCurrentOutputPos(), getProfilerPrecision()))
+            {
+                return;
+            }
+        }
+        else
+        {
+            return;
+        }
     }
 
     ErrorHandler::tryToHandleError(
@@ -386,15 +404,18 @@ void SCAxis::waitProfilerStopped(double targetPos)
                     qCWarning(motionCate()) << "Waiting axis stopped..." << name();
                 }
             }
-            prfPos = getCurrentOutputPos();
-            if (isArrivedPos(targetPos, prfPos, getProfilerPrecision()))
+            if(m_config->advancedAxisConfig()->checkProfilerPrecision())
             {
-                return;
-            }
-            else
-            {
-                throw ActionError("Axis",
-                                  QObject::tr("Axis %1 may be stopped! Target pos %2! Profiler pos: %3").arg(name()).arg(targetPos).arg(prfPos));
+                prfPos = getCurrentOutputPos();
+                if (isArrivedPos(targetPos, prfPos, getProfilerPrecision()))
+                {
+                    return;
+                }
+                else
+                {
+                    throw ActionError("Axis",
+                                      QObject::tr("Axis %1 may be stopped! Target pos %2! Profiler pos: %3").arg(name()).arg(targetPos).arg(prfPos));
+                }
             }
         },
         [&] {
@@ -575,7 +596,12 @@ void SCAxis::setNextMoveVelAcc(double vel, double acc)
 
 void SCAxis::jogMove(int direction)
 {
-    jogMoveWithVel(direction, m_config->advancedAxisConfig()->jogMoveMaxVel());
+    double vel = m_config->advancedAxisConfig()->jogMoveMaxVel();
+    if(!m_config->advancedAxisConfig()->useSoftLimit())
+    {
+        vel = m_config->maxVel() * m_config->velocityRatio();
+    }
+    jogMoveWithVel(direction, vel);
 }
 
 void SCAxis::jogMoveWithVel(int direction, double velocity)
@@ -662,7 +688,7 @@ void SCAxis::velocityMove(Direction dir, double vel, double acc)
     }
     else
     {
-        throw SilicolAbort(tr("Can not move on velocity mode if useSoftLimit!"), EX_LOCATION);
+        throw SilicolAbort(tr("Can not move on velocity mode if useSoftLimit! Axis: %1").arg(name()), EX_LOCATION);
     }
 }
 
@@ -1188,6 +1214,7 @@ void SCAxis::absMoveImpl(double targetPos, bool checkRunning)
             scaleMaxAcc(nextMoveAccRatio);
         }
         currentTargetPos = targetPos;
+        axisMoveTimer.start();
         moveToImpl(targetPos);
     });
 }
@@ -1218,7 +1245,7 @@ double SCAxis::getProfilerPrecision() const
     double precision = m_config->advancedAxisConfig()->maxCompensation();
     if (precision <= 0)
     {
-        precision = MinStep;
+        precision = 1.01 / m_config->scale();
     }
     return precision;
 }

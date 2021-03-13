@@ -415,6 +415,8 @@ private:
     double currentVelRatio = -1;
     double currentAccRatio = -1;
 
+    HighPrecisionTimer axisMoveTimer;
+
     bool m_isSoftLandDown = false;
 };
 

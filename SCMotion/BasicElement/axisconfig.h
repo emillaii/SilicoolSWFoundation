@@ -30,6 +30,7 @@ class SCMOTIONSHARED_EXPORT AdvancedAxisConfig : public ConfigObject
     Q_PROPERTY(int homeSettlingPricision READ homeSettlingPricision WRITE setHomeSettlingPricision NOTIFY homeSettlingPricisionChanged)
     Q_PROPERTY(int homeSettlingTimeout READ homeSettlingTimeout WRITE setHomeSettlingTimeout NOTIFY homeSettlingTimeoutChanged)
 
+    Q_PROPERTY(bool checkProfilerPrecision READ checkProfilerPrecision WRITE setCheckProfilerPrecision NOTIFY checkProfilerPrecisionChanged)
     Q_PROPERTY(double maxCompensation READ maxCompensation WRITE setMaxCompensation NOTIFY maxCompensationChanged)
 
     Q_PROPERTY(bool settlingByAppLayer READ settlingByAppLayer WRITE setSettlingByAppLayer NOTIFY settlingByAppLayerChanged)
@@ -134,6 +135,11 @@ public:
     bool respondToGlobalVelRatioChange() const
     {
         return m_respondToGlobalVelRatioChange;
+    }
+
+    bool checkProfilerPrecision() const
+    {
+        return m_checkProfilerPrecision;
     }
 
 public slots:
@@ -281,6 +287,15 @@ public slots:
         emit respondToGlobalVelRatioChangeChanged(m_respondToGlobalVelRatioChange);
     }
 
+    void setCheckProfilerPrecision(bool checkProfilerPrecision)
+    {
+        if (m_checkProfilerPrecision == checkProfilerPrecision)
+            return;
+
+        m_checkProfilerPrecision = checkProfilerPrecision;
+        emit checkProfilerPrecisionChanged(m_checkProfilerPrecision);
+    }
+
 signals:
     void jogMovableChanged(bool jogMovable);
 
@@ -314,6 +329,8 @@ signals:
 
     void respondToGlobalVelRatioChangeChanged(bool respondToGlobalVelRatioChange);
 
+    void checkProfilerPrecisionChanged(bool checkProfilerPrecision);
+
 private:
     HomeExecutor m_homeExecutor{ Controller };
     QString m_startHomeDoName;
@@ -325,12 +342,13 @@ private:
     int m_resetDriverTime = -1;
     bool m_needHome = true;
     bool m_useSoftLimit = true;
-    int m_homeSettlingWindow = 10;
+    int m_homeSettlingWindow = 30;
     int m_homeSettlingPricision = -1;
     int m_homeSettlingTimeout = 3000;
     double m_maxCompensation = -1;
     double m_jogMoveMaxVel = 100;
     bool m_respondToGlobalVelRatioChange = true;
+    bool m_checkProfilerPrecision = true;
 };
 
 class SCMOTIONSHARED_EXPORT AxisConfig : public ConfigObject
