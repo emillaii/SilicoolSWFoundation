@@ -4,6 +4,7 @@ SCVacuum::SCVacuum(QString name, QObject *parent) : QObject(parent)
 {
     setObjectName(name);
     MotionElementContainer::getIns()->registerItem<SCVacuum>(name, this);
+    schedulingTimer.setSingleShot(true);
     connect(&schedulingTimer, &QTimer::timeout, this, &SCVacuum::closeBlowOutput, Qt::DirectConnection);
 }
 
