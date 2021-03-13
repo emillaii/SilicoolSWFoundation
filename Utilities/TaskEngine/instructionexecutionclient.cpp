@@ -61,13 +61,15 @@ QVariant InstructionExecutionClient::getInstructionExecutionResult(const QString
     }
     silicoolWait(
         -1, [&] { return instructionExecuteResults[uuid].isExecutionDone; }, 1);
-    InstructionExecuteResult ier = instructionExecuteResults[uuid];
-    instructionExecuteResults.remove(uuid);
+    auto ier = instructionExecuteResults.take(uuid);
     if (!ier.errMsg.isEmpty())
     {
         throw SilicolAbort(ier.errMsg);
     }
-    return ier.result;
+    else
+    {
+        return ier.result;
+    }
 }
 
 InstructionExecutorReplica *InstructionExecutionClient::getIeReplica() const

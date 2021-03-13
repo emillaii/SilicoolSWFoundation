@@ -117,15 +117,19 @@ QVariant MotionManager::getInstructionExecutionResult(QString uuid)
     {
         throw SilicolAbort(tr("Instruction with uuid %1 was not watched!").arg(uuid), EX_LOCATION);
     }
-    InstructionExecuteResult *ier = &instructionExecuteResults[uuid];
+    InstructionExecuteResult *pier = &instructionExecuteResults[uuid];
     silicoolWait(
-        -1, [&] { return ier->isExecutionDone; }, 1);
-    instructionExecuteResults.remove(uuid);
-    if (!ier->errMsg.isEmpty())
+        -1, [pier] { return pier->isExecutionDone; }, 1);
+
+    auto ier = instructionExecuteResults.take(uuid);
+    if (!ier.errMsg.isEmpty())
     {
-        throw SilicolAbort(ier->errMsg);
+        throw SilicolAbort(ier.errMsg);
     }
-    return ier->result;
+    else
+    {
+        return ier.result;
+    }
 }
 
 QVariant MotionManager::runInstruction(int elementType, QString elementName, QString cmd, QVariantList args)

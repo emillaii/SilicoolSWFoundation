@@ -27,13 +27,14 @@ QVariant ObjectLivedThreadInstructionExecutor::getInsResult(QString uuid)
 {
     silicoolWait(
         -1, [&] { return insExeResults[uuid].isExecutionDone; }, 1);
-    if (!insExeResults[uuid].errMsg.isEmpty())
+    auto ier = insExeResults.take(uuid);
+    if (!ier.errMsg.isEmpty())
     {
-        throw SilicolAbort(insExeResults[uuid].errMsg);
+        throw SilicolAbort(ier.errMsg);
     }
     else
     {
-        return insExeResults[uuid].result;
+        return ier.result;
     }
 }
 
