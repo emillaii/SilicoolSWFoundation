@@ -362,9 +362,11 @@ void VisionManager::startMoveAndPr()
     logFile.open(QIODevice::WriteOnly);
     QString title = "OffsetX,OffsetY,OffsetTheta\r\n";
     logFile.write(title.toUtf8());
+    logFile.flush();
 
     PrOffset prOffset;
-    for (int i = 0; i < visionConfigManager->m_moveAndPrConfig->times(); i++)
+    auto moveAndPrCfg = visionConfigManager->m_moveAndPrConfig;
+    for (int i = 0; i < moveAndPrCfg->times(); i++)
     {
         if (!runMoveAndPr)
         {
@@ -374,11 +376,16 @@ void VisionManager::startMoveAndPr()
         MotionManager::getIns().moveMultiAxes(axisNames, pos1);
         MotionManager::getIns().moveMultiAxes(axisNames, pos2);
         MotionManager::getIns().moveMultiAxes(axisNames, prPos);
+        if(moveAndPrCfg->delayBeforePr() > 0)
+        {
+            QThread::msleep(moveAndPrCfg->delayBeforePr());
+        }
         if (!vl->performPR(prOffset))
         {
             throw SilicolAbort(tr("%1 perform PR failed!").arg(vlName));
         }
         logFile.write((prOffset.toPureString() + "\r\n").toUtf8());
+        logFile.flush();
     }
     logFile.close();
 }

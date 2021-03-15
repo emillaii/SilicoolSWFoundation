@@ -99,6 +99,7 @@ class MoveAndPrConfig : public ConfigObject
     Q_PROPERTY(ConfigObjectArray *axisMoveConfigs READ axisMoveConfigs)
     Q_PROPERTY(
         QString visionLocationName READ visionLocationName WRITE setVisionLocationName NOTIFY visionLocationNameChanged)
+    Q_PROPERTY(int delayBeforePr READ delayBeforePr WRITE setDelayBeforePr NOTIFY delayBeforePrChanged)
     Q_PROPERTY(int times READ times WRITE setTimes NOTIFY timesChanged)
 
 public:
@@ -123,6 +124,11 @@ public:
         return m_times;
     }
 
+    int delayBeforePr() const
+    {
+        return m_delayBeforePr;
+    }
+
 public slots:
     void setVisionLocationName(QString visionLocationName)
     {
@@ -142,15 +148,27 @@ public slots:
         emit timesChanged(m_times);
     }
 
+    void setDelayBeforePr(int delayBeforePr)
+    {
+        if (m_delayBeforePr == delayBeforePr)
+            return;
+
+        m_delayBeforePr = delayBeforePr;
+        emit delayBeforePrChanged(m_delayBeforePr);
+    }
+
 signals:
     void visionLocationNameChanged(QString visionLocationName);
 
     void timesChanged(int times);
 
+    void delayBeforePrChanged(int delayBeforePr);
+
 private:
     ConfigObjectArray *m_axisMoveConfigs;
     QString m_visionLocationName;
     int m_times = 30;
+    int m_delayBeforePr = -1;
 };
 
 #endif    // MOVEANDPRCONFIG_H
