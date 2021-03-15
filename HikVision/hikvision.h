@@ -10,6 +10,32 @@
 #include "defineforhik.h"
 #include "QThread"
 #include  <QtDebug>
+#include <QtConcurrent/QtConcurrent>
+
+class CTimeSpent
+{
+
+public:
+    CTimeSpent()
+    {
+        time_Start = 0.0;
+        time_End = 0.0;
+    }
+    void StartClock()
+    {
+        time_Start = (double)clock();
+    }
+
+    void EndClock(QString msg)
+    {
+        time_End = (double)clock();
+        qDebug()<<msg<<(time_End - time_Start)/1000.0<<"s";
+    }
+
+private:
+    double time_Start;
+    double time_End;
+};
 
 class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
@@ -19,7 +45,6 @@ public:
     explicit HikVision(QObject *parent = nullptr);
 
     ~HikVision();
-
 
     // SCVision interface
 public:
@@ -74,6 +99,7 @@ private:
     void*    m_handle = nullptr;            // CH: 操作句柄
     unsigned int m_nMatchPtNum;    // CH: 匹配点数量 | EN: Number of matching points
     CDefine nCDfine;
+    CTimeSpent mCTimeSpent;
 
     int Init();
     static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO * const pstInputPlatformInfo, void * const pUser);
@@ -85,7 +111,8 @@ private:
     const QString mHikVisionMasterServerPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\Server\\VisionMasterServer.exe";
 
     const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
-    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\baslerTestGray8.sol";
+    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";//MatchTemplateGray8.sol
 };
+
 
 #endif    // HIKVISION_H

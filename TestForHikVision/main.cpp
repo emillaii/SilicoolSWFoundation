@@ -1,29 +1,27 @@
+#include <windows.h>
 #include <stdio.h>
 #include <QCoreApplication>
 #include <QTextStream>
 #include "../HikVision/hikvision.h"
-#include <windows.h>
 #include <string.h>
-#include <tlhelp32.h>
 #include <QTextCodec>
 #include <QDebug>
+#include <QtCore/QCoreApplication>
 
-void StartClock();
-void EndClock(QString msg);
-double time_Start = 0.0;
-double time_End = 0.0;
+BOOL HandlerRoutine(DWORD CtrlType);
+HikVision mhik;
+bool isClose = false;
+
+CTimeSpent mCTimeSpent;
 
 int main(int argc, char *argv[])
 {
+     SetConsoleCtrlHandler((PHANDLER_ROUTINE)HandlerRoutine,TRUE);
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QCoreApplication a(argc, argv);
     QTextStream in(stdin);//
     QTextStream out(stdout);//
-
-    StartClock();
-    HikVision hik;
-    EndClock("HikVision init Time spent:");
 
     QImage myImage1; VisionLocationConfig *prConfig; PRResultImageInfo *resultImageInfo; PRResultStruct prResult;
 
@@ -33,50 +31,80 @@ int main(int argc, char *argv[])
     qDebug()<<"image.width():"<<myImage1.width()<<"image.height()"<<myImage1.height();
 
     //rgb to gray
-    QImage gray = myImage1.convertToFormat(QImage::Format_Grayscale8);//QImage::Format_Grayscale8
+    QImage gray = myImage1.convertToFormat(QImage::Format_Grayscale8);//QImage::Format_Grayscale8//Format_Indexed8
     //gray.save("SaveTest.png","PNG",-1);
+    while(!isClose)
+    {
+        QString str;
+        qDebug()<<"Please input 1 or 0: input 1 is PR, input 0 is break";
 
-    StartClock();
-    int i = hik.performPr(gray,prConfig,&resultImageInfo,prResult);
-    EndClock("performPr Time spent:");
+        QTextStream in(stdin);
+        in>>str;
+        if(str == QString("1"))
+        {
+            mCTimeSpent.StartClock();
+            qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
+            int i = mhik.performPr(gray,prConfig,&resultImageInfo,prResult);
+            mCTimeSpent.EndClock("performPr Time spent:");
+        }
+        else if(str == QString("0"))
+        {
+            break;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    mhik.Close();
+    qDebug()<<"isClosed";
 
-    hik.Close();
-    system("pause");
+    //system("pause");
     return a.exec();
 }
 
-void StartClock()
-{
-    time_Start = (double)clock();
-}
-void EndClock(QString msg)
-{
-    time_End = (double)clock();
-    qDebug()<<msg<<(time_End - time_Start)/1000.0<<"s";
-}
+//bool KillProcess(QString ProcessName)
+//{
+//    bool result = false;
+//    QString str1;
+//    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0) ;
+//    PROCESSENTRY32 pInfo;
+//    pInfo.dwSize = sizeof(pInfo);
+//    Process32First(hSnapShot, &pInfo);
+//    do
+//    {
+//        str1 = (QString::fromUtf16(reinterpret_cast<const unsigned short *>(pInfo.szExeFile)));
+//        if (str1 == ProcessName)
+//        {
+//            result = true;
+//            QString cmd;
+//            cmd = QString("taskkill /F /PID %1 /T").arg(pInfo.th32ProcessID);
+//            qDebug()<<cmd<<"VisionMasterServer.exe";
+//            system(cmd.toUtf8());
+//        }
+//    } while(Process32Next(hSnapShot, &pInfo) );
+//    return result;
+//}
 
-bool KillProcess(QString ProcessName)
-{
-    bool result = false;
-    QString str1;
 
-    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0) ;
-    PROCESSENTRY32 pInfo;
-    pInfo.dwSize = sizeof(pInfo);
-
-    Process32First(hSnapShot, &pInfo);
-    do
+BOOL HandlerRoutine(DWORD dwCtrlType)
+{    switch (dwCtrlType)
     {
-        str1 = (QString::fromUtf16(reinterpret_cast<const unsigned short *>(pInfo.szExeFile)));
-        if (str1 == ProcessName)
-        {
-            result = true;
-            QString cmd;
-            cmd = QString("taskkill /F /PID %1 /T").arg(pInfo.th32ProcessID);
-            qDebug()<<cmd<<"VisionMasterServer.exe";
-            system(cmd.toUtf8());
-        }
-    } while(Process32Next(hSnapShot, &pInfo) );
-    return result;
-}
+    case CTRL_C_EVENT:
+        printf("ctrl+c\n") ;
+        return TRUE;
+    case CTRL_CLOSE_EVENT:
+        //mhik.Close();
 
+        printf("ctrl close\n") ;
+        return TRUE;
+    case CTRL_BREAK_EVENT:
+        printf("CTRL_BREAK_EVENT\n") ;
+    case CTRL_LOGOFF_EVENT:
+        printf("CTRL_LOGOFF_EVENT\n") ;
+    case CTRL_SHUTDOWN_EVENT:
+        printf("CTRL_SHUTDOWN_EVENT\n") ;
+    default:
+        return FALSE;
+    }
+}
