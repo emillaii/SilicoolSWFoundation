@@ -16,7 +16,7 @@ CTimeSpent mCTimeSpent;
 
 int main(int argc, char *argv[])
 {
-     SetConsoleCtrlHandler((PHANDLER_ROUTINE)HandlerRoutine,TRUE);
+    SetConsoleCtrlHandler((PHANDLER_ROUTINE)HandlerRoutine,TRUE);
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QCoreApplication a(argc, argv);
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     //gray.save("SaveTest.png","PNG",-1);
     while(!isClose)
     {
+        QThread::msleep(5);
         QString str;
         qDebug()<<"Please input 1 or 0: input 1 is PR, input 0 is break";
 
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
         }
     }
     mhik.Close();
-    qDebug()<<"isClosed";
+    //qDebug()<<"isClosed";
 
     //system("pause");
     return a.exec();
@@ -94,8 +95,8 @@ BOOL HandlerRoutine(DWORD dwCtrlType)
         printf("ctrl+c\n") ;
         return TRUE;
     case CTRL_CLOSE_EVENT:
-        //mhik.Close();
-
+        isClose = true;
+        mhik.Close();
         printf("ctrl close\n") ;
         return TRUE;
     case CTRL_BREAK_EVENT:

@@ -112,6 +112,7 @@ private:
 
     const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
     const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";//MatchTemplateGray8.sol
+    int GetResultFromProcess2(IN IMVS_PF_MODU_RES_INFO * const pstPFModuResInfoList);
 };
 
 
