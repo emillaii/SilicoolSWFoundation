@@ -366,16 +366,16 @@ void SCAxis::waitProfilerStopped(double targetPos)
 {
     const int CheckRunningDelayAfterMove = 3;
     int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
-    if(remainedDelay > 0)
+    if (remainedDelay > 0)
     {
         QThread::msleep(remainedDelay);
     }
 
     if (!isRunning())
     {
-        if(m_config->advancedAxisConfig()->checkProfilerPrecision())
+        if (m_config->advancedAxisConfig()->checkProfilerPrecision())
         {
-            if(isArrivedPos(targetPos, getCurrentOutputPos(), getProfilerPrecision()))
+            if (isArrivedPos(targetPos, getCurrentOutputPos(), getProfilerPrecision()))
             {
                 return;
             }
@@ -404,17 +404,22 @@ void SCAxis::waitProfilerStopped(double targetPos)
                     qCWarning(motionCate()) << "Waiting axis stopped..." << name();
                 }
             }
-            if(m_config->advancedAxisConfig()->checkProfilerPrecision())
+            if (m_config->advancedAxisConfig()->checkProfilerPrecision())
             {
-                prfPos = getCurrentOutputPos();
-                if (isArrivedPos(targetPos, prfPos, getProfilerPrecision()))
+                timer.restart();
+                while (true)
                 {
-                    return;
-                }
-                else
-                {
-                    throw ActionError("Axis",
-                                      QObject::tr("Axis %1 may be stopped! Target pos %2! Profiler pos: %3").arg(name()).arg(targetPos).arg(prfPos));
+                    prfPos = getCurrentOutputPos();
+                    if (isArrivedPos(targetPos, prfPos, getProfilerPrecision()))
+                    {
+                        return;
+                    }
+                    if (timer.elapsed() > 200)
+                    {
+                        throw ActionError(
+                            "Axis", QObject::tr("Axis %1 may be stopped! Target pos %2! Profiler pos: %3").arg(name()).arg(targetPos).arg(prfPos));
+                    }
+                    QThread::msleep(1);
                 }
             }
         },
@@ -597,7 +602,7 @@ void SCAxis::setNextMoveVelAcc(double vel, double acc)
 void SCAxis::jogMove(int direction)
 {
     double vel = m_config->advancedAxisConfig()->jogMoveMaxVel();
-    if(!m_config->advancedAxisConfig()->useSoftLimit())
+    if (!m_config->advancedAxisConfig()->useSoftLimit())
     {
         vel = m_config->maxVel() * m_config->velocityRatio();
     }
@@ -967,21 +972,21 @@ void SCAxis::waitGreaterThanPos(double targetPos, double precision, int timeout)
     ErrorHandler::tryToHandleError([&] {
         QElapsedTimer timer;
         timer.start();
+        bool profilerStopped = false;
         while (true)
         {
             if (getFeedbackPos(-1) > (targetPos - precision))
             {
                 return;
             }
-            if (!isRunning())
+            if (!profilerStopped)
             {
-                throw SilicolAbort(QObject::tr("Axis %1 was stopped! Wait greater than pos "
-                                               "failed! Target pos: "
-                                               "%2, Current pos: %3, Compare precision: %4")
-                                       .arg(name())
-                                       .arg(targetPos)
-                                       .arg(getFeedbackPos())
-                                       .arg(precision));
+                if (!isRunning())
+                {
+                    profilerStopped = true;
+                    timeout = 3000;
+                    timer.restart();
+                }
             }
 
             QThread::msleep(1);
@@ -1003,21 +1008,21 @@ void SCAxis::waitLessThanPos(double targetPos, double precision, int timeout)
     ErrorHandler::tryToHandleError([&] {
         QElapsedTimer timer;
         timer.start();
+        bool profilerStopped = false;
         while (true)
         {
             if (getFeedbackPos(-1) < (targetPos + precision))
             {
                 return;
             }
-            if (!isRunning())
+            if (!profilerStopped)
             {
-                throw SilicolAbort(QObject::tr("Axis %1 was stopped! Wait less than pos failed! "
-                                               "Target pos: "
-                                               "%2, Current pos: %3, Compare precision: %4")
-                                       .arg(name())
-                                       .arg(targetPos)
-                                       .arg(getFeedbackPos())
-                                       .arg(precision));
+                if (!isRunning())
+                {
+                    profilerStopped = true;
+                    timeout = 3000;
+                    timer.restart();
+                }
             }
 
             QThread::msleep(1);
@@ -1039,21 +1044,21 @@ void SCAxis::waitApproachPos(double targetPos, double precision, int timeout)
     ErrorHandler::tryToHandleError([&] {
         QElapsedTimer timer;
         timer.start();
+        bool profilerStopped = false;
         while (true)
         {
             if (qAbs(targetPos - getFeedbackPos(-1)) < precision)
             {
                 return;
             }
-            if (!isRunning())
+            if (!profilerStopped)
             {
-                throw SilicolAbort(QObject::tr("Axis %1 was stopped! Wait approach pos failed! "
-                                               "Target pos: "
-                                               "%2, Current pos: %3, Compare precision: %4")
-                                       .arg(name())
-                                       .arg(targetPos)
-                                       .arg(getFeedbackPos())
-                                       .arg(precision));
+                if (!isRunning())
+                {
+                    profilerStopped = true;
+                    timeout = 3000;
+                    timer.restart();
+                }
             }
 
             QThread::msleep(1);
