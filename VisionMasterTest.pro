@@ -1,5 +1,7 @@
 TEMPLATE = subdirs
 
+Qt += concurrent
+
 SUBDIRS += \
     HikVision
 SUBDIRS += \
