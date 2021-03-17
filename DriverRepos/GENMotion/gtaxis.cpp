@@ -293,7 +293,7 @@ void GTAxis::moveToImpl(double targetPos)
 {
     setMoveMode(Pos);
 
-    short res = GTN_SetPos(coreNo, index, targetPos * gtAxisConfig->scale());
+    short res = GTN_SetPos(coreNo, index, round(targetPos * gtAxisConfig->scale()));
     CheckGTAxisResult(res, "GTN_SetPos failed");
     res = GTN_Update(coreNo, 1 << (index - 1));
     CheckGTAxisResult(res, "GTN_Update failed");

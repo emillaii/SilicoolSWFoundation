@@ -179,7 +179,7 @@ void ElmoDriver::clearErrorImpl() {}
 
 void ElmoDriver::moveToImpl(double targetPos)
 {
-    sendCommand(QString("PA=%1").arg(int(targetPos * elmoConfig->scale())));
+    sendCommand(QString("PA=%1").arg(static_cast<int>(round(targetPos * elmoConfig->scale()))));
     sendCommand(QString("BG"));
 }
 

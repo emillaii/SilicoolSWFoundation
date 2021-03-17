@@ -161,7 +161,7 @@ void PACVcm::clearErrorImpl()
 void PACVcm::moveToImpl(double targetPos)
 {
     setServoMode(SM_POS);
-    if (!PAC_MoveAbs(vcmAddress, targetPos * m_vcmConfig->scale(), false))
+    if (!PAC_MoveAbs(vcmAddress, round(targetPos * m_vcmConfig->scale()), false))
     {
         throw ActionError(name(), "PAC_MoveAbs failed!");
     }
