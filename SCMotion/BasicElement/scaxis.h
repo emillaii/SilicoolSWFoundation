@@ -276,6 +276,7 @@ protected:
     void checkState(bool checkHasHome = true);
     void checkIsRunning();
     void checkInLimitRange(double targetPos) const;
+    void setHasHome(bool value);
 
     ///
     /// \brief initImpl
