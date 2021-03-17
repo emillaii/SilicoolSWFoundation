@@ -1,12 +1,12 @@
-#include <windows.h>
-#include <stdio.h>
-#include <QCoreApplication>
-#include <QTextStream>
 #include "../HikVision/hikvision.h"
-#include <string.h>
-#include <QTextCodec>
+#include <QCoreApplication>
 #include <QDebug>
+#include <QTextCodec>
+#include <QTextStream>
 #include <QtCore/QCoreApplication>
+#include <stdio.h>
+#include <string.h>
+#include <windows.h>
 
 BOOL HandlerRoutine(DWORD CtrlType);
 HikVision mhik;
@@ -16,38 +16,42 @@ CTimeSpent mCTimeSpent;
 
 int main(int argc, char *argv[])
 {
-     SetConsoleCtrlHandler((PHANDLER_ROUTINE)HandlerRoutine,TRUE);
+    SetConsoleCtrlHandler((PHANDLER_ROUTINE)HandlerRoutine, TRUE);
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QCoreApplication a(argc, argv);
-    QTextStream in(stdin);//
-    QTextStream out(stdout);//
+    QTextStream in(stdin);      //
+    QTextStream out(stdout);    //
 
-    QImage myImage1; VisionLocationConfig *prConfig; PRResultImageInfo *resultImageInfo; PRResultStruct prResult;
+    QImage myImage1;
+    VisionLocationConfig *prConfig;
+    PRResultImageInfo *resultImageInfo;
+    PRResultStruct prResult;
 
-    QString mPicturePath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\BaslerPicture.png";
-    myImage1  = QImage(mPicturePath.toUtf8());
+    QString mPicturePath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\LensUplookRectLocation_18_39_14_634.png";
+    myImage1 = QImage(mPicturePath.toUtf8());
 
-    qDebug()<<"image.width():"<<myImage1.width()<<"image.height()"<<myImage1.height();
+    qDebug() << "image.width():" << myImage1.width() << "image.height()" << myImage1.height();
 
-    //rgb to gray
-    QImage gray = myImage1.convertToFormat(QImage::Format_Grayscale8);//QImage::Format_Grayscale8//Format_Indexed8
-    //gray.save("SaveTest.png","PNG",-1);
-    while(!isClose)
+    // rgb to gray
+    QImage gray = myImage1.convertToFormat(QImage::Format_Grayscale8);    // QImage::Format_Grayscale8//Format_Indexed8
+    // gray.save("SaveTest.png","PNG",-1);
+    while (!isClose)
     {
+        QThread::msleep(5);
         QString str;
-        qDebug()<<"Please input 1 or 0: input 1 is PR, input 0 is break";
+        qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
 
         QTextStream in(stdin);
-        in>>str;
-        if(str == QString("1"))
+        in >> str;
+        if (str == QString("1"))
         {
             mCTimeSpent.StartClock();
             qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
-            int i = mhik.performPr(gray,prConfig,&resultImageInfo,prResult);
+            int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
             mCTimeSpent.EndClock("performPr Time spent:");
         }
-        else if(str == QString("0"))
+        else if (str == QString("0"))
         {
             break;
         }
@@ -57,13 +61,13 @@ int main(int argc, char *argv[])
         }
     }
     mhik.Close();
-    qDebug()<<"isClosed";
+    // qDebug()<<"isClosed";
 
-    //system("pause");
+    // system("pause");
     return a.exec();
 }
 
-//bool KillProcess(QString ProcessName)
+// bool KillProcess(QString ProcessName)
 //{
 //    bool result = false;
 //    QString str1;
@@ -86,25 +90,25 @@ int main(int argc, char *argv[])
 //    return result;
 //}
 
-
 BOOL HandlerRoutine(DWORD dwCtrlType)
-{    switch (dwCtrlType)
+{
+    switch (dwCtrlType)
     {
-    case CTRL_C_EVENT:
-        printf("ctrl+c\n") ;
-        return TRUE;
-    case CTRL_CLOSE_EVENT:
-        //mhik.Close();
-
-        printf("ctrl close\n") ;
-        return TRUE;
-    case CTRL_BREAK_EVENT:
-        printf("CTRL_BREAK_EVENT\n") ;
-    case CTRL_LOGOFF_EVENT:
-        printf("CTRL_LOGOFF_EVENT\n") ;
-    case CTRL_SHUTDOWN_EVENT:
-        printf("CTRL_SHUTDOWN_EVENT\n") ;
-    default:
-        return FALSE;
+        case CTRL_C_EVENT:
+            printf("ctrl+c\n");
+            return TRUE;
+        case CTRL_CLOSE_EVENT:
+            isClose = true;
+            mhik.Close();
+            printf("ctrl close\n");
+            return TRUE;
+        case CTRL_BREAK_EVENT:
+            printf("CTRL_BREAK_EVENT\n");
+        case CTRL_LOGOFF_EVENT:
+            printf("CTRL_LOGOFF_EVENT\n");
+        case CTRL_SHUTDOWN_EVENT:
+            printf("CTRL_SHUTDOWN_EVENT\n");
+        default:
+            return FALSE;
     }
 }

@@ -1,16 +1,16 @@
 #ifndef HIKVISION_H
 #define HIKVISION_H
 
+#include "QThread"
+#include "defineforhik.h"
 #include "errorHandling/scassert.h"
+#include "hikvision_global.h"
 #include "hikvisionlocationconfig.h"
 #include "hikvisionresultimageinfo.h"
 #include "scvision.h"
 #include <QObject>
-#include "hikvision_global.h"
-#include "defineforhik.h"
-#include "QThread"
-#include  <QtDebug>
 #include <QtConcurrent/QtConcurrent>
+#include <QtDebug>
 
 class CTimeSpent
 {
@@ -29,7 +29,7 @@ public:
     void EndClock(QString msg)
     {
         time_End = (double)clock();
-        qDebug()<<msg<<(time_End - time_Start)/1000.0<<"s";
+        qDebug() << msg << (time_End - time_Start) / 1000.0 << "s";
     }
 
 private:
@@ -41,7 +41,7 @@ class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
     Q_OBJECT
 public:
-    //HikVision();
+    // HikVision();
     explicit HikVision(QObject *parent = nullptr);
 
     ~HikVision();
@@ -96,23 +96,31 @@ public:
     void Close();
 
 private:
-    void*    m_handle = nullptr;            // CH: 操作句柄
+    void *m_handle = nullptr;      // CH: 操作句柄
     unsigned int m_nMatchPtNum;    // CH: 匹配点数量 | EN: Number of matching points
     CDefine nCDfine;
     CTimeSpent mCTimeSpent;
 
     int Init();
-    static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO * const pstInputPlatformInfo, void * const pUser);
-    int CallBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO * const pstInputPlatformInfo);
+    static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo, void *const pUser);
+    int CallBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo);
 
-    int CopyModuResultByModu(IMVS_PF_MODU_RES_INFO * const pstPFModuResInfoList);
-    int CopyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST * const pstPFModuResInfoList);
+    int CopyModuResultByModu(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int CopyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
 
     const QString mHikVisionMasterServerPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\Server\\VisionMasterServer.exe";
 
     const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
-    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";//MatchTemplateGray8.sol
+    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";    // MatchTemplateGray8.sol
+    int GetResultFromProcess2(IN IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess3(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess4(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess5(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess6(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess7(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess8(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess9(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetResultFromProcess10(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
 };
-
 
 #endif    // HIKVISION_H

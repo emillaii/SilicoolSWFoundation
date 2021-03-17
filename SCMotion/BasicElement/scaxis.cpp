@@ -1113,6 +1113,16 @@ void SCAxis::checkInLimitRange(double targetPos) const
     }
 }
 
+void SCAxis::setHasHome(bool value)
+{
+    if (value)
+    {
+        qCInfo(motionCate()) << QString("%1 set has home!").arg(name());
+    }
+
+    m_hasHome = value;
+}
+
 void SCAxis::waitSettling(int window, double precision, int timeout)
 {
     QList<double> feedbackPos;
