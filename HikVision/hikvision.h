@@ -12,21 +12,21 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QtDebug>
 
-class CTimeSpent
+class SCTimeSpent
 {
 
 public:
-    CTimeSpent()
+    SCTimeSpent()
     {
         time_Start = 0.0;
         time_End = 0.0;
     }
-    void StartClock()
+    void SC_StartClock()
     {
         time_Start = (double)clock();
     }
 
-    void EndClock(QString msg)
+    void SC_EndClock(QString msg)
     {
         time_End = (double)clock();
         qDebug() << msg << (time_End - time_Start) / 1000.0 << "s";
@@ -41,9 +41,7 @@ class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
     Q_OBJECT
 public:
-    // HikVision();
     explicit HikVision(QObject *parent = nullptr);
-
     ~HikVision();
 
     // SCVision interface
@@ -67,7 +65,6 @@ public:
     {
         HikVisionResultImageInfo *hikResultImageInfo = qobject_cast<HikVisionResultImageInfo *>(resultImageInfo);
         SC_ASSERT(hikResultImageInfo != nullptr);
-
         // TBD
     }
     bool glueCheck(QImage &imageBefore,
@@ -93,39 +90,28 @@ public:
     }
 
 public:
-    void Close();
+    int SC_ShowModuleInterface(unsigned int nIndex);
+    int SC_SaveSolution(QString nSolutionPath, QString nPassWord);
+    int SC_ReloadSolution(QString nSolutionPath, QString nPassword);
+    void SC_Close();
 
 private:
-    void *m_handle = nullptr;      // CH: 操作句柄
-    unsigned int m_nMatchPtNum;    // CH: 匹配点数量 | EN: Number of matching points
-    CDefine nCDfine;
-    CTimeSpent mCTimeSpent;
-
     int Init();
     static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo, void *const pUser);
     int CallBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo);
-
     int CopyModuResultByModu(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
     int CopyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
+    int GetV32ResFromCallBack(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
+
+private:
+    void *m_handle = nullptr;
+    unsigned int m_nMatchPtNum;
+    CDefine nCDfine;
+    SCTimeSpent mCTimeSpent;
 
     const QString mHikVisionMasterServerPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\Server\\VisionMasterServer.exe";
-
     const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
     const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";    // MatchTemplateGray8.sol
-    int GetResultFromProcess2(IN IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess3(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess4(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess5(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess6(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess7(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess8(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess9(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetResultFromProcess10(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int GetV32(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
-
-public:
-    int myShowModuleInterface(unsigned int nIndex);
-    int saveSolution(QString nSolutionPath, QString nPassWord);
 };
 
 #endif    // HIKVISION_H

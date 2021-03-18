@@ -10,9 +10,7 @@
 
 BOOL HandlerRoutine(DWORD CtrlType);
 HikVision mhik;
-bool isClose = false;
-
-CTimeSpent mCTimeSpent;
+SCTimeSpent mCTimeSpent;
 
 int main(int argc, char *argv[])
 {
@@ -38,56 +36,27 @@ int main(int argc, char *argv[])
     // gray.save("SaveTest.png","PNG",-1);
 
     QString str;
-    qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
+    qDebug() << "Please input any char--myShowModuleInterface";
+    getchar();
 
-    QTextStream in(stdin);
-    in >> str;
+    mCTimeSpent.SC_StartClock();
+    qDebug() << "start myShowModuleInterface";
+    mhik.SC_ShowModuleInterface(str.toUInt());
+    // int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
+    mCTimeSpent.SC_EndClock("performPr Time spent:");
+    qDebug() << "Please input any char--saveSolution";
+    getchar();
+    mhik.SC_SaveSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol", "");
+    //    qDebug() << "Please input any char--reLoadSolution";
+    //    getchar();
+    //    mhik.reLoadSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol", "");
+    qDebug() << "Please input any char--performPr";
+    getchar();
+    int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
 
-    if (str == QString("1"))
-    {
-        mCTimeSpent.StartClock();
-        qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
-        mhik.myShowModuleInterface(str.toUInt());
-        // int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
-        mCTimeSpent.EndClock("performPr Time spent:");
-    }
-
-    QString str1;
-    in >> str1;
-
-    mhik.saveSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput111.sol", "");
-
-    //    while (!isClose)
-    //    {
-    //        QString str;
-    //        qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
-
-    //        QTextStream in(stdin);
-    //        in >> str;
-
-    //        if (str == QString("1"))
-    //        {
-    //            mCTimeSpent.StartClock();
-    //            qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
-    //            mhik.myShowModuleInterface(str.toUInt());
-    //            // int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
-    //            mCTimeSpent.EndClock("performPr Time spent:");
-    //        }
-    //        else if (str == QString("0"))
-    //        {
-    //            QString str1;
-    //            QTextStream in(stdin);
-    //            in >> str1;
-    //            mhik.saveSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput111.sol", "");
-    //            break;
-    //        }
-    //        else
-    //        {
-    //            continue;
-    //        }
-    //    }
-
-    mhik.Close();
+    qDebug() << "Please input any char";
+    getchar();
+    mhik.SC_Close();
     qDebug() << "isClosed";
 
     // system("pause");
@@ -125,9 +94,7 @@ BOOL HandlerRoutine(DWORD dwCtrlType)
             printf("ctrl+c\n");
             return TRUE;
         case CTRL_CLOSE_EVENT:
-            isClose = true;
-            mhik.Close();
-
+            mhik.SC_Close();
             printf("ctrl close\n");
             return TRUE;
         case CTRL_BREAK_EVENT:
