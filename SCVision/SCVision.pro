@@ -39,6 +39,7 @@ SOURCES += \
         VisionManager/visionmanager.cpp \
         imagesaver.cpp \
         sccamera.cpp \
+        scvision.cpp \
         visionconfigdir.cpp
 
 HEADERS += \

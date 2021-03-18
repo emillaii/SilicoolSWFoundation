@@ -12,6 +12,7 @@ VisionManager::~VisionManager()
     lscs.clear();
     if (m_vision != nullptr)
     {
+        m_vision->dispose();
         delete m_vision;
         m_vision = nullptr;
     }
@@ -108,6 +109,7 @@ void VisionManager::preInit()
 
 void VisionManager::postInit(bool checkDongle)
 {
+    m_vision->init();
     if (checkDongle && !m_vision->checkDongle())
     {
         throw SilicolAbort(tr("Vision dongle was not detected!"));
@@ -376,7 +378,7 @@ void VisionManager::startMoveAndPr()
         MotionManager::getIns().moveMultiAxes(axisNames, pos1);
         MotionManager::getIns().moveMultiAxes(axisNames, pos2);
         MotionManager::getIns().moveMultiAxes(axisNames, prPos);
-        if(moveAndPrCfg->delayBeforePr() > 0)
+        if (moveAndPrCfg->delayBeforePr() > 0)
         {
             QThread::msleep(moveAndPrCfg->delayBeforePr());
         }

@@ -48,6 +48,12 @@ class SCVISIONSHARED_EXPORT SCVision : public QObject
     Q_OBJECT
 
 public:
+    void init();
+    void dispose();
+
+    virtual void initImpl() {}
+    virtual void disposeImpl() {}
+
     virtual ~SCVision() {}
 
     ///
@@ -117,6 +123,9 @@ public:
     {
         return true;
     }
+
+private:
+    bool isInit = false;
 };
 
 #endif    // SCVISION_H
