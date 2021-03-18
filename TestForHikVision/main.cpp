@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QCoreApplication a(argc, argv);
-    QTextStream in(stdin);      //
-    QTextStream out(stdout);    //
+    /*QTextStream in(stdin);      //
+    QTextStream out(stdout);  */  //
 
     QImage myImage1;
     VisionLocationConfig *prConfig;
@@ -36,32 +36,59 @@ int main(int argc, char *argv[])
     // rgb to gray
     QImage gray = myImage1.convertToFormat(QImage::Format_Grayscale8);    // QImage::Format_Grayscale8//Format_Indexed8
     // gray.save("SaveTest.png","PNG",-1);
-    while (!isClose)
-    {
-        QThread::msleep(5);
-        QString str;
-        qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
 
-        QTextStream in(stdin);
-        in >> str;
-        if (str == QString("1"))
-        {
-            mCTimeSpent.StartClock();
-            qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
-            int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
-            mCTimeSpent.EndClock("performPr Time spent:");
-        }
-        else if (str == QString("0"))
-        {
-            break;
-        }
-        else
-        {
-            continue;
-        }
+    QString str;
+    qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
+
+    QTextStream in(stdin);
+    in >> str;
+
+    if (str == QString("1"))
+    {
+        mCTimeSpent.StartClock();
+        qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
+        mhik.myShowModuleInterface(str.toUInt());
+        // int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
+        mCTimeSpent.EndClock("performPr Time spent:");
     }
+
+    QString str1;
+    in >> str1;
+
+    mhik.saveSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput111.sol", "");
+
+    //    while (!isClose)
+    //    {
+    //        QString str;
+    //        qDebug() << "Please input 1 or 0: input 1 is PR, input 0 is break";
+
+    //        QTextStream in(stdin);
+    //        in >> str;
+
+    //        if (str == QString("1"))
+    //        {
+    //            mCTimeSpent.StartClock();
+    //            qDebug() << "start perform pr" << QDateTime::currentMSecsSinceEpoch();
+    //            mhik.myShowModuleInterface(str.toUInt());
+    //            // int i = mhik.performPr(gray, prConfig, &resultImageInfo, prResult);
+    //            mCTimeSpent.EndClock("performPr Time spent:");
+    //        }
+    //        else if (str == QString("0"))
+    //        {
+    //            QString str1;
+    //            QTextStream in(stdin);
+    //            in >> str1;
+    //            mhik.saveSolution("C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput111.sol", "");
+    //            break;
+    //        }
+    //        else
+    //        {
+    //            continue;
+    //        }
+    //    }
+
     mhik.Close();
-    // qDebug()<<"isClosed";
+    qDebug() << "isClosed";
 
     // system("pause");
     return a.exec();
@@ -100,6 +127,7 @@ BOOL HandlerRoutine(DWORD dwCtrlType)
         case CTRL_CLOSE_EVENT:
             isClose = true;
             mhik.Close();
+
             printf("ctrl close\n");
             return TRUE;
         case CTRL_BREAK_EVENT:

@@ -38,8 +38,10 @@ int HikVision::Init()
     //    nRet = IMVS_PF_ShowVisionMaster(m_handle, 1);
     //    qDebug()<<"IMVS_PF_ShowVisionMaster" << nRet;
 
-    nRet = IMVS_PF_RegisterResultCallBack_V30(m_handle, CallBackModuRes, this);
-    IMVS_PF_RegisterResultCallBack_V32() if (IMVS_EC_OK != nRet)
+    // nRet = IMVS_PF_RegisterResultCallBack_V30(m_handle, CallBackModuRes, this);
+    nRet = IMVS_PF_RegisterResultCallBack_V32(m_handle, CallBackModuRes,
+                                              this);    // unregist: IMVS_PF_RegisterResultCallBack_V32(m_handle, NULL, this);
+    if (IMVS_EC_OK != nRet)
     {
         qDebug() << "IMVS_PF_RegisterResultCallBack_V30 Error" << nRet;
     }
@@ -74,6 +76,58 @@ void HikVision::Close()
 {
     IMVS_PF_CloseSolution(m_handle);    //
     IMVS_PF_DestroyHandle(m_handle);    //
+}
+
+int HikVision::myShowModuleInterface(unsigned int nIndex)
+{
+    int nRet = IMVS_PF_StartVisionMaster(m_handle, mHikVisionMasterAppPath.toUtf8(), 10000);
+    // qDebug() << "IMVS_PF_StartVisionMaster" << nRet;
+
+    // nRet = IMVS_PF_ShowVisionMaster(m_handle, IMVS_PF_STATUS_PLATFORM_SHOW);
+    // qDebug() << "IMVS_PF_ShowVisionMaster" << nRet;
+    // nRet = IMVS_PF_SyncLoadSolution(m_handle, mSolutionPath.toUtf8(), "", false);
+    QThread::msleep(100);
+    nRet = IMVS_PF_ShowModuleInterface(m_handle, 2);
+    if (IMVS_EC_OK != nRet)
+    {
+        qDebug() << "IMVS_PF_ShowModuleInterface Error" << nRet;
+    }
+    return nRet;
+}
+
+int HikVision::saveSolution(QString nSolutionPath, QString nPassWord)
+{
+    IMVS_PF_SAVE_SOLUTION_INPUT stSaveInput = { 0 };
+    //    stSaveInput.strPath = nSolutionPath.toUtf8();
+    //    stSaveInput.strPassWord = nPassWord.toUtf8();
+    _snprintf_s(stSaveInput.strPath, IMVS_PF_MAX_PATH_LENGTH - 1, "%s", nSolutionPath.toUtf8().data());
+    _snprintf_s(stSaveInput.strPassWord, IMVS_PF_PASSWORD_LENGTH - 1, "%s", nPassWord.toUtf8().data());
+    int nRet = IMVS_PF_SaveSolution(m_handle, &stSaveInput);    // 异步保存方案
+    if (IMVS_EC_OK != nRet)
+    {
+        qDebug() << "IMVS_PF_SaveSolution Error" << nRet;
+    }
+
+    unsigned int nSaveprogress = 0;
+
+    QElapsedTimer qTimer;
+    qTimer.start();
+    while (nRet == IMVS_EC_OK)
+    {
+        nRet = IMVS_PF_GetSaveProgress(m_handle, &nSaveprogress);
+
+        if (nSaveprogress == 100)
+        {
+            qDebug() << "IMVS_PF_GetSaveProgress OK" << nRet;
+            break;
+        }
+        if (qTimer.elapsed() > 5000)
+        {
+            qDebug() << "IMVS_PF_GetSaveProgress TimeOut" << nRet;
+            break;
+        }
+    }
+    return 0;
 }
 
 bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
@@ -122,6 +176,7 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
     mCTimeSpent.StartClock();
     // nRet = IMVS_PF_ExecuteOnce(m_handle, NULL);
 
+    nRet = IMVS_PF_ExecuteOnce_V30(m_handle, 10000, nullptr);
     nRet = IMVS_PF_ExecuteOnce_V30(m_handle, 10001, nullptr);
     //    if (IMVS_EC_OK != nRet)
     //    {
@@ -215,64 +270,106 @@ int HikVision::CallBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
     qDebug() << "HikVision::CallBackModuResFunc" << pstInputPlatformInfo->nInfoType;
     if (IMVS_ENUM_CTRLC_OUTPUT_PLATFORM_INFO_MODULE_RESULT == pstInputPlatformInfo->nInfoType)
     {
+        // Parsing module callback results after V32
+        IMVS_PF_MODULE_RESULT_INFO_LIST *pstPFModuResInfoList = (IMVS_PF_MODULE_RESULT_INFO_LIST *)pstInputPlatformInfo->pData;
+
         // Parsing module callback results after V3.0
-        IMVS_PF_MODU_RES_INFO *pstPFModuResInfoList = (IMVS_PF_MODU_RES_INFO *)pstInputPlatformInfo->pData;
+        // IMVS_PF_MODU_RES_INFO *pstPFModuResInfoList = (IMVS_PF_MODU_RES_INFO *)pstInputPlatformInfo->pData;
 
         // Determine if the process ID matches
 
         // int m_nProgressFlag = 0;
         qDebug() << "CopyModuResultByModu start" << pstPFModuResInfoList->nProcessID;
-        if ((10000 == pstPFModuResInfoList->nProcessID))
+        if ((10000 == pstPFModuResInfoList->nProcessID || 10001 == pstPFModuResInfoList->nProcessID))
         {
-            CopyModuResultByModu(pstPFModuResInfoList);
+            GetV32(pstPFModuResInfoList);
+            // CopyModuResultByModu(pstPFModuResInfoList);
             qDebug() << "CopyModuResultByModu end";
         }
-        if ((10001 == pstPFModuResInfoList->nProcessID))
+        //        if ((10001 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess2(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess2 end";
+        //        }
+        //        if ((10002 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess3(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess3 end";
+        //        }
+        //        if ((10003 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess4(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess4 end";
+        //        }
+        //        if ((10004 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess5(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess5 end";
+        //        }
+        //        if ((10005 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess6(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess6 end";
+        //        }
+        //        if ((10006 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess7(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess7 end";
+        //        }
+        //        if ((10007 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess8(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess8 end";
+        //        }
+        //        if ((10008 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess9(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess9 end";
+        //        }
+        //        if ((10009 == pstPFModuResInfoList->nProcessID))
+        //        {
+        //            GetResultFromProcess10(pstPFModuResInfoList);
+        //            qDebug() << "GetResultFromProcess10 end";
+        //        }
+    }
+}
+
+int HikVision::GetV32(IN IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList)
+{
+    qDebug() << "V32-get PR result Process1-nResultNum:" << pstPFModuResInfoList->nResultNum;
+    for (int i = 0; i < pstPFModuResInfoList->nResultNum; i++)
+    {
+
+        if (IMVS_PF_MODURES_TYPE_INT == pstPFModuResInfoList->pModuResInfo[i].nParamType)
         {
-            GetResultFromProcess2(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess2 end";
+            if (0 == strcmp("MatchNum2", pstPFModuResInfoList->pModuResInfo[i].strParamName))
+            {
+                int n = *pstPFModuResInfoList->pModuResInfo[i].pIntValue;
+                qDebug() << "MatchNum2:" << n;
+            }
+            mCTimeSpent.EndClock("MatchNum2");
         }
-        if ((10002 == pstPFModuResInfoList->nProcessID))
+        if (IMVS_PF_MODURES_TYPE_FLOAT == pstPFModuResInfoList->pModuResInfo[i].nParamType)
         {
-            GetResultFromProcess3(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess3 end";
-        }
-        if ((10003 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess4(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess4 end";
-        }
-        if ((10004 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess5(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess5 end";
-        }
-        if ((10005 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess6(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess6 end";
-        }
-        if ((10006 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess7(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess7 end";
-        }
-        if ((10007 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess8(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess8 end";
-        }
-        if ((10008 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess9(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess9 end";
-        }
-        if ((10009 == pstPFModuResInfoList->nProcessID))
-        {
-            GetResultFromProcess10(pstPFModuResInfoList);
-            qDebug() << "GetResultFromProcess10 end";
+            if (0 == strcmp("MatchPointX2", pstPFModuResInfoList->pModuResInfo[i].strParamName))
+            {
+                float f = *pstPFModuResInfoList->pModuResInfo[i].pFloatValue;
+                qDebug() << "MatchPointX2:" << f;
+            }
+            if (0 == strcmp("MatchPointY2", pstPFModuResInfoList->pModuResInfo[i].strParamName))
+            {
+                float f = *pstPFModuResInfoList->pModuResInfo[i].pFloatValue;
+                qDebug() << "MatchPointY2:" << f;
+            }
+            if (0 == strcmp("MatchPointX6", pstPFModuResInfoList->pModuResInfo[i].strParamName))
+            {
+                float f = *pstPFModuResInfoList->pModuResInfo[i].pFloatValue;
+                qDebug() << "MatchPointX6:" << f;
+            }
         }
     }
+    mCTimeSpent.EndClock("MatchPointX2-MatchPointY2");
+    return 0;
 }
 
 int HikVision::GetResultFromProcess2(IN IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList)
@@ -654,6 +751,12 @@ int HikVision::GetResultFromProcess10(IN IMVS_PF_MODU_RES_INFO *const pstPFModuR
 }
 
 ////////////////////////////////////////////
+/// \brief HikVision::CopyModuResultByModu
+/// \param pstPFModuResInfoList
+/// \return
+///
+///
+///
 
 int HikVision::CopyModuResultByModu(IN IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList)
 {

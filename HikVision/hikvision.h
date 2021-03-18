@@ -121,6 +121,11 @@ private:
     int GetResultFromProcess8(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
     int GetResultFromProcess9(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
     int GetResultFromProcess10(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int GetV32(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
+
+public:
+    int myShowModuleInterface(unsigned int nIndex);
+    int saveSolution(QString nSolutionPath, QString nPassWord);
 };
 
 #endif    // HIKVISION_H
