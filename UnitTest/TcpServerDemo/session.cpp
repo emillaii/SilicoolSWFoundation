@@ -20,6 +20,8 @@ Session::Session(qint64 sessionId, QTcpSocket *socket, QObject *parent) : QObjec
     connect(socket, &QTcpSocket::readyRead, this, &Session::onReadyRead);
     connect(this, &Session::sendMessage, this, &Session::onSendMessage);
     connect(socket, &QTcpSocket::disconnected, this, &Session::onDisconnected);
+
+    heartBeatTimerId = startTimer(5000);
 }
 
 Session::~Session()
@@ -30,6 +32,11 @@ Session::~Session()
 
 void Session::dispose()
 {
+    if (heartBeatTimerId >= 0)
+    {
+        killTimer(heartBeatTimerId);
+        heartBeatTimerId = -1;
+    }
     thdPool.waitForDone();
     socket->close();
 }
@@ -37,6 +44,21 @@ void Session::dispose()
 void Session::clearReceiveBuffer()
 {
     receiveBuffer.clear();
+}
+
+void Session::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == heartBeatTimerId)
+    {
+        if (!gotHeartbeatbeatRsp)
+        {
+            qCritical() << "Got heartbeat response timeout! Now close connection...";
+            dispose();
+            return;
+        }
+        gotHeartbeatbeatRsp = false;
+        sendMessage(heartbeat.toUtf8());
+    }
 }
 
 void Session::msgHandle(const QString &msg)
@@ -57,7 +79,15 @@ void Session::onReadyRead()
     while (index >= 0)
     {
         QString msg = receiveBuffer.mid(0, index);
-        msgHandle(msg);
+        if (msg == heartbeatRsp)
+        {
+            gotHeartbeatbeatRsp = true;
+        }
+        else
+        {
+            msgHandle(msg);
+        }
+
         receiveBuffer.remove(0, index + endMark.length());
         index = receiveBuffer.indexOf(endMark);
     }

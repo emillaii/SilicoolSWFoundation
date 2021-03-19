@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QThreadPool>
+#include <QTimerEvent>
 
 class Session;
 
@@ -35,6 +36,10 @@ signals:
     void sendMessage(QString msg);
     void socketDisconnected(qint64 sessionId);
 
+    // QObject interface
+protected:
+    void timerEvent(QTimerEvent *event);
+
 private:
     void msgHandle(const QString &msg);
 
@@ -44,6 +49,11 @@ private slots:
     void onDisconnected();
 
 private:
+    const QString heartbeat = "heartbeat\r\n";
+    const QString heartbeatRsp = "heartbeatRsp";
+    bool gotHeartbeatbeatRsp = true;
+    int heartBeatTimerId = -1;
+
     const QByteArray endMark = "\r\n";
     qint64 sessionId;
     QTcpSocket *socket;
