@@ -15,6 +15,7 @@ class SCVISIONSHARED_EXPORT VisionLocationConfig : public ConfigObject
     Q_PROPERTY(int lightBrightness READ lightBrightness WRITE setLightBrightness NOTIFY lightBrightnessChanged)
     Q_PROPERTY(int secondLightBrightness READ secondLightBrightness WRITE setSecondLightBrightness NOTIFY secondLightBrightnessChanged)
     Q_PROPERTY(bool checkXy READ checkXy WRITE setCheckXy NOTIFY checkXyChanged)
+    Q_PROPERTY(bool reverseTheta READ reverseTheta WRITE setReverseTheta NOTIFY reverseThetaChanged)
     Q_PROPERTY(double maxXOffset READ maxXOffset WRITE setMaxXOffset NOTIFY maxXOffsetChanged)
     Q_PROPERTY(double maxYOffset READ maxYOffset WRITE setMaxYOffset NOTIFY maxYOffsetChanged)
     Q_PROPERTY(double maximunAngle READ maximunAngle WRITE setMaximunAngle NOTIFY maximunAngleChanged)
@@ -128,6 +129,11 @@ public:
     bool checkXy() const
     {
         return m_checkXy;
+    }
+
+    bool reverseTheta() const
+    {
+        return m_reverseTheta;
     }
 
 public slots:
@@ -277,6 +283,15 @@ public slots:
         emit checkXyChanged(m_checkXy);
     }
 
+    void setReverseTheta(bool reverseTheta)
+    {
+        if (m_reverseTheta == reverseTheta)
+            return;
+
+        m_reverseTheta = reverseTheta;
+        emit reverseThetaChanged(m_reverseTheta);
+    }
+
 signals:
     void cameraNameChanged(QString cameraName);
 
@@ -310,6 +325,8 @@ signals:
 
     void checkXyChanged(bool checkXy);
 
+    void reverseThetaChanged(bool reverseTheta);
+
 private:
     QString m_cameraName = "";
     int m_lightBrightness = 0;
@@ -328,6 +345,7 @@ private:
     bool m_savePrFailedImage = true;
     bool m_showPrImage = true;
     bool m_checkXy = true;
+    bool m_reverseTheta = true;
 };
 
 #endif    // VISIONLOCATIONCONFIG_H

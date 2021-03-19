@@ -72,6 +72,7 @@ private slots:
     void onVisionLocationConfigSecondLightBrightnessChanged(int lightBrightnessChanged);
 
 private:
+    void reverseTheta(PRResultStruct& prResult);
     void showPrImage(QImage &image, const QString &imgProcessingResult = "");
     void savePrFailedImage(QImage &image);
     void drawSaveShowResultImage(QImage image, PRResultImageInfo *prResultImageInfo, QString imgProcessingResult = "");

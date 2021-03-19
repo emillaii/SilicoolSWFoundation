@@ -37,7 +37,7 @@ bool VisionLocation::performPR(PrOffset &offset, int roiRowIndex, int roiColInde
 
     PRResultImageInfo *resultImageInfo = nullptr;
     bool res = vision->performPr(image, m_config, &resultImageInfo, prResult, roiRowIndex, roiColIndex);
-    prResult.theta *= -1;    // Vision计算角度时顺时针为正，应用层使用时定义逆时针为正
+    reverseTheta(prResult);
 
     if (res)
     {
@@ -169,7 +169,7 @@ bool VisionLocation::performPR(QImage &image, PRResultStruct &prResult)
 
     PRResultImageInfo *resultImageInfo = nullptr;
     bool res = vision->performPr(image, m_config, &resultImageInfo, prResult);
-    prResult.theta *= -1;    // Vision计算角度时顺时针为正，应用层使用时定义逆时针为正
+    reverseTheta(prResult);
 
     if (res)
     {
@@ -259,7 +259,7 @@ bool VisionLocation::performPR(QImage &image, PrOffset &offset, PRResultStruct &
 
     PRResultImageInfo *resultImageInfo = nullptr;
     bool res = vision->performPr(image, m_config, &resultImageInfo, prResult);
-    prResult.theta *= -1;    // Vision计算角度时顺时针为正，应用层使用时定义逆时针为正
+    reverseTheta(prResult);
 
     if (res)
     {
@@ -417,6 +417,14 @@ void VisionLocation::onVisionLocationConfigSecondLightBrightnessChanged(int ligh
     catch (SilicoolException &se)
     {
         qCCritical(visionCate()) << se.what();
+    }
+}
+
+void VisionLocation::reverseTheta(PRResultStruct &prResult)
+{
+    if(m_config->reverseTheta())
+    {
+        prResult.theta *= -1;
     }
 }
 
