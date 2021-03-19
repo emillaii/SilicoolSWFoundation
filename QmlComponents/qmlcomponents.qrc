@@ -80,11 +80,11 @@
         <file>CustomizedUIElement/RowColumnSelectorView/RowColInfo2.qml</file>
         <file>CustomizedUIElement/RowColumnSelectorView/RowColSelector2.qml</file>
         <file>CustomizedUIElement/RowColumnSelectorView/ColumnLayoutRowColSelector2.qml</file>
-		<file>PathCanvasEditor/MainCanvas.qml</file>
-		<file>PathCanvasEditor/PathEditor.qml</file>
-		<file>PathCanvasEditor/PathSettingTableWidget.qml</file>
-		<file>PathCanvasEditor/PointsTableWidget.qml</file>
-		
+        <file>PathCanvasEditor/MainCanvas.qml</file>
+        <file>PathCanvasEditor/PathEditor.qml</file>
+        <file>PathCanvasEditor/PathSettingTableWidget.qml</file>
+        <file>PathCanvasEditor/PointsTableWidget.qml</file>
+        <file>VisionViewer/HikVisionLocationViewer.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

@@ -19,6 +19,7 @@ DEFINES += HIKVISION_LIBRARY
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_MESSAGELOGCONTEXT
+DEFINES += WIN32_LEAN_AND_MEAN
 
 
 INCLUDEPATH +=  ../UtilitiesLib
@@ -35,19 +36,20 @@ INCLUDEPATH +=   ../Utilities     \
 DESTDIR = ./Release
 OBJECTS_DIR = ./Release/Objs
 MOC_DIR = ./Release/Mocs
-LIBS += ../../SCLibs/utilities.lib
-LIBS += ../../SCLibs/SCVision.lib
-LIBS += ../../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
-LIBS += ../../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
+LIBS += ../SCLibs/utilities.lib
+LIBS += ../SCLibs/SCVision.lib
+LIBS += ../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
+LIBS += ../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
 
 SOURCES += \
         hikvision.cpp
 
 HEADERS += \
-        defineforhik.h \
         hikvision.h \
         hikvision_global.h  \
+        hikvisionconfig.h \
         hikvisionlocationconfig.h \
+        hikvisionresult.h \
         hikvisionresultimageinfo.h
 
 unix {
@@ -55,9 +57,4 @@ unix {
     INSTALLS += target
 }
 
-CONFIG(debug, debug|release){
-    DESTDIR =$$PWD/../VisionMasterTest/xdebug
-}else{
-    DESTDIR =$$PWD/../VisionMasterTest/xrelease
-}
 

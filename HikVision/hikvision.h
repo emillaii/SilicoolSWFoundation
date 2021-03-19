@@ -1,51 +1,47 @@
 #ifndef HIKVISION_H
 #define HIKVISION_H
 
-#include "QThread"
-#include "defineforhik.h"
+#include "configManager/configfile.h"
+#include "deleter.h"
 #include "errorHandling/scassert.h"
 #include "hikvision_global.h"
+#include "hikvisionconfig.h"
 #include "hikvisionlocationconfig.h"
+#include "hikvisionresult.h"
 #include "hikvisionresultimageinfo.h"
+#include "iMVS-6000PlatformSDKC.h"
 #include "scvision.h"
-#include <QObject>
-#include <QtConcurrent/QtConcurrent>
-#include <QtDebug>
+#include "visionconfigdir.h"
+#include <QThread>
+#include <QWaitCondition>
+#include "loghelper.h"
 
-class SCTimeSpent
-{
-
-public:
-    SCTimeSpent()
-    {
-        time_Start = 0.0;
-        time_End = 0.0;
-    }
-    void SC_StartClock()
-    {
-        time_Start = (double)clock();
+#define CHECK_MVS_RES(calling)                                                                                                                       \
+    {                                                                                                                                                \
+        int ret = calling;                                                                                                                           \
+        if (ret != IMVS_EC_OK)                                                                                                                       \
+        {                                                                                                                                            \
+            throw SilicolAbort(                                                                                                                      \
+                QString("%1 failed! ErrorCode: %2, ErrorString: %3").arg(#calling).arg(QString::number(ret, 16)).arg(IMVS_PF_GetErrorMsg(ret)));     \
+        }                                                                                                                                            \
     }
 
-    void SC_EndClock(QString msg)
-    {
-        time_End = (double)clock();
-        qDebug() << msg << (time_End - time_Start) / 1000.0 << "s";
-    }
-
-private:
-    double time_Start;
-    double time_End;
-};
+SILICOOL_DECLARE_LOGGING_CATEGORY(hikCate,)
 
 class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
     Q_OBJECT
+
 public:
     explicit HikVision(QObject *parent = nullptr);
-    ~HikVision();
+    ~HikVision() override;
+    HikVisionConfig* config() const;
 
     // SCVision interface
 public:
+    void initImpl() override;
+    void disposeImpl() override;
+
     bool performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult);
 
     bool performPr(QImage &image,
@@ -64,8 +60,10 @@ public:
     void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo)
     {
         HikVisionResultImageInfo *hikResultImageInfo = qobject_cast<HikVisionResultImageInfo *>(resultImageInfo);
-        SC_ASSERT(hikResultImageInfo != nullptr);
-        // TBD
+        if(hikResultImageInfo != nullptr)
+        {
+
+        }
     }
     bool glueCheck(QImage &imageBefore,
                    QImage &imageAfter,
@@ -89,29 +87,34 @@ public:
         return true;
     }
 
-public:
-    int SC_ShowModuleInterface(unsigned int nIndex);
-    int SC_SaveSolution(QString nSolutionPath, QString nPassWord);
-    int SC_ReloadSolution(QString nSolutionPath, QString nPassword);
-    void SC_Close();
+public slots:
+    void loadSolution();
+    void startVisionMaster(bool start);
+    void showVisionMaster(bool show);
+    void printProcessModuleIds();
 
 private:
-    int Init();
-    static int __stdcall CallBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo, void *const pUser);
-    int CallBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo);
-    int CopyModuResultByModu(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
-    int CopyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
-    int GetV32ResFromCallBack(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
+    static int callBackModuRes(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo, void *const pUser);
+    int callBackModuResFunc(IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo);
+    int copyModuResultByModu(IMVS_PF_MODU_RES_INFO *const pstPFModuResInfoList);
+    int copyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
+
+private:
+    double calcAngle(const IMVS_PF_LINE_INFO& line)
+    {
+        double radian = qAtan((line.stEndPt.fPtY - line.stStartPt.fPtY) / (line.stEndPt.fPtX - line.stStartPt.fPtX));
+        return radian / M_PI * 180;
+    }
+
 
 private:
     void *m_handle = nullptr;
     unsigned int m_nMatchPtNum;
-    CDefine nCDfine;
-    SCTimeSpent mCTimeSpent;
 
-    const QString mHikVisionMasterServerPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\Server\\VisionMasterServer.exe";
-    const QString mHikVisionMasterAppPath = "E:\\VisionMaster\\VisionMaster3.4.0\\Applications\\VisionMaster.exe";
-    const QString mSolutionPath = "C:\\Users\\Aini\\Desktop\\VisionMasterLearning\\GetImageFromOutput.sol";    // MatchTemplateGray8.sol
+    QMap<int, HikVisionResult *> hikResults;
+    QMutex hikResultsLocker;
+    ConfigFile *hikVisionConfigFile;
+    HikVisionConfig *hikVisionConfig;
 };
 
 #endif    // HIKVISION_H

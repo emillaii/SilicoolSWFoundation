@@ -122,6 +122,7 @@ HEADERS += \
         configManager/configshareclient.h \
         configManager/configshareserver.h \
         csvHelper/csvhelper.h \
+        deleter.h \
         duttypemanager.h \
         enumhelper.h \
         errorHandling/actionerror.h \
