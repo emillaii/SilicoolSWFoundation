@@ -1,0 +1,5 @@
+按D主动释放Socket
+按Q退出Server
+
+如需在多个机台共享配置，参考configManager/configshareclient和configshareserver
+如需在其它线程，调用Socket相关的方法，参考TaskEngine/objectlivedthreadinstructionexecutor
