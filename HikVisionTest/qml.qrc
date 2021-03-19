@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>LoadingAnimation.qml</file>
+        <file>StartupViewer.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>qml/Workers/ModuleDebugger.qml</file>
+        <file>qml/Workers/TrayLoader/TrayLoaderViewer.qml</file>
+        <file>qml/Workers/DataStatistics.qml</file>
+        <file>qml/Workers/PickArm/PickArmViewer.qml</file>
+    </qresource>
+</RCC>
