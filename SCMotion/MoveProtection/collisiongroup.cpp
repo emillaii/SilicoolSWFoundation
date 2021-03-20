@@ -18,26 +18,21 @@ bool CollisionConditionsConfig::add(int index, QString collisionConditionType, Q
         return false;
     }
 
-    CollisionCondition::Type collisionConditionTypeEnum
-        = CollisionCondition::TypeEnumInfo().nameToEnum(collisionConditionType);
+    CollisionCondition::Type collisionConditionTypeEnum = CollisionCondition::TypeEnumInfo().nameToEnum(collisionConditionType);
     ComparisonOperation::Type cmpOperationTypeEnum = ComparisonOperation::TypeEnumInfo().nameToEnum(cmpOperationType);
 
     if ((collisionConditionTypeEnum == CollisionCondition::SingleAxisCollisionCondition
          || collisionConditionTypeEnum == CollisionCondition::TwoAxisCollisionCondition)
         && cmpOperationTypeEnum == ComparisonOperation::NotInState)
     {
-        qCritical() << QString("collisionConditionType(%1) and cmpOperationType(%2) did not match!")
-                           .arg(collisionConditionType)
-                           .arg(cmpOperationType);
+        qCritical() << QString("collisionConditionType(%1) and cmpOperationType(%2) did not match!").arg(collisionConditionType).arg(cmpOperationType);
         return false;
     }
     if ((collisionConditionTypeEnum == CollisionCondition::CylinderCollisionCondition
          || collisionConditionTypeEnum == CollisionCondition::DICollisionCondition)
         && cmpOperationTypeEnum != ComparisonOperation::NotInState)
     {
-        qCritical() << QString("collisionConditionType(%1) and cmpOperationType(%2) did not match!")
-                           .arg(collisionConditionType)
-                           .arg(cmpOperationType);
+        qCritical() << QString("collisionConditionType(%1) and cmpOperationType(%2) did not match!").arg(collisionConditionType).arg(cmpOperationType);
         return false;
     }
 
@@ -90,8 +85,8 @@ bool CollisionConditionsConfig::read(const QJsonValue &jsonValue)
         {
             CollisionCondition::Type collisionConditionType
                 = CollisionCondition::TypeEnumInfo().nameToEnum(jsonObj["collisionConditionType"].toString());
-            ComparisonOperation::Type cmpOperationType = ComparisonOperation::TypeEnumInfo().nameToEnum(
-                jsonObj["cmpOperation"].toObject()["cmpOperationType"].toString());
+            ComparisonOperation::Type cmpOperationType
+                = ComparisonOperation::TypeEnumInfo().nameToEnum(jsonObj["cmpOperation"].toObject()["cmpOperationType"].toString());
 
             auto collisionCondition = CollisionCondition::createInstance(collisionConditionType, this);
             auto cmpOperation = ComparisonOperation::createInstance(cmpOperationType, collisionCondition);
@@ -105,8 +100,7 @@ bool CollisionConditionsConfig::read(const QJsonValue &jsonValue)
         }
         else
         {
-            qCritical() << "Key not found: collisionConditionType or cmpOperation.cmpOperationType, Json object index:"
-                        << i;
+            qCritical() << "Key not found: collisionConditionType or cmpOperation.cmpOperationType, Json object index:" << i;
             result = false;
         }
     }
@@ -154,10 +148,8 @@ bool IgnoreCollisionConditionsConfig::read(const QJsonValue &jsonValue)
         if (jsonObj.contains("ignoreCollisionConditionType"))
         {
             IgnoreCollisionCondition::Type ignoreCollisionConditionTypeEnum
-                = IgnoreCollisionCondition::TypeEnumInfo().nameToEnum(
-                    jsonObj["ignoreCollisionConditionType"].toString());
-            auto ignoreCollisionCondition
-                = IgnoreCollisionCondition::createInstance(ignoreCollisionConditionTypeEnum, this);
+                = IgnoreCollisionCondition::TypeEnumInfo().nameToEnum(jsonObj["ignoreCollisionConditionType"].toString());
+            auto ignoreCollisionCondition = IgnoreCollisionCondition::createInstance(ignoreCollisionConditionTypeEnum, this);
 
             if (!ignoreCollisionCondition->read(jsonObj))
             {
@@ -183,6 +175,10 @@ CollisionGroup::CollisionGroup(QObject *parent) : ConfigObject(parent)
 
 bool CollisionGroup::willCollide(QString name, double targetState)
 {
+    if (!m_enable)
+    {
+        return false;
+    }
     for (int i = 0; i < ignoreCollisionConditions()->count(); i++)
     {
         auto ignoreCollisionCondition = ignoreCollisionConditions()->getConfig<IgnoreCollisionCondition>(i);

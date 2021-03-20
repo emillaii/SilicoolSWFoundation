@@ -130,6 +130,7 @@ class SCMOTIONSHARED_EXPORT CollisionGroup : public ConfigObject
     Q_PROPERTY(QString groupDescription READ groupDescription WRITE setGroupDescription NOTIFY groupDescriptionChanged)
     Q_PROPERTY(CollisionConditionsConfig *collisionConditions READ collisionConditions)
     Q_PROPERTY(IgnoreCollisionConditionsConfig *ignoreCollisionConditions READ ignoreCollisionConditions)
+    Q_PROPERTY(bool enable READ enable WRITE setEnable NOTIFY enableChanged)
 
 public:
     Q_INVOKABLE CollisionGroup(QObject *parent = nullptr);
@@ -168,6 +169,11 @@ public:
         return toVariantList(ComparisonOperation::TypeEnumInfo().names());
     }
 
+    bool enable() const
+    {
+        return m_enable;
+    }
+
 public slots:
     void setGroupDescription(QString groupDescription)
     {
@@ -178,13 +184,29 @@ public slots:
         emit groupDescriptionChanged(m_groupDescription);
     }
 
+    void setEnable(bool enable)
+    {
+        if (m_enable == enable)
+            return;
+
+        if (!enable)
+        {
+            qWarning() << "Disable collision group:" << groupDescription();
+        }
+        m_enable = enable;
+        emit enableChanged(m_enable);
+    }
+
 signals:
     void groupDescriptionChanged(QString groupDescription);
+
+    void enableChanged(bool enable);
 
 private:
     QString m_groupDescription;
     CollisionConditionsConfig *m_collisionConditions;
     IgnoreCollisionConditionsConfig *m_ignoreCollisionConditions;
+    bool m_enable = true;
 };
 
 #endif    // COLLISIONGROUP_H

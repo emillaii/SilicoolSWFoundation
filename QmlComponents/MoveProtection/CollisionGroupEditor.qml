@@ -14,7 +14,8 @@ Item {
     }
 
     function init(){
-        groupDescription.configModel = configModel
+        cfgGroupDescription.configModel = configModel
+        cfgEnable.configModel = configModel
         self.collisionConditions = configModel.collisionConditions
         self.ignoreCollisionConditions = configModel.ignoreCollisionConditions
         cmbCollisionConditionType.model = configModel.getCollisionConditionTypes()
@@ -35,7 +36,8 @@ Item {
         connIgnoreCollisionConditionInserted.target = self.ignoreCollisionConditions
         connIgnoreCollisionConditionRemoved.target = self.ignoreCollisionConditions
 
-        groupDescription.init(ConfigElementType.Other)
+        cfgGroupDescription.autoInit()
+        cfgEnable.autoInit()
     }
 
     ListModel{
@@ -89,11 +91,16 @@ Item {
 
     ColumnLayout{
         anchors.fill: parent
-        ConfigRow{
-            id: groupDescription
-            configName: "groupDescription"
-            onChildItemInited: {
-                childItem.implicitWidth = 300
+
+        RowLayout{
+            ConfigRow{
+                id: cfgEnable
+                configName: "enable"
+            }
+            ConfigRow{
+                id: cfgGroupDescription
+                txtWidth: 500
+                configName: "groupDescription"
             }
         }
 
