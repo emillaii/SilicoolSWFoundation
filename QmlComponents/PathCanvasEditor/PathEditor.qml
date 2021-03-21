@@ -19,8 +19,8 @@ Item {
         for (var index in canvas.arrpoints) {
             var px = parseFloat(canvas.arrpoints[index]["x"])
             var py = parseFloat(canvas.arrpoints[index]["y"])
-            var nx = px + x
-            var ny = py + y
+            var nx = parseFloat(px) + parseFloat(x)
+            var ny = parseFloat(py) + parseFloat(y)
             newPointsArray.push({"x": nx,
                                  "y": ny,
                                  "z": canvas.arrpoints[index]["z"],
@@ -39,8 +39,8 @@ Item {
             var px = parseFloat(canvas.arrpoints[index]["x"])
             var py = parseFloat(canvas.arrpoints[index]["y"])
 
-            var nx = Math.cos(theta)*(px - 0.5) - Math.sin(theta)*(py-0.5) + 0.5
-            var ny = Math.sin(theta)*(px - 0.5) + Math.cos(theta)*(py-0.5) + 0.5
+            var nx = Math.cos(theta)*(px - canvas.inputWidth/2) - Math.sin(theta)*(py-canvas.inputHeight/2) +  canvas.inputWidth/2
+            var ny = Math.sin(theta)*(px - canvas.inputWidth/2) + Math.cos(theta)*(py-canvas.inputHeight/2) +  canvas.inputHeight/2
             newPointsArray.push({"x": nx,
                                  "y": ny,
                                  "z": canvas.arrpoints[index]["z"],
@@ -148,7 +148,7 @@ Item {
                 RowLayout{
                     CheckBox {
                         id: stepSelectionBox_1
-                        text: qsTr("0.0001")
+                        text: qsTr("1")
                         onCheckedChanged: {
                             if (checked) {
                                 stepSelectionBox_2.checked = false
@@ -158,7 +158,7 @@ Item {
                     }
                     CheckBox {
                         id: stepSelectionBox_2
-                        text: qsTr("0.001")
+                        text: qsTr("5")
                         checked: true
                         onClicked: {
                             if (checked) {
@@ -169,7 +169,7 @@ Item {
                     }
                     CheckBox {
                         id: stepSelectionBox_3
-                        text: qsTr("0.01")
+                        text: qsTr("10")
                         onCheckedChanged: {
                             if (checked) {
                                 stepSelectionBox_1.checked = false
@@ -251,9 +251,9 @@ Item {
                     text: qsTr("+X")
                     onClicked: {
                         var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 0.0001
-                        else if (stepSelectionBox_2.checked) stepSize = 0.001
-                        else stepSize = 0.01
+                        if (stepSelectionBox_1.checked) stepSize = 1
+                        else if (stepSelectionBox_2.checked) stepSize = 5
+                        else stepSize = 10
                         translate(stepSize, 0)
                     }
                 }
@@ -261,9 +261,9 @@ Item {
                     text: qsTr("-X")
                     onClicked: {
                         var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 0.0001
-                        else if (stepSelectionBox_2.checked) stepSize = 0.001
-                        else stepSize = 0.01
+                        if (stepSelectionBox_1.checked) stepSize = 1
+                        else if (stepSelectionBox_2.checked) stepSize = 5
+                        else stepSize = 10
                         translate(-stepSize, 0)
                     }
                 }
@@ -271,9 +271,9 @@ Item {
                     text: qsTr("+Y")
                     onClicked: {
                         var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 0.0001
-                        else if (stepSelectionBox_2.checked) stepSize = 0.001
-                        else stepSize = 0.01
+                        if (stepSelectionBox_1.checked) stepSize = 1
+                        else if (stepSelectionBox_2.checked) stepSize = 5
+                        else stepSize = 10
                         translate(0, -stepSize)
                     }
                 }
@@ -281,9 +281,9 @@ Item {
                     text: qsTr("-Y")
                     onClicked: {
                         var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 0.0001
-                        else if (stepSelectionBox_2.checked) stepSize = 0.001
-                        else stepSize = 0.01
+                        if (stepSelectionBox_1.checked) stepSize = 1
+                        else if (stepSelectionBox_2.checked) stepSize = 5
+                        else stepSize = 10
                         translate(0, stepSize)
                     }
                 }
