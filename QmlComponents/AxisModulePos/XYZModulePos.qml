@@ -8,6 +8,8 @@ GroupBox{
     property string moduleName: ""
     property string posName: ""
     property bool isUVW: false
+    property bool moveToBtnVisible: true
+    property bool readBtnVisible: true
 
     ColumnLayout{
         spacing: 0
@@ -47,6 +49,8 @@ GroupBox{
         ModulePosEvent{
             id: btns
             spacing: 300
+            readBtn.visible: readBtnVisible
+            moveToBtn.visible: moveToBtnVisible
         }
     }
     Component.onCompleted: {

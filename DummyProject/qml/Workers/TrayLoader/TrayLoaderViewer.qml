@@ -28,7 +28,6 @@ Item {
         VisionLocationViewer {
             calibrationName: "DutDownlookCalibration"
             visionLocationName: "DutDownlookLocation"
-            performOriginPrResultVisible: true
         }
         ConfigRow {
             configModel: tlConfig
