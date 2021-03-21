@@ -17,8 +17,8 @@ Item {
     function translate(x,y) {
         var newPointsArray = []
         for (var index in canvas.arrpoints) {
-            var px = canvas.arrpoints[index]["x"]
-            var py = canvas.arrpoints[index]["y"]
+            var px = parseFloat(canvas.arrpoints[index]["x"])
+            var py = parseFloat(canvas.arrpoints[index]["y"])
             var nx = px + x
             var ny = py + y
             newPointsArray.push({"x": nx,
@@ -36,8 +36,8 @@ Item {
         var newPointsArray = []
         for (var index in canvas.arrpoints) {
             var theta = t*Math.PI/180;
-            var px = canvas.arrpoints[index]["x"]
-            var py = canvas.arrpoints[index]["y"]
+            var px = parseFloat(canvas.arrpoints[index]["x"])
+            var py = parseFloat(canvas.arrpoints[index]["y"])
 
             var nx = Math.cos(theta)*(px - 0.5) - Math.sin(theta)*(py-0.5) + 0.5
             var ny = Math.sin(theta)*(px - 0.5) + Math.cos(theta)*(py-0.5) + 0.5

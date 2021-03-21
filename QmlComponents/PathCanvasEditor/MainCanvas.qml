@@ -139,10 +139,10 @@ Canvas{
                 //Drawing cross mark
                 context.beginPath()
                 context.lineWidth = 2;
-                context.moveTo(x - 10, y)
-                context.lineTo(x + 10, y)
-                context.moveTo(x , y - 10)
-                context.lineTo(x , y + 10)
+                context.moveTo(x - 5, y - 5)
+                context.lineTo(x + 5, y + 5)
+                context.moveTo(x - 5 , y + 5)
+                context.lineTo(x + 5 , y - 5)
                 if (selectedPointIndex == i)
                 {
                     context.strokeStyle = "lime"
@@ -155,7 +155,7 @@ Canvas{
 
                 //Drawing label
                 context.beginPath();
-                context.font = " 42px sans-serif";
+                context.font = "20px sans-serif";
                 context.text(i , x+10 , y-10);
                 context.stroke(); //设置 ↑ 的text风格为stroke
 

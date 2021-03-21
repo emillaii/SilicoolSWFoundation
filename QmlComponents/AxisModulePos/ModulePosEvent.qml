@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.12
 
 RowLayout{
     property var configObj: null
+    property bool moveToBtnVisible: true
+
     Button{
         enabled: userManagement.currentAuthority >= 2
         text: qsTr("Read")
@@ -12,6 +14,7 @@ RowLayout{
         }
     }
     Button{
+        visible: moveToBtnVisible
         text: qsTr("MoveTo")
         onClicked: {
             configObj.handleEvent("MoveTo")
