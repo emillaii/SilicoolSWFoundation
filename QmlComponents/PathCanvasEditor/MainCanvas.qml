@@ -92,6 +92,11 @@ Canvas{
         canvas.requestPaint();
     }
 
+
+    function getCross(p1x, p1y, p2x, p2y, p3x, p3y) {
+        return (p2x - p1x)*(p3y - p1y) - (p3x - p1x)*(p2y - p1y)
+    }
+
     onPaint: {
         var context = getContext("2d")
         context.reset()
@@ -205,15 +210,60 @@ Canvas{
                 var output = []
                 var needUpdate = false
                 for (var i = 0; i < canvas.arrpoints.length -1; i++) {
-
-                    var slope = (canvas.arrpoints[i]["y"] - canvas.arrpoints[i+1]["y"]) / (canvas.arrpoints[i]["x"] - canvas.arrpoints[i+1]["x"])
-                    var c = canvas.arrpoints[i]["y"] - slope*canvas.arrpoints[i]["x"]
-                    var dist = Math.abs(slope*px - py + c) / Math.sqrt(slope*slope + 1)
                     output.push({"x": canvas.arrpoints[i]["x"], "y": canvas.arrpoints[i]["y"], "z": canvas.arrpoints[i]["z"], "type": canvas.arrpoints[i]["type"]})
-                    console.log("dist: " + dist)
-                    if (dist < 10 && !needUpdate) {
-                        output.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0 ,"type": "line"})
-                        needUpdate = true
+                    var dist_x = parseFloat(canvas.arrpoints[i]["x"]) - parseFloat(canvas.arrpoints[i+1]["x"])
+                    if (Math.abs(dist_x) > 10)
+                    {
+                        var slope = (canvas.arrpoints[i]["y"] - canvas.arrpoints[i+1]["y"]) / (canvas.arrpoints[i]["x"] - canvas.arrpoints[i+1]["x"])
+                        var c = canvas.arrpoints[i]["y"] - slope*canvas.arrpoints[i]["x"]
+                        var dist = Math.abs(slope*px - py + c) / Math.sqrt(slope*slope + 1)
+
+                        var p1y = parseFloat(canvas.arrpoints[i]["y"]) + 10/(Math.sqrt(1+slope*slope))
+                        var p2y = parseFloat(canvas.arrpoints[i]["y"]) - 10/(Math.sqrt(1+slope*slope))
+
+                        var p1x = parseFloat(canvas.arrpoints[i]["x"]) - slope*(p1y - parseFloat(canvas.arrpoints[i]["y"]))
+                        var p2x = parseFloat(canvas.arrpoints[i]["x"]) - slope*(p2y - parseFloat(canvas.arrpoints[i]["y"]))
+
+                        var p4y = parseFloat(canvas.arrpoints[i+1]["y"]) + 10/(Math.sqrt(1+slope*slope))
+                        var p3y = parseFloat(canvas.arrpoints[i+1]["y"]) - 10/(Math.sqrt(1+slope*slope))
+
+                        var p4x = parseFloat(canvas.arrpoints[i+1]["x"]) - slope*(p4y - parseFloat(canvas.arrpoints[i+1]["y"]))
+                        var p3x = parseFloat(canvas.arrpoints[i+1]["x"]) - slope*(p3y - parseFloat(canvas.arrpoints[i+1]["y"]))
+
+                        console.log("p1x : " + p1x + " p1y: " + p1y)
+                        console.log("p2x : " + p2x + " p2y: " + p2y)
+                        console.log("p3x : " + p3x + " p3y: " + p3y)
+                        console.log("p4x : " + p4x + " p4y: " + p4y)
+
+                        var cross1 = getCross(p1x, p1y, p2x, p2y, px, py)*getCross(p3x, p3y, p4x, p4y, px, py)
+                        var cross2 = getCross(p2x, p2y, p3x, p3y, px, py)*getCross(p4x, p4y, p1x, p1y, px, py)
+
+
+                        if (dist < 10 && !needUpdate && cross1 >=0 && cross2>=0) {
+                            output.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0 ,"type": "line"})
+                            needUpdate = true
+                        }
+                    } else { //Vertical line
+                        var p1x = parseFloat(canvas.arrpoints[i]["x"]) - 10
+                        var p1y = parseFloat(canvas.arrpoints[i]["y"])
+
+                        var p4x = parseFloat(canvas.arrpoints[i]["x"]) + 10
+                        var p4y = parseFloat(canvas.arrpoints[i]["y"])
+
+
+                        var p2x = parseFloat(canvas.arrpoints[i+1]["x"]) - 10
+                        var p2y = parseFloat(canvas.arrpoints[i+1]["y"])
+
+                        var p3x = parseFloat(canvas.arrpoints[i+1]["x"]) + 10
+                        var p3y = parseFloat(canvas.arrpoints[i+1]["y"])
+
+                        var cross1 = getCross(p1x, p1y, p2x, p2y, px, py)*getCross(p3x, p3y, p4x, p4y, px, py)
+                        var cross2 = getCross(p2x, p2y, p3x, p3y, px, py)*getCross(p4x, p4y, p1x, p1y, px, py)
+
+                        if (!needUpdate && cross1 >=0 && cross2>=0) {
+                            output.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0 ,"type": "line"})
+                            needUpdate = true
+                        }
                     }
                 }
                 if (needUpdate){
