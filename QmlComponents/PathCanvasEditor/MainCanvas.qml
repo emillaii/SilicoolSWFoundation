@@ -30,22 +30,22 @@ Canvas{
             else if (stepSelectionBox_2.checked) stepSize = 0.001
             else stepSize = 0.01
 
-            if (event.key == 16777235){
+            if (event.key === 16777235){
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["y"]) - stepSize
                 canvas.arrpoints[canvas.selectedPointIndex]["y"] = result.toFixed(4)
-            } else if (event.key == 16777237) {
+            } else if (event.key === 16777237) {
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["y"]) + stepSize
                 canvas.arrpoints[canvas.selectedPointIndex]["y"] = result.toFixed(4)
-            } else if (event.key == 16777236) {
+            } else if (event.key === 16777236) {
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["x"]) + stepSize
                 canvas.arrpoints[canvas.selectedPointIndex]["x"] = result.toFixed(4)
-            } else if (event.key == 16777234) {
+            } else if (event.key === 16777234) {
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["x"]) - stepSize
                 canvas.arrpoints[canvas.selectedPointIndex]["x"] = result.toFixed(4)
-            } else if (event.key == 16777223) {  //Delete
+            } else if (event.key === 16777223) {  //Delete
                 var newPointsArray = []
                 for (var index in canvas.arrpoints) {
-                    if (index != canvas.selectedPointIndex) {
+                    if (index !== canvas.selectedPointIndex) {
                         newPointsArray.push(canvas.arrpoints[index])
                     }
                 }
@@ -77,7 +77,6 @@ Canvas{
     }
 
     Component.onCompleted: {
-        console.log('loadimage')
         var image = loadImage(imageUrl)
     }
 
@@ -116,11 +115,11 @@ Canvas{
             context.beginPath()
             var start = arrpoints[0]
 
-            context.moveTo((start["x"]*canvas.width - sx*canvas.width/canvas.inputWidth)*canvas.scaleFactor, (start["y"]*canvas.height - sy*canvas.height/canvas.inputHeight)*canvas.scaleFactor)
+            context.moveTo((start["x"]*canvas.width - sx*canvas.width)*canvas.scaleFactor/canvas.inputWidth, (start["y"]*canvas.height - sy*canvas.height)*canvas.scaleFactor/canvas.inputHeight)
             for(var j=1; j < arrpoints.length; j++){
                 var end= arrpoints[j]
-                context.lineTo((end["x"]*canvas.width - sx*canvas.width/canvas.inputWidth)*canvas.scaleFactor, (end["y"]*canvas.height - sy*canvas.height/canvas.inputHeight)*canvas.scaleFactor)
-                context.moveTo((end["x"]*canvas.width - sx*canvas.width/canvas.inputWidth)*canvas.scaleFactor, (end["y"]*canvas.height - sy*canvas.height/canvas.inputHeight)*canvas.scaleFactor)
+                context.lineTo((end["x"]*canvas.width - sx*canvas.width)*canvas.scaleFactor/canvas.inputWidth, (end["y"]*canvas.height - sy*canvas.height)*canvas.scaleFactor/canvas.inputHeight)
+                context.moveTo((end["x"]*canvas.width - sx*canvas.width)*canvas.scaleFactor/canvas.inputWidth, (end["y"]*canvas.height - sy*canvas.height)*canvas.scaleFactor/canvas.inputHeight)
             }
             context.closePath()
             context.strokeStyle = "red"
@@ -131,8 +130,8 @@ Canvas{
 
             for(var i=0; i < arrpoints.length; i++){
                 var point = arrpoints[i]
-                var x = (point["x"]*canvas.width - sx*canvas.width/canvas.inputWidth)*canvas.scaleFactor
-                var y = (point["y"]*canvas.height - sy*canvas.height/canvas.inputHeight)*canvas.scaleFactor
+                var x = (point["x"]*canvas.width - sx*canvas.width)*canvas.scaleFactor/canvas.inputWidth
+                var y = (point["y"]*canvas.height - sy*canvas.height)*canvas.scaleFactor/canvas.inputHeight
 
                 context.ellipse(x-radius, y-radius, 2*radius, 2*radius)
 
@@ -175,21 +174,61 @@ Canvas{
             if (toolSelect.currentText === "Draw") {
                 var nx = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width
                 var ny = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height
+                var px = nx*canvas.inputWidth
+                var py = ny*canvas.inputHeight
                 //ToDo: Add paint type
-                pointsTable.testModel.addPoint(nx.toFixed(4), ny.toFixed(4), "line")
-                canvas.arrpoints.push({"x": nx.toFixed(4), "y": ny.toFixed(4), "z": 0, "type": "line"})
+                pointsTable.testModel.addPoint(px.toFixed(2), py.toFixed(2), "line")
+                canvas.arrpoints.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0, "type": "line"})
                 canvas.requestPaint()
             } else if (toolSelect.currentText === "Select") {
                 var minDist = 999999;
                 for (var index in canvas.arrpoints) {
-                    var distX = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width - canvas.arrpoints[index]["x"]
-                    var distY = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height - canvas.arrpoints[index]["y"]
+                    var distX = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width - canvas.arrpoints[index]["x"]/canvas.inputWidth
+                    var distY = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height - canvas.arrpoints[index]["y"]/canvas.inputHeight
                     var radius = Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2))
                     if (radius < 0.02 && radius < minDist) {
                         canvas.selectedPointIndex = index
                         minDist = radius
                     }
                 }
+                canvas.requestPaint()
+            }
+        }
+
+        onDoubleClicked: {
+            if (toolSelect.currentText === "Select") {
+                var minDist = 999999;
+                var nx = ( mouseX/canvas.scaleFactor + imageOffsetX*canvas.width/canvas.inputWidth )/canvas.width
+                var ny = ( mouseY/canvas.scaleFactor + imageOffsetY*canvas.height/canvas.inputHeight )/canvas.height
+                var px = nx*canvas.inputWidth
+                var py = ny*canvas.inputHeight
+                var output = []
+                var needUpdate = false
+                for (var i = 0; i < canvas.arrpoints.length -1; i++) {
+
+                    var slope = (canvas.arrpoints[i]["y"] - canvas.arrpoints[i+1]["y"]) / (canvas.arrpoints[i]["x"] - canvas.arrpoints[i+1]["x"])
+                    var c = canvas.arrpoints[i]["y"] - slope*canvas.arrpoints[i]["x"]
+                    var dist = Math.abs(slope*px - py + c) / Math.sqrt(slope*slope + 1)
+                    output.push({"x": canvas.arrpoints[i]["x"], "y": canvas.arrpoints[i]["y"], "z": canvas.arrpoints[i]["z"], "type": canvas.arrpoints[i]["type"]})
+                    console.log("dist: " + dist)
+                    if (dist < 10 && !needUpdate) {
+                        output.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0 ,"type": "line"})
+                        needUpdate = true
+                    }
+                }
+                if (needUpdate){
+                    if (canvas.arrpoints.length-1 !== output.length) {
+                        output.push({"x": canvas.arrpoints[canvas.arrpoints.length-1]["x"], "y": canvas.arrpoints[canvas.arrpoints.length-1]["y"], "z": canvas.arrpoints[canvas.arrpoints.length-1]["z"] ,"type": "line"})
+                        canvas.arrpoints = []
+                        pointsTable.testModel.refreshData(canvas.arrpoints)
+                        pathSettingTable.model.clearTable()
+                    }
+                    for (var index in output){
+                        pointsTable.testModel.addPoint(output[index]["x"], output[index]["y"], "line")
+                        canvas.arrpoints.push({"x": output[index]["x"], "y": output[index]["y"], "z": 0, "type": "line"})
+                    }
+                }
+
                 canvas.requestPaint()
             }
         }
@@ -202,7 +241,6 @@ Canvas{
         }
 
         onReleased: {
-            console.log('released')
             canvas.isPressed = false
         }
 
@@ -212,8 +250,10 @@ Canvas{
             if (toolSelect.currentText === "Select" && canvas.isPressed) {
                 var nx = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width
                 var ny = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height
-                canvas.arrpoints[canvas.selectedPointIndex]["x"] = nx.toFixed(4)
-                canvas.arrpoints[canvas.selectedPointIndex]["y"] = ny.toFixed(4)
+                var px = nx*canvas.inputWidth
+                var py = ny*canvas.inputHeight
+                canvas.arrpoints[canvas.selectedPointIndex]["x"] = px.toFixed(2)
+                canvas.arrpoints[canvas.selectedPointIndex]["y"] = py.toFixed(2)
                 pointsTable.testModel.refreshData(canvas.arrpoints)
                 canvas.requestPaint()
             }
