@@ -195,6 +195,44 @@ Canvas{
             }
         }
 
+        onDoubleClicked: {
+            if (toolSelect.currentText === "Select") {
+                var minDist = 999999;
+                var nx = ( mouseX/canvas.scaleFactor + imageOffsetX*canvas.width/canvas.inputWidth )/canvas.width
+                var ny = ( mouseY/canvas.scaleFactor + imageOffsetY*canvas.height/canvas.inputHeight )/canvas.height
+                var px = nx*canvas.inputWidth
+                var py = ny*canvas.inputHeight
+                var output = []
+                var needUpdate = false
+                for (var i = 0; i < canvas.arrpoints.length -1; i++) {
+
+                    var slope = (canvas.arrpoints[i]["y"] - canvas.arrpoints[i+1]["y"]) / (canvas.arrpoints[i]["x"] - canvas.arrpoints[i+1]["x"])
+                    var c = canvas.arrpoints[i]["y"] - slope*canvas.arrpoints[i]["x"]
+                    var dist = Math.abs(slope*px - py + c) / Math.sqrt(slope*slope + 1)
+                    output.push({"x": canvas.arrpoints[i]["x"], "y": canvas.arrpoints[i]["y"], "z": canvas.arrpoints[i]["z"], "type": canvas.arrpoints[i]["type"]})
+                    console.log("dist: " + dist)
+                    if (dist < 10 && !needUpdate) {
+                        output.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0 ,"type": "line"})
+                        needUpdate = true
+                    }
+                }
+                if (needUpdate){
+                    if (canvas.arrpoints.length-1 !== output.length) {
+                        output.push({"x": canvas.arrpoints[canvas.arrpoints.length-1]["x"], "y": canvas.arrpoints[canvas.arrpoints.length-1]["y"], "z": canvas.arrpoints[canvas.arrpoints.length-1]["z"] ,"type": "line"})
+                        canvas.arrpoints = []
+                        pointsTable.testModel.refreshData(canvas.arrpoints)
+                        pathSettingTable.model.clearTable()
+                    }
+                    for (var index in output){
+                        pointsTable.testModel.addPoint(output[index]["x"], output[index]["y"], "line")
+                        canvas.arrpoints.push({"x": output[index]["x"], "y": output[index]["y"], "z": 0, "type": "line"})
+                    }
+                }
+
+                canvas.requestPaint()
+            }
+        }
+
         onPressAndHold: {
             if (toolSelect.currentText === "Select") {
                 canvas.focus = true
