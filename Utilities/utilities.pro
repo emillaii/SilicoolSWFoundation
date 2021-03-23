@@ -159,6 +159,7 @@ HEADERS += \
         mashineStateIndicator/towerlight.h \
         errorHandling/errorreporter.h \
         mymath.h \
+        pathCanvasEditor/patheditorconfig.h \
         processkiller.h \
         serialPortWrapper/scserialport.h \
         singletonthread.h \

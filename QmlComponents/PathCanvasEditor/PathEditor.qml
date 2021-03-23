@@ -53,14 +53,15 @@ Item {
 
     FileDialog {
         id: loadImageDialog
-        title: qsTr("选择加载Image")
+        title: qsTr("选择加载图像")
         selectExisting: true
         selectFolder: false
         selectMultiple: false
+        folder: pathEditorConfig.imageDir
 
-        nameFilters: ["Image文件 (*.jpg || *.bmp)"]
+        nameFilters: ["图像文件 (*.jpg || *.bmp || *.png)"]
         onAccepted: {
-            console.log("Selected " + loadImageDialog.fileUrl)
+            pathEditorConfig.setImageDir(folder)
             canvas.imageUrl = loadImageDialog.fileUrl
             var result = pointsTable.testModel.checkImageSize(canvas.imageUrl)
             canvas.inputWidth = result["width"]
@@ -71,13 +72,14 @@ Item {
 
     FileDialog {
         id: saveDispensePathDialog
-        title: qsTr("Save Dispense Path")
+        title: qsTr("保存点胶路径")
         selectExisting: false
         selectFolder: false
         selectMultiple: false
+        folder: pathEditorConfig.pathDir
 
         onAccepted: {
-            console.log("Selected " + fileUrl)
+            pathEditorConfig.setPathDir(folder)
             pointsTable.testModel.saveOutputJson(fileUrl, pathSettingTable.model.getCurrentJsonData())
         }
     }
@@ -88,9 +90,11 @@ Item {
         selectExisting: true
         selectFolder: false
         selectMultiple: false
+        folder: pathEditorConfig.pathDir
+        nameFilters: ["Json文件 (*.json)"]
 
         onAccepted: {
-            console.log("Selected " + fileUrl)
+            pathEditorConfig.setPathDir(folder)
             pointsTable.testModel.loadJson(fileUrl)
         }
     }
@@ -99,25 +103,22 @@ Item {
         ColumnLayout {
             RowLayout{
                 Button {
-                    text: qsTr("Load Image")
+                    text: qsTr("加载图像")
                     onClicked: {
                         loadImageDialog.open()
                     }
-                }
-                TextField {
-                    text: canvas.imageUrl
                 }
             }
 
             RowLayout{
                 Button {
-                    text: qsTr("Save Dispense Path")
+                    text: qsTr("保存点胶路径")
                     onClicked: {
                         saveDispensePathDialog.open()
                     }
                 }
                 Button {
-                    text: qsTr("Load Dispense Path")
+                    text: qsTr("加载点胶路径")
                     onClicked: {
                         loadDispensePathDialog.open()
                     }

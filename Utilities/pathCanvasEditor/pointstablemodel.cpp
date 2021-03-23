@@ -1,12 +1,9 @@
 #include "PointsTableModel.h"
 #include <QDebug>
-#include <QJsonDocument>
 #include <QImageReader>
+#include <QJsonDocument>
 
-PointsTableModel::PointsTableModel(QObject *parent)
-    : QAbstractTableModel(parent)
-{
-}
+PointsTableModel::PointsTableModel(QObject *parent) : QAbstractTableModel(parent) {}
 
 QStringList PointsTableModel::getHorHeader() const
 {
@@ -15,37 +12,38 @@ QStringList PointsTableModel::getHorHeader() const
 
 void PointsTableModel::setHorHeader(const QStringList &header)
 {
-    _horHeaderList=header;
+    _horHeaderList = header;
     emit horHeaderChanged();
 }
 
 void PointsTableModel::classBegin()
 {
-    //qDebug()<<"EasyTableModel::classBegin()";
+    // qDebug()<<"EasyTableModel::classBegin()";
 }
 
 void PointsTableModel::componentComplete()
 {
-    //qDebug()<<"EasyTableModel::componentComplete()";
-    _completed=true;
+    // qDebug()<<"EasyTableModel::componentComplete()";
+    _completed = true;
 }
 
 QHash<int, QByteArray> PointsTableModel::roleNames() const
 {
-    //value表示取值，edit表示编辑
-    return QHash<int,QByteArray>{
-        { Qt::DisplayRole,"value" },
-        { Qt::EditRole,"edit" }
-    };
+    // value表示取值，edit表示编辑
+    return QHash<int, QByteArray>{ { Qt::DisplayRole, "value" }, { Qt::EditRole, "edit" } };
 }
 
 QVariant PointsTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     //返回表头数据，无效的返回None
-    if(role==Qt::DisplayRole){
-        if(orientation==Qt::Horizontal){
-            return _horHeaderList.value(section,QString::number(section));
-        }else if(orientation==Qt::Vertical){
+    if (role == Qt::DisplayRole)
+    {
+        if (orientation == Qt::Horizontal)
+        {
+            return _horHeaderList.value(section, QString::number(section));
+        }
+        else if (orientation == Qt::Vertical)
+        {
             return QString::number(section);
         }
     }
@@ -54,16 +52,17 @@ QVariant PointsTableModel::headerData(int section, Qt::Orientation orientation, 
 
 bool PointsTableModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
 {
-    if (value != headerData(section, orientation, role)) {
-        if(orientation==Qt::Horizontal&&role==Qt::EditRole){
-            _horHeaderList[section]=value.toString();
+    if (value != headerData(section, orientation, role))
+    {
+        if (orientation == Qt::Horizontal && role == Qt::EditRole)
+        {
+            _horHeaderList[section] = value.toString();
             emit headerDataChanged(orientation, section, section);
             return true;
         }
     }
     return false;
 }
-
 
 int PointsTableModel::rowCount(const QModelIndex &parent) const
 {
@@ -83,21 +82,24 @@ QVariant PointsTableModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    switch (role) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-        return _modelData.at(index.row()).at(index.column());
-    default:
-        break;
+    switch (role)
+    {
+        case Qt::DisplayRole:
+        case Qt::EditRole:
+            return _modelData.at(index.row()).at(index.column());
+        default:
+            break;
     }
     return QVariant();
 }
 
 bool PointsTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (value.isValid()&&index.isValid()&&(data(index, role) != value)) {
-        if(Qt::EditRole==role){
-            _modelData[index.row()][index.column()]=value;
+    if (value.isValid() && index.isValid() && (data(index, role) != value))
+    {
+        if (Qt::EditRole == role)
+        {
+            _modelData[index.row()][index.column()] = value;
             emit dataChanged(index, index, QVector<int>() << role);
             return true;
         }
@@ -109,9 +111,8 @@ Qt::ItemFlags PointsTableModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
-    return Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsEditable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
-
 
 QJsonArray PointsTableModel::getInitData() const
 {
@@ -120,7 +121,7 @@ QJsonArray PointsTableModel::getInitData() const
 
 void PointsTableModel::setInitData(const QJsonArray &jsonArr)
 {
-    _initData=jsonArr;
+    _initData = jsonArr;
 }
 
 QJsonArray PointsTableModel::getVelocityData() const
@@ -130,7 +131,7 @@ QJsonArray PointsTableModel::getVelocityData() const
 
 void PointsTableModel::setVelocityData(const QJsonArray &jsonArr)
 {
-    _velocityData=jsonArr;
+    _velocityData = jsonArr;
 }
 
 void PointsTableModel::loadData(const QJsonArray &data)
@@ -140,14 +141,16 @@ void PointsTableModel::loadData(const QJsonArray &data)
     QVector<QVector<QVariant>> newData;
     QJsonArray::const_iterator iter;
     int index = 0;
-    for(iter=data.begin();iter!=data.end();++iter){
+    for (iter = data.begin(); iter != data.end(); ++iter)
+    {
         QString dataZ = _modelData[index][2].toString();
         QVector<QVariant> newRow;
-        const QJsonObject itemRow=(*iter).toObject();
+        const QJsonObject itemRow = (*iter).toObject();
         QString x = itemRow["x"].toString();
         QString y = itemRow["y"].toString();
         QString z = dataZ;
-        if (x.isEmpty()) {
+        if (x.isEmpty())
+        {
             x = QString::number(itemRow["x"].toDouble());
             y = QString::number(itemRow["y"].toDouble());
         }
@@ -159,7 +162,7 @@ void PointsTableModel::loadData(const QJsonArray &data)
         index++;
     }
     emit beginResetModel();
-    _modelData=newData;
+    _modelData = newData;
     emit endResetModel();
 }
 
@@ -181,8 +184,9 @@ void PointsTableModel::addPoint(double x, double y, QString type)
     emit beginResetModel();
     _modelData.append(newRow);
     emit endResetModel();
-    //Signal velocity table to add new path setting
-    if (_modelData.length()>1) {
+    // Signal velocity table to add new path setting
+    if (_modelData.length() > 1)
+    {
         emit newPathAdded();
     }
 }
@@ -204,7 +208,8 @@ void PointsTableModel::saveOutputJson(QString filename, QString velocityJson)
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QJsonObject outputJsonObj;
     QJsonArray *pointList = new QJsonArray();
-    for (int i = 0; i < _modelData.length(); i++) {
+    for (int i = 0; i < _modelData.length(); i++)
+    {
         QJsonObject obj;
         obj["x"] = _modelData[i].at(0).toDouble();
         obj["y"] = _modelData[i].at(1).toDouble();
@@ -241,7 +246,8 @@ void PointsTableModel::loadJson(QString filename)
 
     emit beginResetModel();
     _modelData.clear();
-    for (QJsonValue json : jsonArray){
+    for (QJsonValue json : jsonArray)
+    {
         double x = json["x"].toDouble();
         double y = json["y"].toDouble();
         double z = json["z"].toDouble();
@@ -261,11 +267,13 @@ void PointsTableModel::loadJson(QString filename)
     emit dataLoaded();
 }
 
-void PointsTableModel::refreshData(QJsonArray data){
+void PointsTableModel::refreshData(QJsonArray data)
+{
     loadData(data);
 }
 
-QJsonObject PointsTableModel::checkImageSize(QString filename){
+QJsonObject PointsTableModel::checkImageSize(QString filename)
+{
     QJsonObject object;
     filename.replace("file:///", "");
     QImageReader reader(filename);

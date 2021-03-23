@@ -1,15 +1,14 @@
 #ifndef POINTSTABLEMODEL_H
 #define POINTSTABLEMODEL_H
 
+#include "utilities_global.h"
 #include <QAbstractTableModel>
-#include <QQmlParserStatus>
 #include <QHash>
-#include <QList>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
-
-#include "utilities_global.h"
+#include <QList>
+#include <QQmlParserStatus>
 
 class UTILITIESSHARED_EXPORT PointsTableModel : public QAbstractTableModel, public QQmlParserStatus
 {
@@ -36,7 +35,7 @@ public:
     // QQmlParserStatus：构造后
     void componentComplete() override;
     // 自定义role
-    QHash<int,QByteArray> roleNames() const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     // 表头
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,17 +47,16 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     // 编辑
-    bool setData(const QModelIndex &index, const QVariant &value,
-                 int role = Qt::EditRole) override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     // Add data:
-    //bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    //bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+    // bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    // bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
     // Remove data:
-    //bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    //bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+    // bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    // bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
 private:
     void loadData(const QJsonArray &data);
@@ -69,9 +67,10 @@ signals:
     void velocityDataChanged();
     void dataLoaded();
     void newPathAdded();
+
 private:
     // 组件是否初始化完成
-    bool _completed=false;
+    bool _completed = false;
     QJsonArray _initData;
     QJsonArray _velocityData;
     // 数据，我一般纯展示，用vector就行了
@@ -83,13 +82,13 @@ public slots:
     void clearTable();
     void refreshData(QJsonArray data);
     void addPoint(double x, double y, QString type);
-    //Update model data
+    // Update model data
     void updateData(int row, int col, double newValue);
-    //Save Output Dispense Path Json file
+    // Save Output Dispense Path Json file
     void saveOutputJson(QString filename, QString velocityJson);
-    //Load DispensePath Json file
+    // Load DispensePath Json file
     void loadJson(QString filename);
     QJsonObject checkImageSize(QString filename);
 };
 
-#endif // POINTSTABLEMODEL_H
+#endif    // POINTSTABLEMODEL_H
