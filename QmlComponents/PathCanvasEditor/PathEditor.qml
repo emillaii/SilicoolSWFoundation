@@ -147,151 +147,138 @@ Item {
                 title: 'Select Step'
                 height: 100
                 RowLayout{
-                    CheckBox {
+                    RadioButton {
                         id: stepSelectionBox_1
                         text: qsTr("1")
-                        onCheckedChanged: {
-                            if (checked) {
-                                stepSelectionBox_2.checked = false
-                                stepSelectionBox_3.checked = false
-                            }
-                        }
                     }
-                    CheckBox {
+                    RadioButton {
                         id: stepSelectionBox_2
                         text: qsTr("5")
                         checked: true
-                        onClicked: {
-                            if (checked) {
-                                stepSelectionBox_1.checked = false
-                                stepSelectionBox_3.checked = false
-                            }
-                        }
                     }
-                    CheckBox {
+                    RadioButton {
                         id: stepSelectionBox_3
                         text: qsTr("10")
-                        onCheckedChanged: {
-                            if (checked) {
-                                stepSelectionBox_1.checked = false
-                                stepSelectionBox_2.checked = false
+                    }
+                }
+            }
+
+            GroupBox{
+                title: qsTr("图像操作")
+                ColumnLayout{
+                    RowLayout{
+                        Button {
+                            text: qsTr("Zoom in")
+                            onClicked: {
+                                canvas.scaleFactor += 1
+                                canvas.requestPaint()
+                            }
+                        }
+                        Button {
+                            text: qsTr("Zoom out")
+                            onClicked:  {
+                                canvas.scaleFactor -= 1
+                                if (canvas.scaleFactor == 0) canvas.scaleFactor = 1
+                                canvas.requestPaint()
+                            }
+                        }
+                    }
+
+                    RowLayout{
+                        Slider {
+                            from: 1
+                            value: 10
+                            to: canvas.inputWidth - canvas.inputWidth/canvas.scaleFactor
+                            onValueChanged: {
+                                canvas.imageOffsetX  = value;
+                                canvas.requestPaint()
+                            }
+                        }
+                        Slider {
+                            from: 1
+                            value: 10
+                            to: canvas.inputHeight - canvas.inputHeight/canvas.scaleFactor
+                            onValueChanged: {
+                                canvas.imageOffsetY  = value;
+                                canvas.requestPaint()
                             }
                         }
                     }
                 }
             }
 
-            Label{
-                text: qsTr(" 图像 XY 拖拽/缩放")
-            }
+            GroupBox{
+                title: qsTr("路径操作")
 
-            RowLayout{
-                Button {
-                    text: qsTr("Zoom in")
-                    onClicked: {
-                        canvas.scaleFactor += 1
-                        canvas.requestPaint()
+                ColumnLayout{
+                    RowLayout{
+                        TextField {
+                            id: rotatePattern
+                            text: "0"
+                        }
+                        Button {
+                            text: "+T"
+                            onClicked: {
+                                rotate(rotatePattern.text)
+                            }
+                        }
+                        Button {
+                            text: "-T"
+                            onClicked: {
+                                rotate(-rotatePattern.text)
+                            }
+                        }
                     }
-                }
-                Button {
-                    text: qsTr("Zoom out")
-                    onClicked:  {
-                        canvas.scaleFactor -= 1
-                        if (canvas.scaleFactor == 0) canvas.scaleFactor = 1
-                        canvas.requestPaint()
-                    }
-                }
-            }
 
-            RowLayout{
-                Slider {
-                    from: 1
-                    value: 10
-                    to: canvas.inputWidth - canvas.inputWidth/canvas.scaleFactor
-                    onValueChanged: {
-                        canvas.imageOffsetX  = value;
-                        canvas.requestPaint()
+                    RowLayout{
+                        Button {
+                            text: qsTr("+X")
+                            onClicked: {
+                                var stepSize = 0
+                                if (stepSelectionBox_1.checked) stepSize = 1
+                                else if (stepSelectionBox_2.checked) stepSize = 5
+                                else stepSize = 10
+                                translate(stepSize, 0)
+                            }
+                        }
+                        Button {
+                            text: qsTr("-X")
+                            onClicked: {
+                                var stepSize = 0
+                                if (stepSelectionBox_1.checked) stepSize = 1
+                                else if (stepSelectionBox_2.checked) stepSize = 5
+                                else stepSize = 10
+                                translate(-stepSize, 0)
+                            }
+                        }
+                        Button {
+                            text: qsTr("+Y")
+                            onClicked: {
+                                var stepSize = 0
+                                if (stepSelectionBox_1.checked) stepSize = 1
+                                else if (stepSelectionBox_2.checked) stepSize = 5
+                                else stepSize = 10
+                                translate(0, -stepSize)
+                            }
+                        }
+                        Button {
+                            text: qsTr("-Y")
+                            onClicked: {
+                                var stepSize = 0
+                                if (stepSelectionBox_1.checked) stepSize = 1
+                                else if (stepSelectionBox_2.checked) stepSize = 5
+                                else stepSize = 10
+                                translate(0, stepSize)
+                            }
+                        }
                     }
-                }
-                Slider {
-                    from: 1
-                    value: 10
-                    to: canvas.inputHeight - canvas.inputHeight/canvas.scaleFactor
-                    onValueChanged: {
-                        canvas.imageOffsetY  = value;
-                        canvas.requestPaint()
-                    }
-                }
-            }
 
-            Label{
-                text: qsTr(" 整体拖拽/旋转")
-            }
-
-            RowLayout{
-                TextField {
-                    id: rotatePattern
-                    text: "0"
-                }
-                Button {
-                    text: "+T"
-                    onClicked: {
-                        rotate(rotatePattern.text)
-                    }
-                }
-                Button {
-                    text: "-T"
-                    onClicked: {
-                        rotate(-rotatePattern.text)
-                    }
-                }
-            }
-
-            RowLayout{
-                Button {
-                    text: qsTr("+X")
-                    onClicked: {
-                        var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 1
-                        else if (stepSelectionBox_2.checked) stepSize = 5
-                        else stepSize = 10
-                        translate(stepSize, 0)
-                    }
-                }
-                Button {
-                    text: qsTr("-X")
-                    onClicked: {
-                        var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 1
-                        else if (stepSelectionBox_2.checked) stepSize = 5
-                        else stepSize = 10
-                        translate(-stepSize, 0)
-                    }
-                }
-                Button {
-                    text: qsTr("+Y")
-                    onClicked: {
-                        var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 1
-                        else if (stepSelectionBox_2.checked) stepSize = 5
-                        else stepSize = 10
-                        translate(0, -stepSize)
-                    }
-                }
-                Button {
-                    text: qsTr("-Y")
-                    onClicked: {
-                        var stepSize = 0
-                        if (stepSelectionBox_1.checked) stepSize = 1
-                        else if (stepSelectionBox_2.checked) stepSize = 5
-                        else stepSize = 10
-                        translate(0, stepSize)
-                    }
                 }
             }
 
             PointsTableWidget{
                 implicitWidth: 300
+                implicitHeight: 300
                 id: pointsTable
                 Connections {
                     target: pointsTable.testModel
@@ -316,6 +303,7 @@ Item {
             }
 
             PathSettingTableWidget{
+                visible: false
                 implicitWidth: 300
                 id: pathSettingTable
             }

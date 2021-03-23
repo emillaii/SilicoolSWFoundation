@@ -26,9 +26,9 @@ Canvas{
         if (toolSelect.currentText === "Select") {
 
             var stepSize = 0
-            if (stepSelectionBox_1.checked) stepSize = 0.0001
-            else if (stepSelectionBox_2.checked) stepSize = 0.001
-            else stepSize = 0.01
+            if (stepSelectionBox_1.checked) stepSize = parseFloat(stepSelectionBox_1.text)
+            else if (stepSelectionBox_2.checked) stepSize = parseFloat(stepSelectionBox_2.text)
+            else stepSize = parseFloat(stepSelectionBox_3.text)
 
             if (event.key === 16777235){
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["y"]) - stepSize
@@ -55,9 +55,10 @@ Canvas{
             canvas.requestPaint()
         } else if (toolSelect.currentText === "Move Image") {
             var stepSize = 0
-            if (stepSelectionBox_1.checked) stepSize = 1
-            else if (stepSelectionBox_2.checked) stepSize = 10
-            else stepSize = 20
+            if (stepSelectionBox_1.checked) stepSize = parseFloat(stepSelectionBox_1.text)
+            else if (stepSelectionBox_2.checked) stepSize = parseFloat(stepSelectionBox_2.text)
+            else stepSize = parseFloat(stepSelectionBox_3.text)
+
             if (event.key == 16777235){
                 canvas.imageOffsetY -= stepSize;
                 if (canvas.imageOffsetY < 0) canvas.imageOffsetY = 0
