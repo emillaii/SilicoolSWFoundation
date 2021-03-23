@@ -7,14 +7,14 @@ Item {
     ColumnLayout{
         ObjectEditor{
             configModel: laserSerialPortConfig
-            sectionName: qsTr("LaserSerialPortConfig")
+            sectionName: qsTr("激光测高仪串口配置")
             Component.onCompleted: {
                 init()
             }
         }
         RowLayout{
             LaserStation{
-                laserName: qsTr("LeftLaser")
+                laserName: qsTr("左激光测高仪")
                 laserConfig: leftLaserConfig
                 laser: leftLaser
                 Component.onCompleted: {
@@ -22,7 +22,7 @@ Item {
                 }
             }
             LaserStation{
-                laserName: qsTr("RightLaser")
+                laserName: qsTr("右激光测高仪")
                 laserConfig: rightLaserConfig
                 laser: rightLaser
                 Component.onCompleted: {
