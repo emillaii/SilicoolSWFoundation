@@ -24,7 +24,7 @@ public:
     virtual AxisConfig *createAxisConfig(AxisDefinition::AxisType axisType, QObject *parent) override;
     virtual const QMetaObject *ioConfigMetaObj() const override;
     virtual const QMetaObject *axisConfigMetaObj() const override;
-    virtual const QMetaObject *vcmConfigMetaObj() const override;
+    virtual const QMetaObject *extendedAxis3ConfigMetaObj() const override;
     virtual SCDispenser *
     createDispenser(const QLoggingCategory &logCate, DispenserConfig *dispenserConfig, QObject *parent) override;
 };
