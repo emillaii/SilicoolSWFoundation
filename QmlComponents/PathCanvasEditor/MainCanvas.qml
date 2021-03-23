@@ -23,12 +23,8 @@ Canvas{
 
     Keys.onPressed: {
         console.log(event.key)
-        if (toolSelect.currentText === "Select") {
-
-            var stepSize = 0
-            if (stepSelectionBox_1.checked) stepSize = parseFloat(stepSelectionBox_1.text)
-            else if (stepSelectionBox_2.checked) stepSize = parseFloat(stepSelectionBox_2.text)
-            else stepSize = parseFloat(stepSelectionBox_3.text)
+        if (rdbSelect.checked) {
+            var stepSize = parseFloat(selectedStep.text)
 
             if (event.key === 16777235){
                 var result = parseFloat(canvas.arrpoints[canvas.selectedPointIndex]["y"]) - stepSize
@@ -52,27 +48,6 @@ Canvas{
                 canvas.arrpoints = newPointsArray
             }
             pointsTable.testModel.refreshData(canvas.arrpoints)
-            canvas.requestPaint()
-        } else if (toolSelect.currentText === "Move Image") {
-            var stepSize = 0
-            if (stepSelectionBox_1.checked) stepSize = parseFloat(stepSelectionBox_1.text)
-            else if (stepSelectionBox_2.checked) stepSize = parseFloat(stepSelectionBox_2.text)
-            else stepSize = parseFloat(stepSelectionBox_3.text)
-
-            if (event.key == 16777235){
-                canvas.imageOffsetY -= stepSize;
-                if (canvas.imageOffsetY < 0) canvas.imageOffsetY = 0
-            } else if (event.key == 16777237) {
-                canvas.imageOffsetY += stepSize;
-                if (canvas.imageOffsetY < 0) canvas.imageOffsetY = 0
-            } else if (event.key == 16777236) {
-                canvas.imageOffsetX += stepSize
-                if (canvas.imageOffsetX < 0) canvas.imageOffsetX = 0
-            } else if (event.key == 16777234) {
-                canvas.imageOffsetX -= stepSize
-                if (canvas.imageOffsetX < 0) canvas.imageOffsetX = 0
-            }
-            console.log('canvas.imageOffset: ' + canvas.imageOffsetX + ' ' + canvas.imageOffsetY)
             canvas.requestPaint()
         }
     }
@@ -177,7 +152,7 @@ Canvas{
             var sx = (imageOffsetX)
             var sy = (imageOffsetY)
 
-            if (toolSelect.currentText === "Draw") {
+            if (rdbDraw.checked) {
                 var nx = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width
                 var ny = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height
                 var px = nx*canvas.inputWidth
@@ -186,7 +161,7 @@ Canvas{
                 pointsTable.testModel.addPoint(px.toFixed(2), py.toFixed(2), "line")
                 canvas.arrpoints.push({"x": px.toFixed(2), "y": py.toFixed(2), "z": 0, "type": "line"})
                 canvas.requestPaint()
-            } else if (toolSelect.currentText === "Select") {
+            } else if (rdbSelect.checked) {
                 var minDist = 999999;
                 for (var index in canvas.arrpoints) {
                     var distX = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width - canvas.arrpoints[index]["x"]/canvas.inputWidth
@@ -202,7 +177,7 @@ Canvas{
         }
 
         onDoubleClicked: {
-            if (toolSelect.currentText === "Select") {
+            if (rdbSelect.checked) {
                 var minDist = 999999;
                 var nx = ( mouseX/canvas.scaleFactor + imageOffsetX*canvas.width/canvas.inputWidth )/canvas.width
                 var ny = ( mouseY/canvas.scaleFactor + imageOffsetY*canvas.height/canvas.inputHeight )/canvas.height
@@ -272,7 +247,6 @@ Canvas{
                         output.push({"x": canvas.arrpoints[canvas.arrpoints.length-1]["x"], "y": canvas.arrpoints[canvas.arrpoints.length-1]["y"], "z": canvas.arrpoints[canvas.arrpoints.length-1]["z"] ,"type": "line"})
                         canvas.arrpoints = []
                         pointsTable.testModel.refreshData(canvas.arrpoints)
-                        pathSettingTable.model.clearTable()
                     }
                     for (var index in output){
                         pointsTable.testModel.addPoint(output[index]["x"], output[index]["y"], "line")
@@ -285,7 +259,7 @@ Canvas{
         }
 
         onPressAndHold: {
-            if (toolSelect.currentText === "Select") {
+            if (rdbSelect.checked) {
                 canvas.focus = true
                 canvas.isPressed = true
             }
@@ -298,7 +272,7 @@ Canvas{
         onMouseXChanged: {
             var sx = (imageOffsetX)
             var sy = (imageOffsetY)
-            if (toolSelect.currentText === "Select" && canvas.isPressed) {
+            if (rdbSelect.checked && canvas.isPressed) {
                 var nx = ( mouseX/canvas.scaleFactor + sx*canvas.width/canvas.inputWidth )/canvas.width
                 var ny = ( mouseY/canvas.scaleFactor + sy*canvas.height/canvas.inputHeight )/canvas.height
                 var px = nx*canvas.inputWidth

@@ -4,6 +4,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.2
+import "qrc:/qmlComponents/CustomizedUIElement"
 
 Item {
 
@@ -19,8 +20,8 @@ Item {
         for (var index in canvas.arrpoints) {
             var px = parseFloat(canvas.arrpoints[index]["x"])
             var py = parseFloat(canvas.arrpoints[index]["y"])
-            var nx = parseFloat(px) + parseFloat(x)
-            var ny = parseFloat(py) + parseFloat(y)
+            var nx = px + parseFloat(x)
+            var ny = py + parseFloat(y)
             newPointsArray.push({"x": nx,
                                  "y": ny,
                                  "z": canvas.arrpoints[index]["z"],
@@ -41,6 +42,26 @@ Item {
 
             var nx = Math.cos(theta)*(px - canvas.inputWidth/2) - Math.sin(theta)*(py-canvas.inputHeight/2) +  canvas.inputWidth/2
             var ny = Math.sin(theta)*(px - canvas.inputWidth/2) + Math.cos(theta)*(py-canvas.inputHeight/2) +  canvas.inputHeight/2
+            newPointsArray.push({"x": nx,
+                                 "y": ny,
+                                 "z": canvas.arrpoints[index]["z"],
+                                 "type": canvas.arrpoints[index]["type"]})
+        }
+        canvas.arrpoints = newPointsArray
+        pointsTable.testModel.refreshData(canvas.arrpoints)
+        canvas.requestPaint()
+    }
+
+    function doScale(s){
+        s = parseFloat(s)
+        var newPointsArray = []
+        var centerX = canvas.inputWidth / 2
+        var centerY = canvas.inputHeight / 2
+        for (var index in canvas.arrpoints) {
+            var px = parseFloat(canvas.arrpoints[index]["x"])
+            var py = parseFloat(canvas.arrpoints[index]["y"])
+            var nx = (px - centerX) * s + centerX
+            var ny = (py - centerY) * s + centerY
             newPointsArray.push({"x": nx,
                                  "y": ny,
                                  "z": canvas.arrpoints[index]["z"],
@@ -80,7 +101,12 @@ Item {
 
         onAccepted: {
             pathEditorConfig.setPathDir(folder)
-            pointsTable.testModel.saveOutputJson(fileUrl, pathSettingTable.model.getCurrentJsonData())
+            pointsTable.testModel.saveOutputJson(fileUrl)
+            var fileName = fileUrl.toString()
+            fileName = fileName.replace("file:///", "");
+            fileName =  fileName.replace(".json", "")
+            fileName += "_resultPath.jpg"
+            canvas.save(fileName)
         }
     }
 
@@ -101,6 +127,7 @@ Item {
 
     RowLayout {
         ColumnLayout {
+            Layout.alignment: Qt.AlignTop
             RowLayout{
                 Button {
                     text: qsTr("加载图像")
@@ -126,17 +153,25 @@ Item {
             }
 
             RowLayout{
-                ComboBox {
-                    id: toolSelect
-                    implicitWidth: 100
-                    model: ["Draw", "Select", "Move Image"]
+                Frame{
+                    RowLayout{
+                        RadioButton{
+                            id: rdbDraw
+                            text: qsTr("Draw")
+                            checked: true
+                        }
+                        RadioButton{
+                            id: rdbSelect
+                            text: qsTr("Select")
+                        }
+                    }
                 }
+
                 Button {
                     text: qsTr("Clear All")
                     onClicked: {
                         canvas.arrpoints = []
                         pointsTable.testModel.refreshData(canvas.arrpoints)
-                        pathSettingTable.model.clearTable()
                         canvas.requestPaint()
                     }
                 }
@@ -145,20 +180,26 @@ Item {
 
             GroupBox {
                 title: 'Select Step'
-                height: 100
                 RowLayout{
-                    RadioButton {
-                        id: stepSelectionBox_1
-                        text: qsTr("1")
+                    MyIntInput{
+                        id: selectedStep
+                        text: "5"
                     }
-                    RadioButton {
-                        id: stepSelectionBox_2
-                        text: qsTr("5")
-                        checked: true
-                    }
-                    RadioButton {
-                        id: stepSelectionBox_3
-                        text: qsTr("10")
+
+                    Repeater{
+                        model: ["1", "5", "10", "50"]
+                        delegate: RadioButton
+                        {
+                            text: modelData
+                            onCheckedChanged: {
+                                if(checked){
+                                    selectedStep.text = modelData
+                                }
+                            }
+                            Component.onCompleted: {
+                                checked = (modelData === "5")
+                            }
+                        }
                     }
                 }
             }
@@ -185,6 +226,9 @@ Item {
                     }
 
                     RowLayout{
+                        Label{
+                            text: "X:"
+                        }
                         Slider {
                             from: 1
                             value: 10
@@ -193,6 +237,12 @@ Item {
                                 canvas.imageOffsetX  = value;
                                 canvas.requestPaint()
                             }
+                        }
+                    }
+
+                    RowLayout{
+                        Label{
+                            text: "Y:"
                         }
                         Slider {
                             from: 1
@@ -212,7 +262,7 @@ Item {
 
                 ColumnLayout{
                     RowLayout{
-                        TextField {
+                        MyDoubleInput {
                             id: rotatePattern
                             text: "0"
                         }
@@ -231,81 +281,97 @@ Item {
                     }
 
                     RowLayout{
+                        MyDoubleInput {
+                            id: txtScale
+                            text: "1"
+                        }
+                        Button {
+                            text: qsTr("放大")
+                            onClicked: {
+                                var s = parseFloat(txtScale.text)
+                                if(s === 0){
+                                    return
+                                }
+                                if(s > 1){
+                                    doScale(s)
+                                }else{
+                                    doScale(1.0 / s)
+                                }
+                            }
+                        }
+                        Button {
+                            text: qsTr("缩小")
+                            onClicked: {
+                                var s = parseFloat(txtScale.text)
+                                if(s === 0){
+                                    return
+                                }
+                                if(s > 1){
+                                    doScale(1.0 / s)
+                                }else{
+                                    doScale(s)
+                                }
+                            }
+                        }
+                    }
+
+                    RowLayout{
                         Button {
                             text: qsTr("+X")
                             onClicked: {
-                                var stepSize = 0
-                                if (stepSelectionBox_1.checked) stepSize = 1
-                                else if (stepSelectionBox_2.checked) stepSize = 5
-                                else stepSize = 10
+                                var stepSize = parseFloat(selectedStep.text)
                                 translate(stepSize, 0)
                             }
                         }
                         Button {
                             text: qsTr("-X")
                             onClicked: {
-                                var stepSize = 0
-                                if (stepSelectionBox_1.checked) stepSize = 1
-                                else if (stepSelectionBox_2.checked) stepSize = 5
-                                else stepSize = 10
+                                var stepSize = parseFloat(selectedStep.text)
                                 translate(-stepSize, 0)
                             }
                         }
                         Button {
                             text: qsTr("+Y")
                             onClicked: {
-                                var stepSize = 0
-                                if (stepSelectionBox_1.checked) stepSize = 1
-                                else if (stepSelectionBox_2.checked) stepSize = 5
-                                else stepSize = 10
+                                var stepSize = parseFloat(selectedStep.text)
                                 translate(0, -stepSize)
                             }
                         }
                         Button {
                             text: qsTr("-Y")
                             onClicked: {
-                                var stepSize = 0
-                                if (stepSelectionBox_1.checked) stepSize = 1
-                                else if (stepSelectionBox_2.checked) stepSize = 5
-                                else stepSize = 10
+                                var stepSize = parseFloat(selectedStep.text)
                                 translate(0, stepSize)
                             }
                         }
                     }
-
                 }
             }
 
-            PointsTableWidget{
-                implicitWidth: 300
-                implicitHeight: 300
-                id: pointsTable
-                Connections {
-                    target: pointsTable.testModel
-                    onDataLoaded: {
-                        canvas.arrpoints = []
-                        for (var index in pointsTable.testModel.initData)
-                        {
-                            console.log(pointsTable.testModel.initData[index]["x"])
-                            canvas.arrpoints.push({"x": pointsTable.testModel.initData[index]["x"],
-                                                   "y": pointsTable.testModel.initData[index]["y"],
-                                                   "z": pointsTable.testModel.initData[index]["z"],
-                                                   "type": "line"})
+            GroupBox{
+                title: qsTr("路径")
+
+                PointsTableWidget{
+                    implicitWidth: 300
+                    implicitHeight: 250
+                    id: pointsTable
+                    Connections {
+                        target: pointsTable.testModel
+                        onDataLoaded: {
+                            canvas.arrpoints = []
+                            for (var index in pointsTable.testModel.initData)
+                            {
+                                console.log(pointsTable.testModel.initData[index]["x"])
+                                canvas.arrpoints.push({"x": pointsTable.testModel.initData[index]["x"],
+                                                       "y": pointsTable.testModel.initData[index]["y"],
+                                                       "z": pointsTable.testModel.initData[index]["z"],
+                                                       "type": "line"})
+                            }
+
+                            canvas.requestPaint()
                         }
-
-                        pathSettingTable.model.refreshData(pointsTable.testModel.velocityData)
-                        canvas.requestPaint()
-                    }
-                    onNewPathAdded: {
-                        pathSettingTable.model.addPathVelocity()
                     }
                 }
-            }
-
-            PathSettingTableWidget{
-                visible: false
-                implicitWidth: 300
-                id: pathSettingTable
             }
         }
 

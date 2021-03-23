@@ -85,7 +85,7 @@ public slots:
     // Update model data
     void updateData(int row, int col, double newValue);
     // Save Output Dispense Path Json file
-    void saveOutputJson(QString filename, QString velocityJson);
+    void saveOutputJson(QString filename);
     // Load DispensePath Json file
     void loadJson(QString filename);
     QJsonObject checkImageSize(QString filename);

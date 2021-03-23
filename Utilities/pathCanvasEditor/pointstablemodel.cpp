@@ -197,9 +197,8 @@ void PointsTableModel::updateData(int row, int col, double newValue)
     qInfo("Ori value: %f", _modelData[row][col].toDouble());
 }
 
-void PointsTableModel::saveOutputJson(QString filename, QString velocityJson)
+void PointsTableModel::saveOutputJson(QString filename)
 {
-    qInfo("velocity json %s", velocityJson.toStdString().c_str());
     filename.replace("file:///", "");
     filename.replace(".json", "");
     filename.append(".json");
@@ -218,11 +217,7 @@ void PointsTableModel::saveOutputJson(QString filename, QString velocityJson)
         pointList->append(obj);
     }
 
-    QJsonDocument velocityDoc = QJsonDocument::fromJson(velocityJson.toUtf8());
-    QJsonArray velocityArray = velocityDoc.array();
-
     outputJsonObj["points"] = *pointList;
-    outputJsonObj["velocity"] = velocityArray;
 
     QJsonDocument saveDoc(outputJsonObj);
     file.write(saveDoc.toJson());
@@ -242,7 +237,6 @@ void PointsTableModel::loadJson(QString filename)
 
     QJsonObject jsonObj = QJsonDocument::fromJson(settings.toUtf8()).object();
     QJsonArray jsonArray = jsonObj["points"].toArray();
-    QJsonArray velocityArray = jsonObj["velocity"].toArray();
 
     emit beginResetModel();
     _modelData.clear();
@@ -261,7 +255,6 @@ void PointsTableModel::loadJson(QString filename)
     }
 
     setInitData(jsonArray);
-    setVelocityData(velocityArray);
 
     emit endResetModel();
     emit dataLoaded();
