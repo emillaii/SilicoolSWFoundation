@@ -36,10 +36,10 @@ INCLUDEPATH +=   ../Utilities     \
 DESTDIR = ./Release
 OBJECTS_DIR = ./Release/Objs
 MOC_DIR = ./Release/Mocs
-LIBS += ../SCLibs/utilities.lib
-LIBS += ../SCLibs/SCVision.lib
-LIBS += ../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
-LIBS += ../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
+LIBS += ../../SCLibs/utilities.lib
+LIBS += ../../SCLibs/SCVision.lib
+LIBS += ../../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
+LIBS += ../../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
 
 SOURCES += \
         hikvision.cpp

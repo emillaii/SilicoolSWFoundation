@@ -42,10 +42,10 @@ void HikVision::disposeImpl()
 
 bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
 {
+
     HikVisionLocationConfig *hikPrConfig = qobject_cast<HikVisionLocationConfig *>(prConfig);
     SC_ASSERT(hikPrConfig != nullptr);
     SC_ASSERT(image.format() == QImage::Format_Indexed8);
-
 
     IMVS_PF_INPUT_IMAGE_INFO stImageData;
     stImageData.nDataType = 0;
@@ -92,12 +92,12 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
         hikResults.remove(hikPrConfig->processId());
     }
 
-    if(!waitResult)
+    if (!waitResult)
     {
         qCCritical(hikCate()) << prConfig->locationName() << "wait pr result timeout!";
         return false;
     }
-    if(!hikResult->errString.isEmpty())
+    if (!hikResult->errString.isEmpty())
     {
         qCCritical(hikCate()) << prConfig->locationName() << hikResult->errString;
         return false;
@@ -118,7 +118,8 @@ void HikVision::loadSolution()
         QString solutionPath = QDir(VisionConfigDir::getIns().dutRelatedConfigDir()).absoluteFilePath("HikSolution.sol");
         qDebug() << "Load solution..." << solutionPath;
         CHECK_MVS_RES(IMVS_PF_SyncLoadSolution(m_handle, solutionPath.toUtf8(), "", false));
-    } catch (SilicoolException& se)
+    }
+    catch (SilicoolException &se)
     {
         qCritical() << se.what();
     }
@@ -126,7 +127,7 @@ void HikVision::loadSolution()
 
 void HikVision::startVisionMaster(bool start)
 {
-    if(start)
+    if (start)
     {
         CHECK_MVS_RES(IMVS_PF_StartVisionMaster(m_handle, hikVisionConfig->visionMasterPath().toUtf8(), 10000));
     }
@@ -146,9 +147,9 @@ void HikVision::printProcessModuleIds()
     IMVS_PF_PROCESS_INFO_LIST processInfos;
     CHECK_MVS_RES(IMVS_PF_GetAllProcessList(m_handle, &processInfos));
     qDebug() << "Process count:" << processInfos.nNum;
-    for(int i = 0; i < processInfos.nNum; i++)
+    for (int i = 0; i < processInfos.nNum; i++)
     {
-        IMVS_PF_PROCESS_INFO* processInfo = &processInfos.astProcessInfo[i];
+        IMVS_PF_PROCESS_INFO *processInfo = &processInfos.astProcessInfo[i];
         qDebug() << "Process" << processInfo->nProcessID << "name" << processInfo->strProcessName;
 
         IMVS_PF_MODULE_INFO_LIST moduleInfos;
@@ -157,9 +158,8 @@ void HikVision::printProcessModuleIds()
 
         for (int j = 0; j < moduleInfos.nNum; j++)
         {
-            IMVS_PF_MODULE_INFO* moduleInfo = &moduleInfos.astModuleInfo[j];
-            qDebug() << "process" << moduleInfo->nProcessID << "module id" << moduleInfo->nModuleID
-                     << "moduleName" << moduleInfo->strModuleName;
+            IMVS_PF_MODULE_INFO *moduleInfo = &moduleInfos.astModuleInfo[j];
+            qDebug() << "process" << moduleInfo->nProcessID << "module id" << moduleInfo->nModuleID << "moduleName" << moduleInfo->strModuleName;
         }
     }
 }
@@ -187,25 +187,24 @@ int HikVision::callBackModuRes(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPl
 
 int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInputPlatformInfo)
 {
-//    if(pstInputPlatformInfo->nInfoType != 7)
-//    {
-//        qDebug() << "CallBackModuResFunc" << pstInputPlatformInfo->nInfoType;
-//    }
-//    if(IMVS_ENUM_CTRLC_OUTPUT_PLATFORM_INFO_WORK_STATE == pstInputPlatformInfo->nInfoType)
-//    {
-//        IMVS_PF_MODULE_WORK_STAUS__ *info = (IMVS_PF_MODULE_WORK_STAUS__ *)pstInputPlatformInfo->pData;
-//        qDebug() << "nWorkStatus" << info->nWorkStatus <<"nProcessID" <<  info->nProcessID;
-//    }
+    //    if(pstInputPlatformInfo->nInfoType != 7)
+    //    {
+    //        qDebug() << "CallBackModuResFunc" << pstInputPlatformInfo->nInfoType;
+    //    }
+    //    if(IMVS_ENUM_CTRLC_OUTPUT_PLATFORM_INFO_WORK_STATE == pstInputPlatformInfo->nInfoType)
+    //    {
+    //        IMVS_PF_MODULE_WORK_STAUS__ *info = (IMVS_PF_MODULE_WORK_STAUS__ *)pstInputPlatformInfo->pData;
+    //        qDebug() << "nWorkStatus" << info->nWorkStatus <<"nProcessID" <<  info->nProcessID;
+    //    }
 
-
-    if(IMVS_ENUM_CTRLC_OUTPUT_PLATFORM_INFO_STOP == pstInputPlatformInfo->nInfoType)
+    if (IMVS_ENUM_CTRLC_OUTPUT_PLATFORM_INFO_STOP == pstInputPlatformInfo->nInfoType)
     {
         IMVS_PF_STATUS_STOP_INFO__ *info = (IMVS_PF_STATUS_STOP_INFO__ *)pstInputPlatformInfo->pData;
 
         QMutexLocker l(&hikResultsLocker);
-        if(hikResults.contains(info->nProcessID))
+        if (hikResults.contains(info->nProcessID))
         {
-            HikVisionResult* hikResult = hikResults[info->nProcessID];
+            HikVisionResult *hikResult = hikResults[info->nProcessID];
             hikResult->errString = "Process stopped!";
             hikResult->waiter.wakeAll();
         }
@@ -217,27 +216,27 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
         IMVS_PF_MODU_RES_INFO *info = (IMVS_PF_MODU_RES_INFO *)pstInputPlatformInfo->pData;
 
         QMutexLocker l(&hikResultsLocker);
-        if(!hikResults.contains(info->nProcessID))
+        if (!hikResults.contains(info->nProcessID))
         {
             return IMVS_EC_OK;
         }
         auto hikResult = hikResults[info->nProcessID];
-        if(info->nStatus != 1)
+        if (info->nStatus != 1)
         {
             hikResult->errString = QString("%1 failed! Error code: %2").arg(info->strModuleName).arg(QString::number(info->nErrorCode, 16));
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
-        if(info->nModuleID != hikResult->resultModuleId)
+        if (info->nModuleID != hikResult->resultModuleId)
         {
             return IMVS_EC_OK;
         }
 
-        if(strcmp(info->strModuleName, MODU_NAME_HPFEATUREMATCHMODU) == 0)
+        if (strcmp(info->strModuleName, MODU_NAME_HPFEATUREMATCHMODU) == 0)
         {
-            IMVS_PF_HPFEATUREMATCH_MODU_INFO__* hpMathInfo = (IMVS_PF_HPFEATUREMATCH_MODU_INFO__*) info->pData;
+            IMVS_PF_HPFEATUREMATCH_MODU_INFO__ *hpMathInfo = (IMVS_PF_HPFEATUREMATCH_MODU_INFO__ *)info->pData;
 
-            if(hpMathInfo->iMatchNum < 1 || hpMathInfo->iModuStatu != 1)
+            if (hpMathInfo->iMatchNum < 1 || hpMathInfo->iModuStatu != 1)
             {
                 hikResult->errString = "feature match failed!";
                 hikResult->waiter.wakeAll();
@@ -247,17 +246,26 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->theta = matchBaseInfo.stMatchBox.fAngle;
             hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
             hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
+            for (int i = 0; i < hpMathInfo->stMatchConInfo.iPtNum; i++)
+            {
+                QPointF p1
+                    = QPointF(hpMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineX, hpMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineY);
+                hikResult->resultImageInfo->m_points.append(p1);
+            }
+            hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
+                                                 + ")" + ", " + "角度:" + QString::number(hikResult->theta, '.', 6);
 
             // set hik  hikResult->resultImageInfo
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
 
-        if(strcmp(info->strModuleName, MODU_NAME_FASTFEATUREMATCHMODU) == 0)
+        if (strcmp(info->strModuleName, MODU_NAME_FASTFEATUREMATCHMODU) == 0)
         {
-            IMVS_PF_FASTFEATUREMATCH_MODU_INFO__* fMathInfo = (IMVS_PF_FASTFEATUREMATCH_MODU_INFO__*)info->pData;
+            IMVS_PF_FASTFEATUREMATCH_MODU_INFO__ *fMathInfo = (IMVS_PF_FASTFEATUREMATCH_MODU_INFO__ *)info->pData;
 
-            if(fMathInfo->iMatchNum < 1 || fMathInfo->iModuStatu != 1)
+            if (fMathInfo->iMatchNum < 1 || fMathInfo->iModuStatu != 1)
             {
                 hikResult->errString = "feature match failed!";
                 hikResult->waiter.wakeAll();
@@ -268,26 +276,82 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
             hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
 
-            // set hik  hikResult->resultImageInfo
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
+            for (int i = 0; i < fMathInfo->stMatchConInfo.iPtNum; i++)
+            {
+                QPointF p1
+                    = QPointF(fMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineX, fMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineY);
+                hikResult->resultImageInfo->m_points.append(p1);
+            }
+            hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
+                                                 + ")" + ", " + "角度:" + QString::number(hikResult->theta, '.', 6);
+
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
 
-        if(strcmp(info->strModuleName, MODU_NAME_QUADRANGEFINDMODULE) == 0)
+        if (strcmp(info->strModuleName, MODU_NAME_QUADRANGEFINDMODULE) == 0)
         {
-            IMVS_PF_QUADRANGEFIND_MODU_INFO* rectInfo = (IMVS_PF_QUADRANGEFIND_MODU_INFO*)  info->pData;
+            IMVS_PF_QUADRANGEFIND_MODU_INFO *rectInfo = (IMVS_PF_QUADRANGEFIND_MODU_INFO *)info->pData;
 
-            if(rectInfo->iModuStatu != 1)
+            if (rectInfo->iModuStatu != 1)
             {
                 hikResult->errString = "match rectangle failed!";
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
-            hikResult->x = rectInfo->stDiagIntersectionPt.fPtX;
-            hikResult->y = rectInfo->stDiagIntersectionPt.fPtY;
+            hikResult->x = rectInfo->stCentralPoint.fPtX;
+            hikResult->y = rectInfo->stCentralPoint.fPtY;
             hikResult->theta = calcAngle(rectInfo->stEdgeLine0);
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
+            hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine0.stStartPt.fPtX, rectInfo->stEdgeLine0.stStartPt.fPtY,
+                                                              rectInfo->stEdgeLine0.stEndPt.fPtX, rectInfo->stEdgeLine0.stEndPt.fPtY));
+            hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine1.stStartPt.fPtX, rectInfo->stEdgeLine1.stStartPt.fPtY,
+                                                              rectInfo->stEdgeLine1.stEndPt.fPtX, rectInfo->stEdgeLine1.stEndPt.fPtY));
+            hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine2.stStartPt.fPtX, rectInfo->stEdgeLine2.stStartPt.fPtY,
+                                                              rectInfo->stEdgeLine2.stEndPt.fPtX, rectInfo->stEdgeLine2.stEndPt.fPtY));
+            hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine3.stStartPt.fPtX, rectInfo->stEdgeLine3.stStartPt.fPtY,
+                                                              rectInfo->stEdgeLine3.stEndPt.fPtX, rectInfo->stEdgeLine3.stEndPt.fPtY));
 
-            // set hik  hikResult->resultImageInfo
+            hikResult->resultImageInfo->m_text = "Center Point:(" + QString::number(hikResult->x, '.', 3) + ","
+                                                 + QString::number(hikResult->y, '.', 3) + ")" + ", "
+                                                 + "角度:" + QString::number(hikResult->theta, '.', 6);
+
+            hikResult->waiter.wakeAll();
+            return IMVS_EC_OK;
+        }
+
+        if (strcmp(info->strModuleName, MODU_NAME_CIRCLEFINDMODU) == 0)
+        {
+            IMVS_PF_CIRCLEFIND_MODU_INFO *circleInfo = (IMVS_PF_CIRCLEFIND_MODU_INFO *)info->pData;
+            if (circleInfo->iModuStatu != 1)
+            {
+                hikResult->errString = "match circle failed!";
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            hikResult->x = circleInfo->stCirPt.fPtX;
+            hikResult->y = circleInfo->stCirPt.fPtY;
+            hikResult->radius = circleInfo->fRadius;
+            hikResult->resultImageInfo->m_center = QPointF(hikResult->x, hikResult->y);
+            hikResult->resultImageInfo->m_radius = hikResult->radius;
+            hikResult->resultImageInfo->m_text = "Center Point:(" + QString::number(hikResult->x, '.', 3);
+
+            hikResult->waiter.wakeAll();
+            return IMVS_EC_OK;
+        }
+        if (strcmp(info->strModuleName, MODU_NAME_IMAGESHARPNESSMODU) == 0)
+        {
+            IMVS_PF_IMAGESHARPNESS_MODU_INFO *imagesharpness = (IMVS_PF_IMAGESHARPNESS_MODU_INFO *)info->pData;
+            if (imagesharpness->iModuStatu != 1)
+            {
+                hikResult->errString = "imagesharpness failed!";
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            hikResult->fsharpness = imagesharpness->fSharpness;
+            hikResult->resultImageInfo->m_text = "image sharpness:(" + QString::number(hikResult->fsharpness, '.', 3);
+
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
@@ -337,11 +401,124 @@ int HikVision::copyModuResultByModu(IN IMVS_PF_MODU_RES_INFO *const pstPFModuRes
 
             IMVS_PF_HPFEATUREMATCH_MODU_INFO *pstHPFeatureMatchModuRes = (IMVS_PF_HPFEATUREMATCH_MODU_INFO *)pstPFModuResInfoList->pData;
             m_nMatchPtNum = pstHPFeatureMatchModuRes->iMatchNum;
+            IMVS_PF_2DPOINT_F point = pstHPFeatureMatchModuRes->pstMatchBaseInfo->stMatchPt.stMatchPt;
+            QPointF pp = QPointF(point.fPtX, point.fPtY);
+
             for (int i = 0; i < (int)m_nMatchPtNum; i++)
             {
             }
         }
     }
 
+    else if (0 == MODU_NAME_CIRCLEFINDMODU, (pstPFModuResInfoList->strModuleName))
+    {
+        if (2 == pstPFModuResInfoList->nModuleID)
+        {
+            IMVS_PF_CIRCLEFIT_MODU_INFO *pstCircleFindModuRes = (IMVS_PF_CIRCLEFIT_MODU_INFO *)pstPFModuResInfoList->pData;
+            double radius = pstCircleFindModuRes->fRadius;
+            IMVS_PF_2DPOINT_F center = pstCircleFindModuRes->stCentPt;
+        }
+    }
+    else if (0 == MODU_NAME_IMAGESHARPNESSMODU, (pstPFModuResInfoList->strModuleName))
+    {
+        if (2 == pstPFModuResInfoList->nModuleID)
+        {
+            IMVS_PF_IMAGESHARPNESS_MODU_INFO *pstimagesharpnessModuRes = (IMVS_PF_IMAGESHARPNESS_MODU_INFO *)pstPFModuResInfoList->pData;
+            double imagesharpness = pstimagesharpnessModuRes->fSharpness;
+            QString text = QString::number(imagesharpness, '.', 4);
+        }
+    }
+
     return 0;
+}
+
+void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo)
+{
+    HikVisionResultImageInfo *hikResultImageInfo = qobject_cast<HikVisionResultImageInfo *>(resultImageInfo);
+    if (hikResultImageInfo != nullptr)
+    {
+        QPainter painter(&image);
+        // draw point
+        if (!hikResultImageInfo->m_point.isNull())
+        {
+            QPointF point = hikResultImageInfo->m_point;
+            painter.setPen(QPen(Qt::green, 5));
+            painter.drawLine(QPointF(point.x(), point.y() - 10), QPointF(point.x(), point.y() + 10));
+            painter.drawLine(QPointF(point.x() - 10, point.y()), QPointF(point.x() + 10, point.y()));
+        }
+        // draw points
+        if (!hikResultImageInfo->m_points.isEmpty())
+        {
+            painter.setPen(QPen(Qt::blue, 5));
+            painter.drawPoints(hikResultImageInfo->m_points);
+        }
+        // draw line
+        else if (!hikResultImageInfo->m_line.isNull())
+        {
+            QLineF line = hikResultImageInfo->m_line;
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            painter.setPen(QPen(Qt::green, 4));
+            painter.drawLine(line);
+        }
+        // draw lines
+        else if (!hikResultImageInfo->m_lines.isEmpty())
+        {
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            painter.setPen(QPen(Qt::green, 4));
+            QLineF *lines = new QLineF[static_cast<unsigned long long>(hikResultImageInfo->m_lines.count())];
+            for (int i = 0; i < hikResultImageInfo->m_lines.count(); i++)
+            {
+                lines[i] = hikResultImageInfo->m_lines.at(i);
+            }
+            painter.drawLines(lines, hikResultImageInfo->m_lines.count());
+        }
+        // draw rect
+        else if (!hikResultImageInfo->m_rect.isNull())
+        {
+            QRectF rect = hikResultImageInfo->m_rect;
+            painter.setPen(QPen(QColor(0, 0, 255), 4));
+            // painter.setBrush(QColor(255, 160, 90));
+            painter.drawRect(rect);
+        }
+        // draw circle
+        else if (hikResultImageInfo->m_radius > 0 && !hikResultImageInfo->m_center.isNull())
+        {
+            double radius = hikResultImageInfo->m_radius;
+            QPointF center = hikResultImageInfo->m_center;
+            painter.setPen(QPen(QColor(0, 255, 0), 4));
+            // painter.setBrush(QColor(255, 160, 90));
+            painter.drawEllipse(center, radius, radius);
+        }
+        // draw ploygon
+        else if (!hikResultImageInfo->m_mpolygon.isEmpty())
+        {
+            QList<QPointF> polygon = hikResultImageInfo->m_mpolygon;
+            painter.setPen(QPen(QColor(0, 255, 0), 4));
+            QPointF *Points = new QPointF[static_cast<unsigned long long>(polygon.count())];
+            for (int i = 0; i < polygon.count(); i++)
+            {
+                Points[i] = polygon.at(i);
+            }
+            painter.drawPolygon(Points, polygon.count());
+            delete[] Points;
+        }
+        // draw text
+        else if (!hikResultImageInfo->m_text.isNull())
+        {
+            QString text = hikResultImageInfo->m_text;
+            painter.setPen(QPen(Qt::green, 4));
+            painter.setBrush(Qt::NoBrush);
+            QFont font;
+            font.setFamily("宋体");
+            font.setPixelSize(100);
+            font.setBold(true);
+            painter.setFont(font);
+            painter.drawText(image.rect(), text);
+        }
+        // image.save("hikresult.png", "PNG", -1);
+    }
+    else
+    {
+        qCritical() << "no PR result";
+    }
 }

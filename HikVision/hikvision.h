@@ -10,11 +10,12 @@
 #include "hikvisionresult.h"
 #include "hikvisionresultimageinfo.h"
 #include "iMVS-6000PlatformSDKC.h"
+#include "loghelper.h"
 #include "scvision.h"
 #include "visionconfigdir.h"
+#include <QPainter>
 #include <QThread>
 #include <QWaitCondition>
-#include "loghelper.h"
 
 #define CHECK_MVS_RES(calling)                                                                                                                       \
     {                                                                                                                                                \
@@ -26,7 +27,7 @@
         }                                                                                                                                            \
     }
 
-SILICOOL_DECLARE_LOGGING_CATEGORY(hikCate,)
+SILICOOL_DECLARE_LOGGING_CATEGORY(hikCate, )
 
 class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 {
@@ -35,7 +36,7 @@ class HIKVISIONSHARED_EXPORT HikVision : public SCVision
 public:
     explicit HikVision(QObject *parent = nullptr);
     ~HikVision() override;
-    HikVisionConfig* config() const;
+    HikVisionConfig *config() const;
 
     // SCVision interface
 public:
@@ -57,14 +58,8 @@ public:
     {
         throw SilicolAbort("Unimplemented function: getObjectSharpness");
     }
-    void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo)
-    {
-        HikVisionResultImageInfo *hikResultImageInfo = qobject_cast<HikVisionResultImageInfo *>(resultImageInfo);
-        if(hikResultImageInfo != nullptr)
-        {
 
-        }
-    }
+    void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo) override;
     bool glueCheck(QImage &imageBefore,
                    QImage &imageAfter,
                    double resoultion,
@@ -100,12 +95,11 @@ private:
     int copyModuResult(IMVS_PF_MODULE_RESULT_INFO_LIST *const pstPFModuResInfoList);
 
 private:
-    double calcAngle(const IMVS_PF_LINE_INFO& line)
+    double calcAngle(const IMVS_PF_LINE_INFO &line)
     {
         double radian = qAtan((line.stEndPt.fPtY - line.stStartPt.fPtY) / (line.stEndPt.fPtX - line.stStartPt.fPtX));
         return radian / M_PI * 180;
     }
-
 
 private:
     void *m_handle = nullptr;
