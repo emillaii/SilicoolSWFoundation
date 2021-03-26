@@ -39,6 +39,106 @@ XYZModule::XYZModule(QString name, XYZModuleConfig *xyzModuleConfig, QObject *pa
     recordPos = new XYZModulePos();
 }
 
+void XYZModule::moveToPos(double x, double y, double z, MoveSequence::Sequence safetyMoveSequence, bool waitDone)
+{
+    const double MinStep = 0.00001;
+
+    QString safetyMoveSeq = MoveSequence::SequenceEnumInfo().enumToName(safetyMoveSequence);
+    if (m_xAxis->isProfilerAtPos(x, MinStep) && m_yAxis->isProfilerAtPos(y, MinStep) && m_zAxis->isProfilerAtPos(z, MinStep))
+    {
+        return;
+    }
+    qCInfo(motionCate(), N_FUNC_ARG(safetyMoveSeq, x, y, z, waitDone));
+
+    auto groups = safetyMoveSeq.split("_");
+    for (int i = 0; i < groups.length(); i++)
+    {
+        QString group = groups[i];
+        QList<AxisTargetInfo> axesTargetInfo;
+        for (int j = 0; j < group.length(); j++)
+        {
+            auto axisName = group[j];
+            if (axisName == "S")
+            {
+                if (axesTargetInfo.count() == 0)
+                {
+                    throw SilicolAbort(tr("Unkown safetyMoveSeq %1(%2, %3)").arg(safetyMoveSeq).arg(i).arg(j), EX_LOCATION);
+                }
+                auto lastAxisName = group[j - 1];
+                if (lastAxisName == "X")
+                {
+                    if (!xyzModuleConfig->useXSafetyPos())
+                    {
+                        throw SilicolAbort(tr("Try to move %1 x to safety pos, but useXSafetyPos is false!").arg(name()), EX_LOCATION);
+                    }
+                    axesTargetInfo[axesTargetInfo.count() - 1].targetPos = xyzModuleConfig->xSafetyPos();
+                }
+                else if (lastAxisName == "Y")
+                {
+                    if (!xyzModuleConfig->useYSafetyPos())
+                    {
+                        throw SilicolAbort(tr("Try to move %1 y to safety pos, but useYSafetyPos is false!").arg(name()), EX_LOCATION);
+                    }
+                    axesTargetInfo[axesTargetInfo.count() - 1].targetPos = xyzModuleConfig->ySafetyPos();
+                }
+                else if (lastAxisName == "Z")
+                {
+                    if (!xyzModuleConfig->useZSafetyPos())
+                    {
+                        throw SilicolAbort(tr("Try to move %1 z to safety pos, but useZSafetyPos is false!").arg(name()), EX_LOCATION);
+                    }
+                    axesTargetInfo[axesTargetInfo.count() - 1].targetPos = xyzModuleConfig->zSafetyPos();
+                }
+                else
+                {
+                    throw SilicolAbort(tr("Unkown safetyMoveSeq %1(%2, %3)").arg(safetyMoveSeq).arg(i).arg(j), EX_LOCATION);
+                }
+            }
+            else
+            {
+                if (axisName == "X")
+                {
+                    axesTargetInfo.append(AxisTargetInfo(m_xAxis, x));
+                }
+                else if (axisName == "Y")
+                {
+                    axesTargetInfo.append(AxisTargetInfo(m_yAxis, y));
+                }
+                else if (axisName == "Z")
+                {
+                    axesTargetInfo.append(AxisTargetInfo(m_zAxis, z));
+                }
+                else
+                {
+                    throw SilicolAbort(tr("Unkown safetyMoveSeq %1(%2, %3)").arg(safetyMoveSeq).arg(i).arg(j), EX_LOCATION);
+                }
+            }
+        }
+        foreach (auto axisTargetInfo, axesTargetInfo)
+        {
+            axisTargetInfo.axis->absMove(axisTargetInfo.targetPos, false);
+        }
+
+        if (i < groups.length() - 1)
+        {
+            foreach (auto axisTargetInfo, axesTargetInfo)
+            {
+                axisTargetInfo.axis->waitProfilerStopped(axisTargetInfo.targetPos);
+            }
+        }
+        else
+        {
+            if (waitDone)
+            {
+                foreach (auto axisTargetInfo, axesTargetInfo)
+                {
+                    axisTargetInfo.axis->waitArrivedPos(axisTargetInfo.targetPos, 0.1);
+                }
+            }
+        }
+    }
+}
+
 void XYZModule::moveToWithOffset(
     QString posName, MoveSequence::Sequence safetyMoveSequence, double xOffset, double yOffset, double zOffset, bool waitDone, bool logIt)
 {

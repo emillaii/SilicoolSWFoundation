@@ -413,11 +413,13 @@ class SCMOTIONSHARED_EXPORT XYZModule : public AxisModule
         {
         }
 
+        AxisTargetInfo(SCAxis *axis, double targetPos) : axis(axis), targetPos(targetPos) {}
+
         SCAxis *axis;
         double targetPos;
-        double precision;
-        double velRatio;
-        double accRatio;
+        double precision = 0.1;
+        double velRatio = -1;
+        double accRatio = -1;
     };
 
 public:
@@ -448,6 +450,7 @@ public:
         return m_zAxis;
     }
 
+    void moveToPos(double x, double y, double z, MoveSequence::Sequence safetyMoveSequence, bool waitDone = true);
     void moveToWithOffset(QString posName,
                           MoveSequence::Sequence safetyMoveSequence,
                           double xOffset = 0,
