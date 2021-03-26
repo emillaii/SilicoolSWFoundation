@@ -212,7 +212,14 @@ void Worker::processEvent(const WorkerEvent &event, bool fromEventQueue)
         else if (event.eventName == "Reset")
         {
             eventQueue.clear();
-            resetEventHandle();
+            if (m_isInit)
+            {
+                resetEventHandle();
+            }
+            else
+            {
+                qCWarning(logCate()) << QString("Worker %1 is not inited, Reset event is ignored...").arg(workerName());
+            }
             m_currentState = SMD::Idle;
         }
         else
