@@ -8,7 +8,7 @@ SCAxis *GTMotionElementFactory::createAxis(QString name, AxisDefinition::AxisTyp
         {
             return new GTAxis(name, parent);
         }
-        case AxisDefinition::VCM:
+        case AxisDefinition::ExtendedAxis3:
         {
             return new PACVcm(name, parent);
         }
@@ -45,7 +45,7 @@ AxisConfig *GTMotionElementFactory::createAxisConfig(AxisDefinition::AxisType ax
         {
             return new GTAxisConfig(parent);
         }
-        case AxisDefinition::VCM:
+        case AxisDefinition::ExtendedAxis3:
         {
             return new PACVcmConfig(parent);
         }
@@ -64,7 +64,7 @@ const QMetaObject *GTMotionElementFactory::axisConfigMetaObj() const
     return &GTAxisConfig::staticMetaObject;
 }
 
-const QMetaObject *GTMotionElementFactory::vcmConfigMetaObj() const
+const QMetaObject *GTMotionElementFactory::extendedAxis3ConfigMetaObj() const
 {
     return &PACVcmConfig::staticMetaObject;
 }

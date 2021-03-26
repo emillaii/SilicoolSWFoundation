@@ -1,10 +1,10 @@
 #ifndef HIKVISIONRESULT_H
 #define HIKVISIONRESULT_H
 
+#include "hikvisionresultimageinfo.h"
 #include <QMutex>
 #include <QWaitCondition>
 #include <qmap.h>
-#include "hikvisionresultimageinfo.h"
 
 struct HikVisionResult
 {
@@ -16,10 +16,11 @@ public:
     double theta = 0;
     double width = 0;
     double height = 0;
-    HikVisionResultImageInfo* resultImageInfo;
+    double radius = 0;
+    double fsharpness = 0;
+    HikVisionResultImageInfo *resultImageInfo;
 
     QWaitCondition waiter;
 };
-
 
 #endif    // HIKVISIONRESULT_H
