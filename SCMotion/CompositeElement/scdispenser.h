@@ -370,6 +370,8 @@ public:
         generateConfig(pointCount, m_dispConfig->generalDispenserConfig()->lineDisabled(), false);
     }
 
+    static QVector<PathEndPoint> readDispensePath(const QString &fileName);
+
     void dispensePath(QVector<PathEndPoint> &path);
     void dispenseLine(QPointF startPos, QPointF endPos, double dispenseHeight, double zSafetyHeight);
     void dispenseRect(QPointF leftTopPos, double width, double height, double dispenseHeight, double zSafetyHeight);

@@ -14,6 +14,31 @@ void SCDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
     isInit = true;
 }
 
+QVector<PathEndPoint> SCDispenser::readDispensePath(const QString &fileName)
+{
+    QFile f(fileName);
+    if (!f.exists())
+    {
+        throw SilicolAbort(tr("File not exist! %1").arg(fileName));
+    }
+    f.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonObject jsonObj = QJsonDocument::fromJson(f.readAll()).object();
+    f.close();
+
+    SC_ASSERT(jsonObj.contains("points"));
+    QJsonArray jsonArray = jsonObj["points"].toArray();
+    SC_ASSERT(jsonArray.count() > 0);
+
+    QVector<PathEndPoint> path;
+    for (QJsonValue json : jsonArray)
+    {
+        double x = json["x"].toDouble();
+        double y = json["y"].toDouble();
+        path.append(PathEndPoint(x, y));
+    }
+    return path;
+}
+
 void SCDispenser::dispensePath(QVector<PathEndPoint> &path)
 {
     checkIsInit();
