@@ -61,5 +61,6 @@
         <file>reduce1.png</file>
         <file>emo.png</file>
         <file>resetDriver.png</file>
+        <file>buzzer.png</file>
     </qresource>
 </RCC>

@@ -81,6 +81,12 @@ public:
         this->blinkConfig = blinkConfig;
     }
 
+public slots:
+    void close()
+    {
+        set(Closed);
+    }
+
 protected:
     BlinkConfig *blinkConfig = nullptr;
 };
