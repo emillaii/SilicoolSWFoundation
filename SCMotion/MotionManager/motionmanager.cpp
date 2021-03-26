@@ -70,8 +70,9 @@ MotionManager::~MotionManager()
 
 void MotionManager::dispose()
 {
-    m_isInit = false;
+    DiStateMonitor::getIns().stopMonitor();
     motionStateReporter.stopReport();
+    m_isInit = false;
     host.disableRemoting(this);
 
     foreach (auto cacheState, remoteDiStateCache.values())

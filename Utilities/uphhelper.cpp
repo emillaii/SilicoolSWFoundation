@@ -27,8 +27,7 @@ UPHHelper::UPHHelper(QObject *parent) : QThread(parent)
 
 UPHHelper::~UPHHelper()
 {
-    isRun = false;
-    wait();
+    stop();
 }
 
 void UPHHelper::appendData()
@@ -41,6 +40,12 @@ void UPHHelper::appendData()
     }
     timestamps.append(now);
     setTotal(m_total + 1);
+}
+
+void UPHHelper::stop()
+{
+    isRun = false;
+    wait();
 }
 
 void UPHHelper::trayTestStart()
@@ -73,8 +78,7 @@ void UPHHelper::run()
         QDateTime now = QDateTime::currentDateTime();
         {
             QMutexLocker tmpLocker(&locker);
-            while (timestamps.count() > 0
-                   && now.toSecsSinceEpoch() - timestamps.first().toSecsSinceEpoch() > uphHelperConfig->timeWindowLen())
+            while (timestamps.count() > 0 && now.toSecsSinceEpoch() - timestamps.first().toSecsSinceEpoch() > uphHelperConfig->timeWindowLen())
             {
                 timestamps.removeFirst();
             }
@@ -84,8 +88,7 @@ void UPHHelper::run()
             }
             else
             {
-                double tUph
-                    = timestamps.count() * 3600.0 / (now.toSecsSinceEpoch() - timestamps.first().toSecsSinceEpoch());
+                double tUph = timestamps.count() * 3600.0 / (now.toSecsSinceEpoch() - timestamps.first().toSecsSinceEpoch());
                 setUph(static_cast<int>(tUph));
             }
         }

@@ -17,6 +17,8 @@ public:
 
     void init(LaserStationConfig::SamplePeriod samplePeriod, int stationNum);
 
+    void dispose();
+
     ///
     /// \brief readHeight
     /// \return return +999.99 while error occur

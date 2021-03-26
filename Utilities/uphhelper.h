@@ -111,6 +111,7 @@ public:
     ~UPHHelper() override;
 
     void appendData();
+    void stop();
 
     void trayTestStart();
     void trayTestEnd();

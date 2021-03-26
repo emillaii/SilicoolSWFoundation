@@ -25,6 +25,11 @@ void LaserDriver::init(LaserStationConfig::SamplePeriod samplePeriod, int statio
     qDebug() << tr("Init laser successful! Station:") << stationNum;
 }
 
+void LaserDriver::dispose()
+{
+    serialPort->dispose();
+}
+
 double LaserDriver::readHeight(int stationNum)
 {
     return ErrorHandler::tryToHandleGeneralError<double>([&] { return readHeightNoErrHandling(stationNum); },
