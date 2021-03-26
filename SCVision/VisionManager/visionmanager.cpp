@@ -2,12 +2,20 @@
 
 VisionManager::~VisionManager()
 {
-    cameraMap.clear();
-    auto lscNames = lscs.keys();
-    foreach (auto lscName, lscNames)
+    dispose();
+}
+
+void VisionManager::dispose()
+{
+    foreach (auto camera, cameraMap.values())
     {
-        auto lsc = lscs[lscName];
-        delete lsc;
+        camera->close();
+        delete camera;
+    }
+    cameraMap.clear();
+    foreach (auto lsc, lscs.values())
+    {
+        lsc->dispose();
     }
     lscs.clear();
     if (m_vision != nullptr)

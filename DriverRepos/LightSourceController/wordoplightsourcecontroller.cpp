@@ -7,6 +7,11 @@ WordopLightSourceController::WordopLightSourceController(SerialPortConfig *confi
     serialPort->moveToThread(&SingletonThd::serialPortThd());
 }
 
+WordopLightSourceController::~WordopLightSourceController()
+{
+    dispose();
+}
+
 void WordopLightSourceController::init()
 {
     serialPort->initSerialPort();
@@ -71,6 +76,18 @@ bool WordopLightSourceController::getBrightness(int channel, int &brightness)
     Q_UNUSED(channel);
     Q_UNUSED(brightness);
     return false;
+}
+
+void WordopLightSourceController::dispose()
+{
+    if (serialPort->isInit())
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            setBrightness(i, 0);
+        }
+    }
+    serialPort->dispose();
 }
 
 void WordopLightSourceController::setOnOffImpl(int channel, bool isOn)

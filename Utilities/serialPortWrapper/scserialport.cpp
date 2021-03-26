@@ -30,6 +30,15 @@ void SCSerialPort::initSerialPort()
     isInitSerialPort = true;
 }
 
+void SCSerialPort::dispose()
+{
+    if (isInitSerialPort)
+    {
+        isInitSerialPort = false;
+        runIns("disposeSerialPortImpl");
+    }
+}
+
 void SCSerialPort::writeData(const QByteArray &data, bool waitDone)
 {
     if (!isInitSerialPort || !serialPort->isOpen())
@@ -109,6 +118,14 @@ void SCSerialPort::initSerialPortImpl()
     }
     serialPort->clear();
     serialPort->clearError();
+}
+
+void SCSerialPort::disposeSerialPortImpl()
+{
+    if (serialPort != nullptr)
+    {
+        serialPort->close();
+    }
 }
 
 void SCSerialPort::writeDataImpl(QByteArray data)

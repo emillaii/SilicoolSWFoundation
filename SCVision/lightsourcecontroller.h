@@ -7,6 +7,7 @@ class SCVISIONSHARED_EXPORT LightSourceController
 {
 public:
     virtual void init() = 0;
+    virtual void dispose() {}
     virtual ~LightSourceController() {}
     virtual void setBrightness(int channel, int brightness) = 0;
     virtual bool getBrightness(int channel, int &brightness) = 0;

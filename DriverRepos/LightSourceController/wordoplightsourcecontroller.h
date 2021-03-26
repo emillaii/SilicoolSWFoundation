@@ -71,6 +71,7 @@ class WordopLightSourceController : public QObject, public LightSourceController
 
 public:
     explicit WordopLightSourceController(SerialPortConfig *config, QObject *parent = nullptr);
+    ~WordopLightSourceController() override;
 
     // LightSourceController interface
 public:
@@ -79,6 +80,7 @@ public:
     virtual void open(int channel) override;
     virtual void close(int channel) override;
     virtual bool getBrightness(int channel, int &brightness) override;
+    virtual void dispose() override;
 
 private:
     void setOnOffImpl(int channel, bool isOn);

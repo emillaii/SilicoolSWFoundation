@@ -102,7 +102,14 @@ public:
 
     virtual ~SCSerialPort();
 
+    bool isInit() const
+    {
+        return isInitSerialPort;
+    }
+
     void initSerialPort();
+
+    void dispose();
 
     void writeData(const QByteArray &data, bool waitDone = true);
 
@@ -115,6 +122,7 @@ public:
 private slots:
     void onReadyRead();
     void initSerialPortImpl();
+    void disposeSerialPortImpl();
     void writeDataImpl(QByteArray data);
     void clearReadBufferImpl();
     QByteArray readEndmarkImpl(QString endMark, int timeout);

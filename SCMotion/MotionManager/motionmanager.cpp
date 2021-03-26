@@ -65,11 +65,14 @@ MotionManager::MotionManager(QObject *parent) : MotionManagerSimpleSource(parent
 
 MotionManager::~MotionManager()
 {
-    delete m_moveProtection;
-    delete collisionGroupsConfig;
-    delete motionElementDefinitions;
-    delete motionManagerConfigFile;
-    delete motionManagerConfig;
+    dispose();
+}
+
+void MotionManager::dispose()
+{
+    m_isInit = false;
+    motionStateReporter.stopReport();
+    host.disableRemoting(this);
 
     foreach (auto cacheState, remoteDiStateCache.values())
     {
@@ -97,6 +100,7 @@ MotionManager::~MotionManager()
     {
         controlCard->dispose();
         delete controlCard;
+        controlCard = nullptr;
     }
 }
 

@@ -27,6 +27,8 @@ public:
 
     ~VisionManager();
 
+    void dispose();
+
     void setVisionFactory(VisionFactory *visionFactory)
     {
         this->visionFactory = visionFactory;

@@ -85,6 +85,8 @@ public:
         return instance;
     }
 
+    void dispose();
+
     bool isInit() const
     {
         return m_isInit;
