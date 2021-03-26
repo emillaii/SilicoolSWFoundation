@@ -1,8 +1,17 @@
 #include "gtdispenser.h"
 
+int GTDispenser::GtDispenserCount = 0;
+
 GTDispenser::GTDispenser(const QLoggingCategory &logCate, DispenserConfig *dispenserConfig, QObject *parent)
     : SCDispenser(logCate, dispenserConfig, parent)
 {
+    GtDispenserCount++;
+    m_crd = GtDispenserCount;
+    m_psoIndex = m_crd;
+    if (GtDispenserCount > 2)
+    {
+        qWarning(logCate) << "More than 2 GTDispenser was created...";
+    }
 }
 
 void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGlueOut)
@@ -77,7 +86,7 @@ void GTDispenser::enterInterpolationMode()
 
 void GTDispenser::exitInterpolationMode()
 {
-    GTN_PosCompareStop(m_core, PSOIndex);
+    GTN_PosCompareStop(m_core, m_psoIndex);
     m_xAxis->setMoveMode(GTAxis::Pos, false);
     m_yAxis->setMoveMode(GTAxis::Pos, false);
     if (dispenserConfig()->useFlyDispensing())
@@ -200,7 +209,7 @@ void GTDispenser::flyDispenseImpl(QVector<PathEndPoint> &dispensePath)
     if (dispenserConfig()->enableDispensing())
     {
         TPosCompareMode mode;
-        checkResult1(GTN_GetPosCompareMode(m_core, PSOIndex, &mode));
+        checkResult1(GTN_GetPosCompareMode(m_core, m_psoIndex, &mode));
         mode.mode = 2;
         mode.dimension = 2;
         mode.sourceMode = 1;
@@ -210,18 +219,18 @@ void GTDispenser::flyDispenseImpl(QVector<PathEndPoint> &dispensePath)
         mode.outputCounter = 1;
         mode.errorBand = 0;
         mode.outputPulseWidth = flyDispensingConfig->shotGlueDotTime() * 1000;
-        checkResult1(GTN_SetPosCompareMode(m_core, PSOIndex, &mode));
+        checkResult1(GTN_SetPosCompareMode(m_core, m_psoIndex, &mode));
 
         TPosComparePsoPrm comparePsoPrm;
-        checkResult1(GTN_PosCompareClear(m_core, PSOIndex));
-        checkResult1(GTN_GetPosComparePsoPrm(m_core, PSOIndex, &comparePsoPrm));
+        checkResult1(GTN_PosCompareClear(m_core, m_psoIndex));
+        checkResult1(GTN_GetPosComparePsoPrm(m_core, m_psoIndex, &comparePsoPrm));
         comparePsoPrm.count = 1;
         comparePsoPrm.startPosX = dispensePath[0].x * m_xAxis->getGtAxisConfig()->scale();
         comparePsoPrm.startPosY = dispensePath[0].y * m_yAxis->getGtAxisConfig()->scale();
         comparePsoPrm.gpo = m_shotGlueOut->getGtioConfig()->index();
         comparePsoPrm.syncPos = flyDispensingConfig->shotGlueDotStep() * m_xAxis->getGtAxisConfig()->scale();
-        checkResult1(GTN_SetPosComparePsoPrm(m_core, PSOIndex, &comparePsoPrm));
-        checkResult1(GTN_PosCompareStart(m_core, PSOIndex));
+        checkResult1(GTN_SetPosComparePsoPrm(m_core, m_psoIndex, &comparePsoPrm));
+        checkResult1(GTN_PosCompareStart(m_core, m_psoIndex));
     }
 
     checkResult1(GTN_CrdStart(m_core, 1 << (m_crd - 1), 0));

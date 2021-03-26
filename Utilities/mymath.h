@@ -4,7 +4,7 @@
 #include "utilities_global.h"
 
 template <typename T>
-T myAve(QList<T> &data)
+T myAve(const QList<T> &data)
 {
     if (data.length() == 0)
     {
@@ -19,7 +19,7 @@ T myAve(QList<T> &data)
 }
 
 template <typename T>
-T myMax(QList<T> &data)
+T myMax(const QList<T> &data)
 {
     if (data.length() == 0)
     {
@@ -37,7 +37,7 @@ T myMax(QList<T> &data)
 }
 
 template <typename T>
-T myMin(QList<T> &data)
+T myMin(const QList<T> &data)
 {
     if (data.length() == 0)
     {
@@ -54,4 +54,4 @@ T myMin(QList<T> &data)
     return minData;
 }
 
-#endif // MYMATH_H
+#endif    // MYMATH_H

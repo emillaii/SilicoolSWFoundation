@@ -22,7 +22,7 @@ Canvas{
     height: 960
 
     Keys.onPressed: {
-        console.log(event.key)
+//        console.log(event.key)
         if (rdbSelect.checked) {
             var stepSize = parseFloat(selectedStep.text)
 
@@ -206,10 +206,10 @@ Canvas{
                         var p4x = parseFloat(canvas.arrpoints[i+1]["x"]) - slope*(p4y - parseFloat(canvas.arrpoints[i+1]["y"]))
                         var p3x = parseFloat(canvas.arrpoints[i+1]["x"]) - slope*(p3y - parseFloat(canvas.arrpoints[i+1]["y"]))
 
-                        console.log("p1x : " + p1x + " p1y: " + p1y)
-                        console.log("p2x : " + p2x + " p2y: " + p2y)
-                        console.log("p3x : " + p3x + " p3y: " + p3y)
-                        console.log("p4x : " + p4x + " p4y: " + p4y)
+//                        console.log("p1x : " + p1x + " p1y: " + p1y)
+//                        console.log("p2x : " + p2x + " p2y: " + p2y)
+//                        console.log("p3x : " + p3x + " p3y: " + p3y)
+//                        console.log("p4x : " + p4x + " p4y: " + p4y)
 
                         var cross1 = getCross(p1x, p1y, p2x, p2y, px, py)*getCross(p3x, p3y, p4x, p4y, px, py)
                         var cross2 = getCross(p2x, p2y, p3x, p3y, px, py)*getCross(p4x, p4y, p1x, p1y, px, py)

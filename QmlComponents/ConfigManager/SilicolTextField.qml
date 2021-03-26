@@ -107,7 +107,6 @@ RowLayout{
     }
 
     TextField {
-
         id: txt
         onEditingFinished: {
             if(!dataModel.setConfig(identity, text)){
@@ -128,5 +127,6 @@ RowLayout{
         }
 
         selectByMouse: true
+        horizontalAlignment: TextInput.AlignHCenter
     }
 }

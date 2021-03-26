@@ -33,10 +33,11 @@ private:
 private:
     const double MinLineLen = 0.001;
 
-    const int PSOIndex = 1;
+    static int GtDispenserCount;
+    short m_crd = 1;
+    int m_psoIndex = 1;
 
     short m_core = 1;
-    const short m_crd = 1;
 
     short m_runStatus;
     long m_segment;

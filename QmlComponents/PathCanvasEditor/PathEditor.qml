@@ -361,7 +361,7 @@ Item {
                             canvas.arrpoints = []
                             for (var index in pointsTable.testModel.initData)
                             {
-                                console.log(pointsTable.testModel.initData[index]["x"])
+//                                console.log(pointsTable.testModel.initData[index]["x"])
                                 canvas.arrpoints.push({"x": pointsTable.testModel.initData[index]["x"],
                                                        "y": pointsTable.testModel.initData[index]["y"],
                                                        "z": pointsTable.testModel.initData[index]["z"],
