@@ -148,8 +148,14 @@ void Worker::processEvent(const WorkerEvent &event, bool fromEventQueue)
             initEventHandle();
             m_isInit = true;
             m_currentState = SMD::Initialized;
+            return;
         }
-        else if (event.eventName == "__Home")
+        if (!m_isInit)
+        {
+            qCWarning(logCate()) << QString("Worker %1 is not inited, event was ignored... %2").arg(workerName()).arg(event.eventName);
+            return;
+        }
+        if (event.eventName == "__Home")
         {
             try
             {
