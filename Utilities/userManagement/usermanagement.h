@@ -38,6 +38,7 @@ public:
     Q_PROPERTY(Authority currentAuthority READ currentAuthority WRITE setCurrentAuthority NOTIFY currentAuthorityChanged)
     Q_PROPERTY(QString currentAuthorityName READ currentAuthorityName WRITE setCurrentAuthorityName NOTIFY currentAuthorityNameChanged)
     Q_PROPERTY(bool hasLogin READ hasLogin WRITE setHasLogin NOTIFY hasLoginChanged)
+    Q_PROPERTY(QStringList userNameList READ userNameList NOTIFY userNameListChanged)
 
     void init();
 
@@ -56,6 +57,18 @@ public:
     Authority currentAuthority() const
     {
         return m_currentAuthority;
+    }
+    bool hasLogin() const
+    {
+        return m_hasLogin;
+    }
+    QString currentAuthorityName() const
+    {
+        return m_currentAuthorityName;
+    }
+    QStringList userNameList() const
+    {
+        return m_userNameList;
     }
 
 public slots:
@@ -76,7 +89,6 @@ public slots:
         emit currentAuthorityChanged(m_currentAuthority);
         setCurrentAuthorityName(AuthorityEnumInfo().enumToName(currentAuthority));
     }
-
     void setHasLogin(bool hasLogin)
     {
         if (m_hasLogin == hasLogin)
@@ -85,7 +97,6 @@ public slots:
         m_hasLogin = hasLogin;
         emit hasLoginChanged(m_hasLogin);
     }
-
     void setCurrentAuthorityName(QString currentAuthorityName)
     {
         if (m_currentAuthorityName == currentAuthorityName)
@@ -98,10 +109,9 @@ public slots:
 signals:
     void currentUserNameChanged(QString currentUserName);
     void currentAuthorityChanged(Authority currentAuthority);
-
     void hasLoginChanged(bool hasLogin);
-
     void currentAuthorityNameChanged(QString currentAuthorityName);
+    void userNameListChanged(QStringList userNameList);
 
 private:
     QString cryptograph(QString clearText)
@@ -126,19 +136,10 @@ private:
     bool isTableExist(QString tableName);
     bool verifyUserPsw(QString userName, QString password);
     bool getUserInfo(QString userName, QString &password, Authority &authority, bool showMsgBoxAsUserDidNotExist = true);
+    void initUserNames();
 
 public:
     MySqlTableModel *userModel;
-
-    bool hasLogin() const
-    {
-        return m_hasLogin;
-    }
-
-    QString currentAuthorityName() const
-    {
-        return m_currentAuthorityName;
-    }
 
 private:
     QString m_currentUserName = "";
@@ -153,6 +154,7 @@ private:
     const int MinPasswordLen = 6;
     bool isInit = false;
     bool m_hasLogin = false;
+    QStringList m_userNameList;
 };
 
 #endif    // USERMANAGEMENT_H

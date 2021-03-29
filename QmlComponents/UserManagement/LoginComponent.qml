@@ -24,13 +24,28 @@ ColumnLayout{
             text: qsTr("UserName:")
             horizontalAlignment: Text.AlignRight
         }
-        TextField{
+        ComboBox{
             id: txtUserName
+
+            property var isInit: false
+            editable: true
             Layout.fillWidth: true
-            text: basicConfig.lastInputUser
-            selectByMouse: true
-            onEditingFinished: {
-                basicConfig.setLastInputUser(text)
+            model: userManagement.userNameList
+            Component.onCompleted: {
+                var lastInputUser = basicConfig.lastInputUser
+                for(var i in model){
+                    if(lastInputUser === model[i]){
+                        currentIndex = i
+                        break
+                    }
+                }
+                txtUserName.isInit = true
+            }
+            onCurrentTextChanged: {
+                if(!txtUserName.isInit){
+                    return
+                }
+                basicConfig.setLastInputUser(currentText)
             }
         }
         Label{
@@ -50,7 +65,7 @@ ColumnLayout{
             id: btnLogin
             text: qsTr("Login")
             onClicked: {
-                if(userManagement.login(txtUserName.text, txtPassword.text))
+                if(userManagement.login(txtUserName.currentText, txtPassword.text))
                 {
                     closePopup()
                 }

@@ -51,8 +51,9 @@ void UserManagement::init()
     }
     userModel = new MySqlTableModel(nullptr, db);
     userModel->setTable("user");
-
     userModel->select();
+
+    initUserNames();
     isInit = true;
 }
 
@@ -137,6 +138,9 @@ void UserManagement::removeUser(QString userName)
         return;
     }
     userModel->select();
+
+    m_userNameList.removeOne(userName);
+    emit userNameListChanged(m_userNameList);
 }
 
 bool UserManagement::changePassword(QString userName,
@@ -214,6 +218,9 @@ void UserManagement::_addUser(QString userName, QString password, UserManagement
         return;
     }
     userModel->select();
+
+    m_userNameList.append(userName);
+    emit userNameListChanged(m_userNameList);
 }
 
 bool UserManagement::hasUser(QString userName)
@@ -297,4 +304,16 @@ bool UserManagement::getUserInfo(QString userName,
         }
         return false;
     }
+}
+
+void UserManagement::initUserNames()
+{
+    m_userNameList.clear();
+    QSqlQuery sqlStatement("select * from user", db);
+    sqlStatement.exec();
+    while (sqlStatement.next())
+    {
+        m_userNameList.append(sqlStatement.value("name").toString());
+    }
+    emit userNameListChanged(m_userNameList);
 }
