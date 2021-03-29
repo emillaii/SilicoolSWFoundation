@@ -94,31 +94,76 @@ private:
     int m_doCount = 16;
 };
 
-class GTCoreCfgManager
+class GTCardConfig: public ConfigObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(int cardOpenMode READ cardOpenMode WRITE setCardOpenMode NOTIFY cardOpenModeChanged)
+    Q_PROPERTY(ConfigObjectArray *gtCoreCfgs  READ  gtCoreCfgs)
+
+public:
+    GTCardConfig(QObject* parent=nullptr): ConfigObject (parent)
+    {
+        m_gtCoreCfgs = new ConfigObjectArray(&GTCoreConfig::staticMetaObject, this);
+        init();
+    }
+
+    int cardOpenMode() const
+    {
+        return m_cardOpenMode;
+    }
+
+    ConfigObjectArray * gtCoreCfgs() const
+    {
+        return m_gtCoreCfgs;
+    }
+
+public slots:
+    void setCardOpenMode(int cardOpenMode)
+    {
+        if (m_cardOpenMode == cardOpenMode)
+            return;
+
+        m_cardOpenMode = cardOpenMode;
+        emit cardOpenModeChanged(m_cardOpenMode);
+    }
+
+signals:
+    void cardOpenModeChanged(int cardOpenMode);
+
+private:
+    int m_cardOpenMode = 1;
+    ConfigObjectArray * m_gtCoreCfgs;
+};
+
+class GTCardCfgManager
 {
 private:
-    GTCoreCfgManager()
+    GTCardCfgManager()
     {
-        gtCoreCfgs = new ConfigObjectArray(&GTCoreConfig::staticMetaObject);
-        gtCoreCfgsFile = new ConfigFile("GTCoreConfigs", gtCoreCfgs, "./config/motionConfig/GTCoreConfigs.json");
-        gtCoreCfgsFile->populate();
+        gtCardCfg = new GTCardConfig();
+        gtCardCfgsFile = new ConfigFile("GTCardConfig", gtCardCfg, "./config/motionConfig/GTCardConfig.json");
+        gtCardCfgsFile->populate();
     }
 
 public:
-    static GTCoreCfgManager &getIns()
+    static GTCardCfgManager &getIns()
     {
-        static GTCoreCfgManager instance;
+        static GTCardCfgManager instance;
         return instance;
     }
 
-    ConfigObjectArray *getGtCoreCfgs() const
+    GTCardConfig *getGtCardCfg() const
     {
-        return gtCoreCfgs;
+        return gtCardCfg;
     }
 
 private:
-    ConfigFile *gtCoreCfgsFile;
-    ConfigObjectArray *gtCoreCfgs;
+    ConfigFile *gtCardCfgsFile;
+    GTCardConfig* gtCardCfg;
 };
 
+
 #endif    // GTCONTROLCARDCONFIG_H
+
+

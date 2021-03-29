@@ -4,12 +4,13 @@ GTControlCard::GTControlCard(QObject *parent) : ControlCard(parent) {}
 
 void GTControlCard::postInit()
 {
+    auto gtCardConfig = GTCardCfgManager::getIns().getGtCardCfg();
     if (!isOpen)
     {
-        checkResult1(GTN_Open(5, 1));
+        checkResult1(GTN_Open(5, gtCardConfig->cardOpenMode()));
         isOpen = true;
     }
-    ConfigObjectArray *gtCoreCfgs = GTCoreCfgManager::getIns().getGtCoreCfgs();
+    auto *gtCoreCfgs = gtCardConfig->gtCoreCfgs();
     for (int i = 0; i < gtCoreCfgs->count(); i++)
     {
         GTCoreConfig *gtCoreCfg = gtCoreCfgs->getConfig<GTCoreConfig>(i);

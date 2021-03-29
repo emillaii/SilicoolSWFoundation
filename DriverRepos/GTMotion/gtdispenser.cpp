@@ -31,18 +31,9 @@ void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
     CHECK_GT_PRT(m_yAxis);
     CHECK_GT_PRT(m_shotGlueOut);
 
-    if (m_xAxis->getGtAxisConfig()->index() > 8)
+    if(qAbs(m_xAxis->getGtAxisConfig()->index() - m_yAxis->getGtAxisConfig()->index()) > 7)
     {
-        throw SilicolAbort(tr("Only 1-8 axis can do interpolation. X axis index: %1").arg(m_xAxis->getGtAxisConfig()->index()));
-    }
-    if (m_yAxis->getGtAxisConfig()->index() > 8)
-    {
-        throw SilicolAbort(tr("Only 1-8 axis can do interpolation. Y axis index: %1").arg(m_yAxis->getGtAxisConfig()->index()));
-    }
-    if (m_shotGlueOut->getGtioConfig()->index() > 8)
-    {
-        //        throw SilicolAbort(tr("Only 1-8 Output can do interpolation. shotGlueOutput index: %1")
-        //                               .arg(m_shotGlueOut->getGtioConfig()->index()));
+        throw SilicolAbort(tr("The range of x y axis index must less than 8!"), EX_LOCATION);
     }
     int xAxisCoreNo = m_xAxis->getGtAxisConfig()->coreNo();
     int yAxisCoreNo = m_yAxis->getGtAxisConfig()->coreNo();
@@ -61,6 +52,8 @@ void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
 
 void GTDispenser::enterInterpolationMode()
 {
+    short minIndex = qMin(m_xAxis->getGtAxisConfig()->index(), m_yAxis->getGtAxisConfig()->index());
+    checkResult1(GTN_SetCrdMapBase(m_core, m_crd, minIndex));
     TCrdPrm crdprm;
     checkResult1(GTN_GetCrdPrm(m_core, m_crd, &crdprm));
     crdprm.dimension = 2;
@@ -71,8 +64,8 @@ void GTDispenser::enterInterpolationMode()
     crdprm.synVelMax = qMin(xMaxVel, yMaxVel);
     crdprm.synAccMax = qMin(xMaxAcc, yMaxAcc);
     crdprm.evenTime = 0;
-    crdprm.profile[m_xAxis->getGtAxisConfig()->index() - 1] = 1;
-    crdprm.profile[m_yAxis->getGtAxisConfig()->index() - 1] = 2;
+    crdprm.profile[m_xAxis->getGtAxisConfig()->index() - minIndex] = 1;
+    crdprm.profile[m_yAxis->getGtAxisConfig()->index() - minIndex] = 2;
     crdprm.setOriginFlag = 1;
     checkResult1(GTN_SetCrdPrm(m_core, m_crd, &crdprm));
     if (dispenserConfig()->useFlyDispensing())
