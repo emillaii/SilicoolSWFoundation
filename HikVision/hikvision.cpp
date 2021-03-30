@@ -542,22 +542,3 @@ void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInf
         qCritical() << "no PR result";
     }
 }
-double HikVision::getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo)
-{
-    (*resultImageInfo) = new HikVisionResultImageInfo();
-    cv::Mat imageSobel, imageLaplacian;
-
-    cv::Mat srcGray(image.height(), image.width(), CV_8UC1, image.bits());
-    double result = .0f;
-    for (int i=srcGray.rows/4;i<3*srcGray.rows/4;i++)
-    {
-        uchar *data = srcGray.ptr<uchar>(i);
-        for (int j=srcGray.cols/4;j<3*srcGray.cols/4;j++)
-        {
-            result += (data[j+2]-data[j])*(data[j+2]-data[j]);
-        }
-    }
-    result = 4*result/srcGray.total();
-
-    return result;
-}

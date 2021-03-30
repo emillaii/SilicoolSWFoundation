@@ -124,16 +124,6 @@ GroupBox {
                 }
             }
             RoundButton{
-                icon.source: "qrc:/commonicons/contrast.png"
-                ToolTip{
-                    text: qsTr("StartContinuallyPerformObjectSharpnessCalculation")
-                    visible: parent.hovered
-                }
-                onClicked: {
-                    tem.runSingleCmd(visionManager, "startContinuallyPerformObjSharpnessCalc", [visionLocationName])
-                }
-            }
-            RoundButton{
                 icon.source: "qrc:/commonicons/stop.png"
                 icon.color: "red"
                 ToolTip{

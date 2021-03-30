@@ -63,8 +63,6 @@ public:
 
     Q_INVOKABLE void startContinuallyPerformPr(QString visionLocationName);
 
-    Q_INVOKABLE void startContinuallyPerformObjSharpnessCalc(QString visionLocationName);
-
     Q_INVOKABLE void stopContinuallyCalculation(QString visionLocationName);
 
     Q_INVOKABLE void performPrResult(QString calibrationName, QString visionLocationName, bool perfomOriginPrResult);

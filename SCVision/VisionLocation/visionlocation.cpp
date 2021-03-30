@@ -125,29 +125,6 @@ void VisionLocation::startContinuallyPerformPr()
     }
 }
 
-void VisionLocation::startContinuallyPerformObjSharpnessCalc()
-{
-    if (isContinuallyCalculation)
-    {
-        return;
-    }
-    isContinuallyCalculation = true;
-    AutoResetBool b(&isContinuallyCalculation, false);
-
-    camera()->stopShowRealtimeImage();
-    while (isContinuallyCalculation)
-    {
-        QImage image = getImage();
-        PRResultImageInfo *resultImageInfo;
-        QString imgProcessingRes;
-        double sharpness = vision->getObjectSharpness(image, m_config, &resultImageInfo);
-        vision->drawResultImage(image, resultImageInfo);
-        imgProcessingRes = QString("Sharpness: %1").arg(sharpness, 0, 'g', 2);
-        m_camera->showImage(image, imgProcessingRes);
-        QThread::msleep(100);
-    }
-}
-
 void VisionLocation::stopContinuallyCalculation()
 {
     isContinuallyCalculation = false;
@@ -422,7 +399,7 @@ void VisionLocation::onVisionLocationConfigSecondLightBrightnessChanged(int ligh
 
 void VisionLocation::reverseTheta(PRResultStruct &prResult)
 {
-    if(m_config->reverseTheta())
+    if (m_config->reverseTheta())
     {
         prResult.theta *= -1;
     }

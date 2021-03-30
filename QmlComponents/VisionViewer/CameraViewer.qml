@@ -326,6 +326,20 @@ Flickable {
             implicitWidth: parent.btnSize
             implicitHeight: parent.btnSize
             display: AbstractButton.IconOnly
+            icon.color: camera.calcObjectSharpness ? "limegreen" : "red"
+            icon.source: "qrc:/commonicons/contrast.png"
+            onClicked: {
+                camera.setCalcObjectSharpness(!camera.calcObjectSharpness)
+            }
+            ToolTip{
+                text: qsTr("计算清晰度")
+                visible: parent.hovered
+            }
+        }
+        ToolButton {
+            implicitWidth: parent.btnSize
+            implicitHeight: parent.btnSize
+            display: AbstractButton.IconOnly
             icon.source: "qrc:/commonicons/single.png"
             icon.color: "limegreen"
             onClicked: {

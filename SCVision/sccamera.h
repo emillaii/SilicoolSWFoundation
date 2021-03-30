@@ -5,6 +5,7 @@
 #include "errorHandling/silicolerror.h"
 #include "imagesaver.h"
 #include "lightsourcecontroller.h"
+#include "opencv2/opencv.hpp"
 #include "sccameraconfig.h"
 #include <QMutex>
 #include <QMutexLocker>
@@ -23,6 +24,7 @@ class SCVISIONSHARED_EXPORT SCCamera : public QThread, public QQuickImageProvide
                    hasSecondLightSourceChannelChanged)
     Q_PROPERTY(bool isOpened READ isOpened WRITE setIsOpened NOTIFY isOpenedChanged)
     Q_PROPERTY(bool isShowRealtimeImage READ isShowRealtimeImage WRITE setIsShowRealtimeImage NOTIFY isShowRealtimeImageChanged)
+    Q_PROPERTY(bool calcObjectSharpness READ calcObjectSharpness WRITE setCalcObjectSharpness NOTIFY calcObjectSharpnessChanged)
 
 public:
     explicit SCCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent = nullptr);
@@ -73,6 +75,11 @@ public:
     bool hasSecondLightSourceChannel() const
     {
         return m_hasSecondLightSourceChannel;
+    }
+
+    bool calcObjectSharpness() const
+    {
+        return m_calcObjectSharpness;
     }
 
     CameraConfig *config() const
@@ -127,6 +134,15 @@ public slots:
         setHasSecondLightSourceChannel(channel >= 0);
     }
 
+    void setCalcObjectSharpness(bool calcObjectSharpness)
+    {
+        if (m_calcObjectSharpness == calcObjectSharpness)
+            return;
+
+        m_calcObjectSharpness = calcObjectSharpness;
+        emit calcObjectSharpnessChanged(m_calcObjectSharpness);
+    }
+
 signals:
     void lightSourceBrightnessChanged(int lightSourceBrightness);
     void imageChanged(QString imgProcessingResult);
@@ -134,6 +150,7 @@ signals:
     void isShowRealtimeImageChanged(bool isShowRealtimeImage);
     void secondLightSourceBrightnessChanged(int secondLightSourceBrightness);
     void hasSecondLightSourceChannelChanged(bool hasSecondLightSourceChannel);
+    void calcObjectSharpnessChanged(bool calcObjectSharpness);
 
     // QThread interface
 protected:
@@ -142,6 +159,9 @@ protected:
     // QQuickImageProvider interface
 public:
     virtual QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
+
+private:
+    double getObjectSharpness(QImage &image);
 
 private:
     QImage lastImage;
@@ -155,6 +175,7 @@ private:
     bool m_isOpened = false;
     bool m_isShowRealtimeImage = false;
     bool useIntervalFromConfig = true;
+    bool m_calcObjectSharpness = false;
     int m_secondLightSourceBrightness = 0;
     bool m_hasSecondLightSourceChannel;
 

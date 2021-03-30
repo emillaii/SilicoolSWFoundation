@@ -264,16 +264,6 @@ void VisionManager::startContinuallyPerformPr(QString visionLocationName)
     visionLocations[visionLocationName]->startContinuallyPerformPr();
 }
 
-void VisionManager::startContinuallyPerformObjSharpnessCalc(QString visionLocationName)
-{
-    if (!visionLocations.contains(visionLocationName))
-    {
-        qCCritical(visionCate()) << tr("Undefined vision location:") << visionLocationName;
-        return;
-    }
-    visionLocations[visionLocationName]->startContinuallyPerformObjSharpnessCalc();
-}
-
 void VisionManager::stopContinuallyCalculation(QString visionLocationName)
 {
     if (!visionLocations.contains(visionLocationName))

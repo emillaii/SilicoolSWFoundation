@@ -75,36 +75,6 @@ bool AdaptVision::performPr(
     return false;
 }
 
-double AdaptVision::getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo)
-{
-    auto adPrConfig = qobject_cast<AdaptVisionLocationConfig *>(prConfig);
-    if (adPrConfig == nullptr)
-    {
-        qFatal("Can not cast VisionLocationConfig to AdaptVisionLocationConfig! Source type name: %s", prConfig->metaObject()->className());
-    }
-    QString prFileName = VisionConfigDir::getIns().prConfigDir() + adPrConfig->prFileName();
-    qInfo("Perform PR: %s", prFileName.toUtf8().data());
-
-    auto adPrResultImageInfo = new AdaptVisionPRResultImageInfo();
-    (*resultImageInfo) = adPrResultImageInfo;
-    QVariantMap args;
-    PRResultStruct prResult;
-    adPrResultImageInfo->prType = adPrConfig->prType();
-
-    if (adPrConfig->prType() == AdaptVisionLocationConfig::Edge_Template_Matching)
-    {
-        qInfo("Going to perform edge fitting");
-        args["col"] = 0;
-        args["objectScore"] = adPrConfig->objectScore();
-        double objectSharpness;
-        if (EdgeFitting::PR_Edge_Fitting(image, prFileName, prResult, args, adPrResultImageInfo, objectSharpness, true))
-        {
-            return objectSharpness;
-        }
-    }
-    return -1;
-}
-
 void AdaptVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo)
 {
     auto adPrResultImageInfo = qobject_cast<AdaptVisionPRResultImageInfo *>(resultImageInfo);

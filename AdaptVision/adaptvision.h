@@ -26,7 +26,6 @@ public:
                    PRResultStruct &prResult,
                    int roiRowIndex,
                    int rowColIndex);
-    double getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo);
     void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo);
     QVector<PathEndPoint> readDispensePath(QString fileName);
 };

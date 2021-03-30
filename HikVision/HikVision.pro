@@ -29,8 +29,7 @@ INCLUDEPATH +=   ../Utilities     \
                  ../SCMotion \
                  ../ThirdPartyLib/zmq \
                  ../Libs/HikLibs/Includes \
-                 ../Libs/HikLibs/Libraries/Common/MvRender/include\
-                 ../ThirdPartyLib/opencv/include
+                 ../Libs/HikLibs/Libraries/Common/MvRender/include
 
 #QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator' uiAccess='false'"
 
@@ -41,7 +40,6 @@ LIBS += ../SCLibs/utilities.lib
 LIBS += ../SCLibs/SCVision.lib
 LIBS += ../Libs/HikLibs/Libraries/win64/C/iMVS-6000PlatformSDK.lib
 LIBS += ../Libs/HikLibs/Libraries/Common/MvRender/lib/win64/MvRender.lib
-LIBS += ../ThirdPartyLib/opencv/lib/opencv_world310.lib
 
 SOURCES += \
         hikvision.cpp

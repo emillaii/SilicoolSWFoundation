@@ -84,14 +84,6 @@ public:
         return false;
     }
 
-    virtual double getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo)
-    {
-        Q_UNUSED(image)
-        Q_UNUSED(prConfig)
-        Q_UNUSED(resultImageInfo)
-        return 0;
-    }
-
     ///
     /// \brief drawResultImage
     /// \param image in and out image

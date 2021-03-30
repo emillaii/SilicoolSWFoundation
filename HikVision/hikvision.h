@@ -11,7 +11,6 @@
 #include "hikvisionresultimageinfo.h"
 #include "iMVS-6000PlatformSDKC.h"
 #include "loghelper.h"
-#include "opencv2/opencv.hpp"
 #include "scvision.h"
 #include "visionconfigdir.h"
 #include <QPainter>
@@ -55,7 +54,6 @@ public:
     {
         throw SilicolAbort("Unimplemented function: performPr");
     }
-    double getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo);
     void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo) override;
     bool glueCheck(QImage &imageBefore,
                    QImage &imageAfter,

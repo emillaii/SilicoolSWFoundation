@@ -271,7 +271,14 @@ void SCCamera::run()
     {
         while (isShowRealtimeImage())
         {
-            getImage(true, false);
+            QImage img = getImage(false, false);
+            QString resultString;
+            if (m_calcObjectSharpness)
+            {
+                double sharpness = getObjectSharpness(img);
+                resultString = QString("Sharpness: %1").arg(sharpness, 0, 'g', 2);
+            }
+            showImage(img, resultString);
             QElapsedTimer timer;
             timer.start();
             int interval = useIntervalFromConfig ? m_config->showRealTimeImageInterval() : 100;
@@ -296,4 +303,21 @@ QImage SCCamera::requestImage(const QString &id, QSize *size, const QSize &reque
     QMutexLocker t(&lastImageLocker);
     imgForDisplay = lastImage.copy();
     return imgForDisplay;
+}
+
+double SCCamera::getObjectSharpness(QImage &image)
+{
+    cv::Mat srcGray(image.height(), image.width(), CV_8UC1, image.bits());
+    double result = 0;
+    for (int i = srcGray.rows / 4; i < 3 * srcGray.rows / 4; i++)
+    {
+        uchar *data = srcGray.ptr<uchar>(i);
+        for (int j = srcGray.cols / 4; j < 3 * srcGray.cols / 4; j++)
+        {
+            result += (data[j + 2] - data[j]) * (data[j + 2] - data[j]);
+        }
+    }
+    result = 4 * result / srcGray.total();
+
+    return result;
 }
