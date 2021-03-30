@@ -21,6 +21,7 @@ public:
     HikVisionResultImageInfo *resultImageInfo;
 
     QWaitCondition waiter;
+    bool gotModuleResult = false;
 };
 
 #endif    // HIKVISIONRESULT_H

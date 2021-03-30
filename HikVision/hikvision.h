@@ -11,6 +11,7 @@
 #include "hikvisionresultimageinfo.h"
 #include "iMVS-6000PlatformSDKC.h"
 #include "loghelper.h"
+#include "opencv2/opencv.hpp"
 #include "scvision.h"
 #include "visionconfigdir.h"
 #include <QPainter>
@@ -54,11 +55,7 @@ public:
     {
         throw SilicolAbort("Unimplemented function: performPr");
     }
-    double getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo)
-    {
-        throw SilicolAbort("Unimplemented function: getObjectSharpness");
-    }
-
+    double getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo);
     void drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo) override;
     bool glueCheck(QImage &imageBefore,
                    QImage &imageAfter,
@@ -104,6 +101,9 @@ private:
 private:
     void *m_handle = nullptr;
     unsigned int m_nMatchPtNum;
+
+    const int LineLen = 60;
+    const int LineWidth = 5;
 
     QMap<int, HikVisionResult *> hikResults;
     QMutex hikResultsLocker;

@@ -42,6 +42,7 @@ void HikVision::disposeImpl()
 
 bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
 {
+    SCTimer sct(QString("performPr: %1").arg(prConfig->locationName()), hikCate());
 
     HikVisionLocationConfig *hikPrConfig = qobject_cast<HikVisionLocationConfig *>(prConfig);
     SC_ASSERT(hikPrConfig != nullptr);
@@ -56,14 +57,18 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
     stImageData.stImageDataInfo.iHeight = image.height();
     stImageData.stImageDataInfo.iImgFormat = 1;
 
-    int nRet = IMVS_PF_SetImageData(m_handle, &stImageData);
-    if (IMVS_EC_OK != nRet)
     {
-        qCCritical(hikCate()) << prConfig->locationName() << "IMVS_PF_SetImageData Error, error code:" << QString::number(nRet, 16);
-        return false;
+        SCTimer sct("IMVS_PF_SetImageData", hikCate());
+
+        int nRet = IMVS_PF_SetImageData(m_handle, &stImageData);
+        if (IMVS_EC_OK != nRet)
+        {
+            qCCritical(hikCate()) << prConfig->locationName() << "IMVS_PF_SetImageData Error, error code:" << QString::number(nRet, 16);
+            return false;
+        }
     }
 
-    nRet = IMVS_PF_ExecuteOnce_V30(m_handle, hikPrConfig->processId(), nullptr);
+    int nRet = IMVS_PF_ExecuteOnce_V30(m_handle, hikPrConfig->processId(), nullptr);
     if (IMVS_EC_OK != nRet)
     {
         qCCritical(hikCate()) << prConfig->locationName() << "IMVS_PF_ExecuteOnce_V30 Error, error code:" << QString::number(nRet, 16);
@@ -205,8 +210,11 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
         if (hikResults.contains(info->nProcessID))
         {
             HikVisionResult *hikResult = hikResults[info->nProcessID];
-            hikResult->errString = "Process stopped!";
-            hikResult->waiter.wakeAll();
+            if (!hikResult->gotModuleResult)
+            {
+                hikResult->errString = "Process stopped!";
+                hikResult->waiter.wakeAll();
+            }
         }
         return IMVS_EC_OK;
     }
@@ -232,6 +240,8 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             return IMVS_EC_OK;
         }
 
+        hikResult->gotModuleResult = true;
+
         if (strcmp(info->strModuleName, MODU_NAME_HPFEATUREMATCHMODU) == 0)
         {
             IMVS_PF_HPFEATUREMATCH_MODU_INFO__ *hpMathInfo = (IMVS_PF_HPFEATUREMATCH_MODU_INFO__ *)info->pData;
@@ -254,9 +264,8 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->resultImageInfo->m_points.append(p1);
             }
             hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
-                                                 + ")" + ", " + "角度:" + QString::number(hikResult->theta, '.', 6);
+                                                 + ")" + ", " + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
-            // set hik  hikResult->resultImageInfo
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
@@ -284,7 +293,7 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->resultImageInfo->m_points.append(p1);
             }
             hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
-                                                 + ")" + ", " + "角度:" + QString::number(hikResult->theta, '.', 6);
+                                                 + ")" + ", " + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
@@ -315,7 +324,7 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
 
             hikResult->resultImageInfo->m_text = "Center Point:(" + QString::number(hikResult->x, '.', 3) + ","
                                                  + QString::number(hikResult->y, '.', 3) + ")" + ", "
-                                                 + "角度:" + QString::number(hikResult->theta, '.', 6);
+                                                 + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
@@ -335,11 +344,13 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->radius = circleInfo->fRadius;
             hikResult->resultImageInfo->m_center = QPointF(hikResult->x, hikResult->y);
             hikResult->resultImageInfo->m_radius = hikResult->radius;
-            hikResult->resultImageInfo->m_text = "Center Point:(" + QString::number(hikResult->x, '.', 3);
+            hikResult->resultImageInfo->m_text
+                = "Center Point:(" + QString::number(hikResult->x, '.', 3) + "Radius:" + QString::number(hikResult->radius, '.', 3);
 
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
+
         if (strcmp(info->strModuleName, MODU_NAME_IMAGESHARPNESSMODU) == 0)
         {
             IMVS_PF_IMAGESHARPNESS_MODU_INFO *imagesharpness = (IMVS_PF_IMAGESHARPNESS_MODU_INFO *)info->pData;
@@ -434,37 +445,36 @@ int HikVision::copyModuResultByModu(IN IMVS_PF_MODU_RES_INFO *const pstPFModuRes
 
 void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInfo)
 {
+    SCTimer sct("drawResultImage", hikCate());
+
     HikVisionResultImageInfo *hikResultImageInfo = qobject_cast<HikVisionResultImageInfo *>(resultImageInfo);
     if (hikResultImageInfo != nullptr)
     {
-        QPainter painter(&image);
-        // draw point
-        if (!hikResultImageInfo->m_point.isNull())
         {
-            QPointF point = hikResultImageInfo->m_point;
-            painter.setPen(QPen(Qt::green, 5));
-            painter.drawLine(QPointF(point.x(), point.y() - 10), QPointF(point.x(), point.y() + 10));
-            painter.drawLine(QPointF(point.x() - 10, point.y()), QPointF(point.x() + 10, point.y()));
+            SCTimer sct("image format convert", hikCate());
+            image = image.convertToFormat(QImage::Format_RGB888);
         }
+
+        QPainter painter(&image);
         // draw points
         if (!hikResultImageInfo->m_points.isEmpty())
         {
-            painter.setPen(QPen(Qt::blue, 5));
+            painter.setPen(QPen(Qt::green, LineWidth));
             painter.drawPoints(hikResultImageInfo->m_points);
         }
         // draw line
-        else if (!hikResultImageInfo->m_line.isNull())
+        if (!hikResultImageInfo->m_line.isNull())
         {
             QLineF line = hikResultImageInfo->m_line;
             painter.setRenderHint(QPainter::Antialiasing, true);
-            painter.setPen(QPen(Qt::green, 4));
+            painter.setPen(QPen(Qt::green, LineWidth));
             painter.drawLine(line);
         }
         // draw lines
-        else if (!hikResultImageInfo->m_lines.isEmpty())
+        if (!hikResultImageInfo->m_lines.isEmpty())
         {
             painter.setRenderHint(QPainter::Antialiasing, true);
-            painter.setPen(QPen(Qt::green, 4));
+            painter.setPen(QPen(Qt::blue, LineWidth));
             QLineF *lines = new QLineF[static_cast<unsigned long long>(hikResultImageInfo->m_lines.count())];
             for (int i = 0; i < hikResultImageInfo->m_lines.count(); i++)
             {
@@ -473,27 +483,27 @@ void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInf
             painter.drawLines(lines, hikResultImageInfo->m_lines.count());
         }
         // draw rect
-        else if (!hikResultImageInfo->m_rect.isNull())
+        if (!hikResultImageInfo->m_rect.isNull())
         {
             QRectF rect = hikResultImageInfo->m_rect;
-            painter.setPen(QPen(QColor(0, 0, 255), 4));
+            painter.setPen(QPen(QColor(0, 0, 255), LineWidth));
             // painter.setBrush(QColor(255, 160, 90));
             painter.drawRect(rect);
         }
         // draw circle
-        else if (hikResultImageInfo->m_radius > 0 && !hikResultImageInfo->m_center.isNull())
+        if (hikResultImageInfo->m_radius > 0 && !hikResultImageInfo->m_center.isNull())
         {
             double radius = hikResultImageInfo->m_radius;
             QPointF center = hikResultImageInfo->m_center;
-            painter.setPen(QPen(QColor(0, 255, 0), 4));
+            painter.setPen(QPen(QColor(0, 0, 255), LineWidth));
             // painter.setBrush(QColor(255, 160, 90));
             painter.drawEllipse(center, radius, radius);
         }
         // draw ploygon
-        else if (!hikResultImageInfo->m_mpolygon.isEmpty())
+        if (!hikResultImageInfo->m_mpolygon.isEmpty())
         {
             QList<QPointF> polygon = hikResultImageInfo->m_mpolygon;
-            painter.setPen(QPen(QColor(0, 255, 0), 4));
+            painter.setPen(QPen(QColor(0, 0, 255), LineWidth));
             QPointF *Points = new QPointF[static_cast<unsigned long long>(polygon.count())];
             for (int i = 0; i < polygon.count(); i++)
             {
@@ -503,17 +513,27 @@ void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInf
             delete[] Points;
         }
         // draw text
-        else if (!hikResultImageInfo->m_text.isNull())
+        if (!hikResultImageInfo->m_text.isNull())
         {
             QString text = hikResultImageInfo->m_text;
-            painter.setPen(QPen(Qt::green, 4));
+            painter.setPen(QPen(Qt::green, 1));
             painter.setBrush(Qt::NoBrush);
             QFont font;
             font.setFamily("宋体");
             font.setPixelSize(100);
             font.setBold(true);
             painter.setFont(font);
-            painter.drawText(image.rect(), text);
+            int startPos = image.width() * 0.1;
+            painter.drawText(startPos, startPos, text);
+        }
+
+        // draw point
+        if (!hikResultImageInfo->m_point.isNull())
+        {
+            QPointF point = hikResultImageInfo->m_point;
+            painter.setPen(QPen(Qt::red, 4));
+            painter.drawLine(QPointF(point.x(), point.y() - LineLen), QPointF(point.x(), point.y() + LineLen));
+            painter.drawLine(QPointF(point.x() - LineLen, point.y()), QPointF(point.x() + LineLen, point.y()));
         }
         // image.save("hikresult.png", "PNG", -1);
     }
@@ -521,4 +541,23 @@ void HikVision::drawResultImage(QImage &image, PRResultImageInfo *resultImageInf
     {
         qCritical() << "no PR result";
     }
+}
+double HikVision::getObjectSharpness(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo)
+{
+    (*resultImageInfo) = new HikVisionResultImageInfo();
+    cv::Mat imageSobel, imageLaplacian;
+
+    cv::Mat srcGray(image.height(), image.width(), CV_8UC1, image.bits());
+    double result = .0f;
+    for (int i=srcGray.rows/4;i<3*srcGray.rows/4;i++)
+    {
+        uchar *data = srcGray.ptr<uchar>(i);
+        for (int j=srcGray.cols/4;j<3*srcGray.cols/4;j++)
+        {
+            result += (data[j+2]-data[j])*(data[j+2]-data[j]);
+        }
+    }
+    result = 4*result/srcGray.total();
+
+    return result;
 }
