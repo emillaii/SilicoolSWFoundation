@@ -276,7 +276,7 @@ void SCCamera::run()
             if (m_calcObjectSharpness)
             {
                 double sharpness = getObjectSharpness(img);
-                resultString = QString("Sharpness: %1").arg(sharpness, 0, 'g', 2);
+                resultString = QString("Sharpness: %1").arg(sharpness);
             }
             showImage(img, resultString);
             QElapsedTimer timer;
