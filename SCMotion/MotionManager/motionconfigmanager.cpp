@@ -24,8 +24,8 @@ MotionConfigManager::MotionConfigManager(BasicElementFactory *basicElementFactor
     axisConfigsFile = new ConfigFile("axisConfigs", m_axisConfigs, motionConfigFileDir + axisConfigsFileName);
     extendedAxisConfigsFile = new ConfigFile("extendedAxisConfigs", m_extendedAxisConfigs, motionConfigFileDir + extendedAxisConfigsFileName);
     extendedAxis2ConfigsFile = new ConfigFile("extendedAxis2Configs", m_extendedAxis2Configs, motionConfigFileDir + extendedAxis2ConfigsFileName);
-    extendedAxis3ConfigsFile = new ConfigFile("extendedAxis3Configs", m_extendedAxis3Configs, dutRelatedConfigFileDir + extendedAxis3ConfigsFileName);
-    extendedAxis4ConfigsFile = new ConfigFile("extendedAxis4Configs", m_extendedAxis4Configs, dutRelatedConfigFileDir + extendedAxis4ConfigsFileName);
+    extendedAxis3ConfigsFile = new ConfigFile("extendedAxis3Configs", m_extendedAxis3Configs, motionConfigFileDir + extendedAxis3ConfigsFileName);
+    extendedAxis4ConfigsFile = new ConfigFile("extendedAxis4Configs", m_extendedAxis4Configs, motionConfigFileDir + extendedAxis4ConfigsFileName);
     diConfigsFile = new ConfigFile("diConfigs", m_diConfigs, motionConfigFileDir + diConfigsFileName);
     doConfigsFile = new ConfigFile("doConfigs", m_doConfigs, motionConfigFileDir + doConfigsFileName);
     cylConfigsFile = new ConfigFile("cylinderConfigs", m_cylConfigs, motionConfigFileDir + cylConfigsFileName);
