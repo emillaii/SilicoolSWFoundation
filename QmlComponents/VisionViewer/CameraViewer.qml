@@ -326,7 +326,7 @@ Flickable {
             implicitWidth: parent.btnSize
             implicitHeight: parent.btnSize
             display: AbstractButton.IconOnly
-            icon.color: camera.calcObjectSharpness ? "limegreen" : "red"
+            icon.color: camera.calcObjectSharpness ? "limegreen" : "white"
             icon.source: "qrc:/commonicons/contrast.png"
             onClicked: {
                 camera.setCalcObjectSharpness(!camera.calcObjectSharpness)
