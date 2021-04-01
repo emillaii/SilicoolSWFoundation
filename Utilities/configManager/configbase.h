@@ -1,13 +1,16 @@
 #ifndef CONFIGBASE_H
 #define CONFIGBASE_H
 
+#include "commonmethod.h"
 #include "utilities_global.h"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QMetaMethod>
 #include <QObject>
 #include <QVariant>
+#include <qtimer.h>
 
 class UTILITIESSHARED_EXPORT ConfigElementInfo : public QObject
 {
@@ -51,6 +54,9 @@ public:
 
     Q_INVOKABLE ConfigElementInfo::Type configType() const;
 
+    void bind(ConfigBase *other, bool isTwoWay = true);
+    void unBind(bool isTwoWay = true);
+
     QByteArray toJsonBinaryData(const QString &objName = "Obj");
     bool fromJsonBinaryData(const QByteArray &jsBinaryData, const QString &objName = "Obj");
 
@@ -58,10 +64,18 @@ public:
     virtual void write(QJsonValue &jsonValue) = 0;
     virtual void uniquelyConnectConfigChangedSignalToSlot(QObject *receiver, int slotIndex, bool connect) = 0;
 
+private slots:
+    void reqSyncConfig();
+    void onSyncConfig();
+
 private:
     friend class ConfigFile;
 
     ConfigElementInfo::Type m_configType;
+
+    ConfigBase *bindedConfigObj = nullptr;
+    QTimer syncConfigTimer;
+    int reqSyncConfigSlotIndex = -1;
 };
 
 #endif    // CONFIGBASE_H
