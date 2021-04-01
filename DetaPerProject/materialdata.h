@@ -1,0 +1,4 @@
+#ifndef MATERIALDATA_H
+#define MATERIALDATA_H
+
+#endif // MATERIALDATA_H
