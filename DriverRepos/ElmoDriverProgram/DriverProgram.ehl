@@ -42,19 +42,22 @@ pa=startPos
 bg
 return
 
-function homing(int homeac, int sp1, int sp2,  float maxCurRatio)
+function Homing(int Homeac, int sp1, int sp2,  float maxCurRatio )
+global float Plbuf
 UI[1]=UI[1] & 0XFB
 rm=0
+PL[1]=Plbuf
 HM[2]=0
 HM[3]=3
 HM[4]=0
 HM[5]=0
-ac=homeac
+ac=Homeac
 dc=ac
+sd=5*ac
 try
 jv=sp1
 bg
-until(abs(iq)>=maxCurRatio* PL[1])
+until(abs(iq)>=maxCurRatio* CL[1])
 st
 HM[1]=1
 jv=sp2
@@ -105,6 +108,14 @@ ob[2]=1
 ob[1]=0
 rm=0
 end
+return
+
+function moveTo(int vel, int acc, int pos)
+ac=acc
+dc=acc
+sp=vel
+pa=pos
+bg
 return
 
 #@AUTO_ER
