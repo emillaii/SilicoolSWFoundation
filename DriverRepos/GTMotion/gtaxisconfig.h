@@ -188,6 +188,7 @@ class GTAxisConfig : public AxisConfig
     Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
     Q_PROPERTY(int inPosBand READ inPosBand WRITE setInPosBand NOTIFY inPosBandChanged)
     Q_PROPERTY(int inPosHoldTime READ inPosHoldTime WRITE setInPosHoldTime NOTIFY inPosHoldTimeChanged)
+    Q_PROPERTY(double stopAccRatio READ stopAccRatio WRITE setStopAccRatio NOTIFY stopAccRatioChanged)
     Q_PROPERTY(GTHomeConfig *gtHomeConfig READ gtHomeConfig)
 
 public:
@@ -220,6 +221,11 @@ public:
     GTHomeConfig *gtHomeConfig() const
     {
         return m_gtHomeConfig;
+    }
+
+    double stopAccRatio() const
+    {
+        return m_stopAccRatio;
     }
 
 public slots:
@@ -259,6 +265,15 @@ public slots:
         emit inPosHoldTimeChanged(m_inPosHoldTime);
     }
 
+    void setStopAccRatio(double stopAccRatio)
+    {
+        if (qFuzzyCompare(m_stopAccRatio, stopAccRatio))
+            return;
+
+        m_stopAccRatio = stopAccRatio;
+        emit stopAccRatioChanged(m_stopAccRatio);
+    }
+
 signals:
     void coreNoChanged(int coreNo);
 
@@ -268,12 +283,15 @@ signals:
 
     void inPosHoldTimeChanged(int inPosHoldTime);
 
+    void stopAccRatioChanged(double stopAccRatio);
+
 private:
     int m_coreNo = 1;
     int m_index = 1;
     int m_inPosBand = 3;
     int m_inPosHoldTime = 3;
     GTHomeConfig *m_gtHomeConfig;
+    double m_stopAccRatio = 1;
 };
 
 #endif    // GTAXISCONFIG_H
