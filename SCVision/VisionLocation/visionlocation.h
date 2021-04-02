@@ -7,6 +7,7 @@
 #include "errorHandling/silicolerrorhandler.h"
 #include "proffset.h"
 #include "scvision_global.h"
+#include "visionconfigdir.h"
 #include "visionlocationconfig.h"
 #include <QtConcurrent>
 
@@ -50,6 +51,8 @@ public:
     bool performPR(QImage &image, PRResultStruct &prResult);
     bool performPR(QImage &image, PrOffset &offset);
     bool performPR(QImage &image, PrOffset &offset, PRResultStruct &prResult);
+
+    void updatePrResultImage();
 
     PrOffset getAvePrOffset(int times);
     PrOffset getAvePrOffset(int times, QList<PrOffset> &processData);
