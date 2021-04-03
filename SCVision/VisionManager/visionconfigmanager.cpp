@@ -180,7 +180,7 @@ void VisionConfigManager::handleDutChanged(QString dutRelatedConfigDir)
     }
 
     ConfigObjectArray newVlConfigs(m_visionLocationConfigMetaObj);
-    ConfigFile newVlConfigFile("", &newVlConfigs, dutRelatedConfigDir + visionLocationConfigsFileName);
+    ConfigFile newVlConfigFile("VisionLocation", &newVlConfigs, dutRelatedConfigDir + visionLocationConfigsFileName);
     newVlConfigFile.populate();
 
     visionLocationConfigsFile->setAutoSave(false);

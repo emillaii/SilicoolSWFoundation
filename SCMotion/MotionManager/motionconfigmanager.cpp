@@ -438,6 +438,33 @@ void MotionConfigManager::setAxisVelocityRatio(QString axisName, double ratio)
     axisConfigMap[axisName]->setVelocityRatio(ratio);
 }
 
+SingleAxisPos *MotionConfigManager::getSAxisModulePos(QString moduleName, QString posName) const
+{
+    if (sAxisConfigMap.contains(moduleName))
+    {
+        return sAxisConfigMap[moduleName]->getPos<SingleAxisPos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined SingleAxis: %1").arg(moduleName));
+}
+
+XYModulePos *MotionConfigManager::getXyModulePos(QString moduleName, QString posName) const
+{
+    if (xyModuleConfigMap.contains(moduleName))
+    {
+        return xyModuleConfigMap[moduleName]->getPos<XYModulePos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined XYModule: %1").arg(moduleName));
+}
+
+XYZModulePos *MotionConfigManager::getXyzModulePos(QString moduleName, QString posName) const
+{
+    if (xyzModuleConfigMap.contains(moduleName))
+    {
+        return xyzModuleConfigMap[moduleName]->getPos<XYZModulePos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined XYZModule: %1").arg(moduleName));
+}
+
 AxisModuleConfig *MotionConfigManager::getModuleConfig(QString moduleName, MotionElement::Type moduleType)
 {
     AxisModuleConfig *axisModuleConfig = nullptr;
@@ -465,6 +492,42 @@ AxisModuleConfig *MotionConfigManager::getModuleConfig(QString moduleName, Motio
         }
     }
     return axisModuleConfig;
+}
+
+QObject *MotionConfigManager::sAxisModulePos(QString moduleName, QString posName) const
+{
+    if (sAxisConfigMap.contains(moduleName) && sAxisConfigMap[moduleName]->containsPos(posName))
+    {
+        return sAxisConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::xyModulePos(QString moduleName, QString posName) const
+{
+    if (xyModuleConfigMap.contains(moduleName) && xyModuleConfigMap[moduleName]->containsPos(posName))
+    {
+        return xyModuleConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::xyzModulePos(QString moduleName, QString posName) const
+{
+    if (xyzModuleConfigMap.contains(moduleName) && xyzModuleConfigMap[moduleName]->containsPos(posName))
+    {
+        return xyzModuleConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::softLandingPos(QString axisName, QString softLandingPosName) const
+{
+    if (axisConfigMap.contains(axisName) && axisConfigMap[axisName]->softLandingPosNames().contains(softLandingPosName))
+    {
+        return axisConfigMap[axisName]->getPos(softLandingPosName);
+    }
+    return nullptr;
 }
 
 void MotionConfigManager::config2Dic()

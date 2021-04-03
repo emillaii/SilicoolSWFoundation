@@ -66,8 +66,12 @@ public slots:
             {
                 setPrResultImage("");
             }
-            emit prResultImageChanged();
         }
+        else
+        {
+            setPrResultImage("");
+        }
+        emit prResultImageChanged();
     }
 
     void setPrType(PrType prType)

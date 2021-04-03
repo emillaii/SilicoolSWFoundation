@@ -40,6 +40,15 @@ void HikVision::disposeImpl()
     }
 }
 
+void HikVision::handleDutTypeChanged()
+{
+    if (m_handle != nullptr)
+    {
+        IMVS_PF_CloseSolution(m_handle);
+        loadSolution();
+    }
+}
+
 bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
 {
     SCTimer sct(QString("performPr: %1").arg(prConfig->locationName()), hikCate());

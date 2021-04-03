@@ -413,6 +413,10 @@ void VisionManager::onDutTypeChanged(QString dutType)
     {
         emit vl->config()->prResultImageChanged();
     }
+    if (m_vision != nullptr)
+    {
+        m_vision->handleDutTypeChanged();
+    }
 }
 
 void VisionManager::initCamera(SCCamera *camera)
