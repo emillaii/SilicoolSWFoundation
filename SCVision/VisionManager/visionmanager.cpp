@@ -409,6 +409,10 @@ void VisionManager::onDutTypeChanged(QString dutType)
     QString dutRelatedVisionConfigDir = QString("./config/DutType/%1/vision").arg(dutType);
     VisionConfigDir::getIns().setDutRelatedConfigDir(dutRelatedVisionConfigDir);
     visionConfigManager->handleDutChanged(dutRelatedVisionConfigDir);
+    foreach (auto vl, visionLocations.values())
+    {
+        emit vl->config()->prResultImageChanged();
+    }
 }
 
 void VisionManager::initCamera(SCCamera *camera)

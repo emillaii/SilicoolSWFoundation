@@ -287,7 +287,7 @@ void SCCylinder::stopLoopTest()
     isLoopTest = false;
 }
 
-void SCCylinder::onNoFalseInputSNRChanged(bool value)
+void SCCylinder::onNoFalseInputSNRChanged(bool value)    // 只会更改本地配置，不会更改远端配置
 {
     noFalseInputSNR = value;
     if (noFalseInputSNR)
@@ -314,7 +314,7 @@ void SCCylinder::onNoFalseInputSNRChanged(bool value)
     }
 }
 
-void SCCylinder::onNoTrueInputSNRChanged(bool value)
+void SCCylinder::onNoTrueInputSNRChanged(bool value)    // 只会更改本地配置，不会更改远端配置
 {
     noTrueInputSNR = value;
     if (noTrueInputSNR)

@@ -140,9 +140,7 @@ GroupBox {
     Connections{
         id: connVisionLocationConfigChanged
         target: null
-        onPrFileNameChanged: {
-            updatePrResultImage()
-        }
+
         onLightBrightnessChanged: {
             if(!lightBrightnessSlider.pressed){
                 lightBrightnessSlider.value = lightBrightness
@@ -152,6 +150,9 @@ GroupBox {
             if(!lightBrightnessSlider2.pressed){
                 lightBrightnessSlider2.value = secondLightBrightness
             }
+        }
+        onPrResultImageChanged: {
+            updatePrResultImage()
         }
     }
 
