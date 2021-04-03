@@ -301,6 +301,16 @@ void VisionManager::performPrResult(QString calibrationName, QString visionLocat
     }
 }
 
+void VisionManager::updatePrResultImage(QString visionLocationName)
+{
+    if (!visionLocations.contains(visionLocationName))
+    {
+        qCCritical(visionCate()) << tr("Undefined vision location:") << visionLocationName;
+        return;
+    }
+    visionLocations[visionLocationName]->updatePrResultImage();
+}
+
 void VisionManager::moveCamera(QString cameraName, double px, double py)
 {
     if (!cameraMap.contains(cameraName))

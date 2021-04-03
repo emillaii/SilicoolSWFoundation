@@ -87,18 +87,17 @@ LIBS += $${LibsDir}dvp/lib/x64/DVPCamera64.lib    \
 LIBS += $${LibsDir}basler/lib/x64/PylonBase_v5_2.lib    \
         $${LibsDir}basler/lib/x64/GCBase_MD_VC141_v3_1_Basler_pylon.lib    \
         $${LibsDir}basler/lib/x64/GenApi_MD_VC141_v3_1_Basler_pylon.lib    \
-        $${LibsDir}basler/lib/x64/PylonUtility_v5_2.lib    \
-        $${SWFoundationDir}AdaptVisionLib/Release/AdaptVision.lib   \
-        $${SWFoundationDir}HikVisionLib/Release/HikVision.lib
-
+        $${LibsDir}basler/lib/x64/PylonUtility_v5_2.lib
 
 DESTDIR = ./Release
 OBJECTS_DIR = ./Release/Objs
 MOC_DIR = ./Release/Mocs
+
 LIBS += $${SWFoundationDir}SCLibs/SCMotion.lib
 LIBS += $${SWFoundationDir}SCLibs/utilities.lib
 LIBS += $${SWFoundationDir}SCLibs/SCVision.lib
-
+LIBS += $${SWFoundationDir}SCLibs/AdaptVision.lib
+LIBS += $${SWFoundationDir}SCLibs/HikVision.lib
 
 
 # Additional import path used to resolve QML modules in Qt Creator's code model

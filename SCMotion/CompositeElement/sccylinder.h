@@ -66,6 +66,10 @@ public:
     Q_INVOKABLE void startLoopTest();
     Q_INVOKABLE void stopLoopTest();
 
+private slots:
+    void onNoFalseInputSNRChanged(bool value);
+    void onNoTrueInputSNRChanged(bool value);
+
 private:
     bool checkState(bool targetState);
     void setImpl(bool state);

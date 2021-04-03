@@ -68,6 +68,8 @@ public:
 
     Q_INVOKABLE void performPrResult(QString calibrationName, QString visionLocationName, bool perfomOriginPrResult);
 
+    Q_INVOKABLE void updatePrResultImage(QString visionLocationName);
+
     Q_INVOKABLE void moveCamera(QString cameraName, double px, double py);
 
     Q_INVOKABLE void startMoveAndPr();
