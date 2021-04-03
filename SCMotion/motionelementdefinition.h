@@ -13,13 +13,11 @@ class SCMOTIONSHARED_EXPORT AxisModuleDefinition : public ConfigObject
     Q_PROPERTY(QString moduleName READ moduleName WRITE setModuleName NOTIFY moduleNameChanged)
     Q_PROPERTY(QString moduleType READ moduleType WRITE setModuleType NOTIFY moduleTypeChanged)
     Q_PROPERTY(ConfigArray *modulePosNames READ modulePosNames)
-    Q_PROPERTY(ConfigArray* dutRelatedModulePosNames READ dutRelatedModulePosNames)
 
 public:
     Q_INVOKABLE AxisModuleDefinition(QObject *parent = nullptr) : ConfigObject(parent)
     {
         m_modulePosNames = new ConfigArray(ConfigElementInfo::Other, this);
-        m_dutRelatedModulePosNames = new ConfigArray(ConfigElementInfo::Other, this);
 
         auto typesInfo = MotionElement::TypeEnumInfo();
         auto typesNames = typesInfo.names();
@@ -46,11 +44,6 @@ public:
     ConfigArray *modulePosNames() const
     {
         return m_modulePosNames;
-    }
-
-    ConfigArray* dutRelatedModulePosNames() const
-    {
-        return m_dutRelatedModulePosNames;
     }
 
 public slots:
@@ -81,7 +74,6 @@ private:
     QString m_moduleName;
     QString m_moduleType;
     ConfigArray *m_modulePosNames;
-    ConfigArray* m_dutRelatedModulePosNames;
 };
 
 class SCMOTIONSHARED_EXPORT AxisDefinition : public ConfigObject

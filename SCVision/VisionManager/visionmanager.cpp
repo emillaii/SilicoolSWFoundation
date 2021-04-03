@@ -394,6 +394,13 @@ void VisionManager::stopMoveAndPr()
     runMoveAndPr = false;
 }
 
+void VisionManager::onDutTypeChanged(QString dutType)
+{
+    QString dutRelatedVisionConfigDir = QString("./config/DutType/%1/vision").arg(dutType);
+    VisionConfigDir::getIns().setDutRelatedConfigDir(dutRelatedVisionConfigDir);
+    visionConfigManager->handleDutChanged(dutRelatedVisionConfigDir);
+}
+
 void VisionManager::initCamera(SCCamera *camera)
 {
     auto lscName = camera->config()->lscName();

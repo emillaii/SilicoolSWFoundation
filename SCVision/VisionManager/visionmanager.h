@@ -5,6 +5,7 @@
 #include "VisionLocation/visionlocation.h"
 #include "dummycamera.h"
 #include "scvision_global.h"
+#include "visionconfigdir.h"
 #include "visionconfigmanager.h"
 #include "visionfactory.h"
 #include <QObject>
@@ -77,6 +78,9 @@ public:
     {
         return m_vision;
     }
+
+public slots:
+    void onDutTypeChanged(QString dutType);
 
 private:
     void initCamera(SCCamera *camera);

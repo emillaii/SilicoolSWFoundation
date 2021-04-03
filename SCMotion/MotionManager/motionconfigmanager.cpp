@@ -31,9 +31,9 @@ MotionConfigManager::MotionConfigManager(BasicElementFactory *basicElementFactor
     cylConfigsFile = new ConfigFile("cylinderConfigs", m_cylConfigs, motionConfigFileDir + cylConfigsFileName);
     vacuumConfigsFile = new ConfigFile("vacuumConfigs", m_vacuumConfigs, motionConfigFileDir + vacuumConfigsFileName);
     singleAxisModuleConfigsFile
-        = new ConfigFile("singleAxisModuleConfigs", m_singleAxisModuleConfigs, dutRelatedConfigFileDir + singleAxisModuleConfigsFileName);
-    xyModuleConfigsFile = new ConfigFile("xyModuleConfigs", m_xyModuleConfigs, dutRelatedConfigFileDir + xyModuleConfigsFileName);
-    xyzModuleConfigsFile = new ConfigFile("xyzModuleConfigs", m_xyzModuleConfigs, dutRelatedConfigFileDir + xyzModuleConfigsFileName);
+        = new ConfigFile("singleAxisModuleConfigs", m_singleAxisModuleConfigs, motionConfigFileDir + singleAxisModuleConfigsFileName);
+    xyModuleConfigsFile = new ConfigFile("xyModuleConfigs", m_xyModuleConfigs, motionConfigFileDir + xyModuleConfigsFileName);
+    xyzModuleConfigsFile = new ConfigFile("xyzModuleConfigs", m_xyzModuleConfigs, motionConfigFileDir + xyzModuleConfigsFileName);
 
     axisConfigsFile->populate();
     extendedAxisConfigsFile->populate(true);

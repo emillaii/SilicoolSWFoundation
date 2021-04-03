@@ -38,14 +38,32 @@ void DutTypeManager::removeDutType(QString dutType)
         UIOperation::getIns()->showError(tr("Current used dut type (%1) can not be removed!").arg(dutType));
         return;
     }
-    if (!UIOperation::getIns()->yesNoConfirm(
-            tr("Remove dut type will delete all related config files!\r\nAre you sure to do that?")))
+    if (!UIOperation::getIns()->yesNoConfirm(tr("Remove dut type will delete all related config files!\r\nAre you sure to do that?")))
     {
         return;
     }
     removeDir(QString("./config/DutType/%1").arg(dutType));
     updateDutTypes();
     UIOperation::getIns()->showTip(tr("Remove dut type (%1) successful!").arg(dutType));
+}
+
+void DutTypeManager::switchTo(QString dutType)
+{
+    if (dutType == basicConfig->dutType())
+    {
+        UIOperation::getIns()->showError(tr("Dut type %1 was used!").arg(dutType));
+        return;
+    }
+    QString dutDir = QString("./config/DutType/%1").arg(dutType);
+    QDir dir(dutDir);
+    if (!dir.exists())
+    {
+        UIOperation::getIns()->showError(tr("Dut type %1 not exist!").arg(dutType));
+        return;
+    }
+    basicConfig->setDutType(dutType);
+    QThread::msleep(500);
+    UIOperation::getIns()->showTip(tr("Switch dut type to %1!").arg(dutType));
 }
 
 void DutTypeManager::copyDir(const QString &source, const QString &target)
