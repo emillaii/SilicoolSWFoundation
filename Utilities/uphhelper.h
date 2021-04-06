@@ -169,7 +169,6 @@ public slots:
 
     void setTrayTestTime(double trayTestTime)
     {
-        qWarning("Floating point comparison needs context sanity check");
         if (qFuzzyCompare(m_trayTestTime, trayTestTime))
             return;
 

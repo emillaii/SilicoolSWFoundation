@@ -85,6 +85,7 @@
         <file>PathCanvasEditor/PathSettingTableWidget.qml</file>
         <file>PathCanvasEditor/PointsTableWidget.qml</file>
         <file>VisionViewer/HikVisionLocationViewer.qml</file>
+        <file>VisionViewer/HikVisionMenu.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

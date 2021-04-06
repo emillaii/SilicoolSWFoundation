@@ -24,16 +24,16 @@ MotionConfigManager::MotionConfigManager(BasicElementFactory *basicElementFactor
     axisConfigsFile = new ConfigFile("axisConfigs", m_axisConfigs, motionConfigFileDir + axisConfigsFileName);
     extendedAxisConfigsFile = new ConfigFile("extendedAxisConfigs", m_extendedAxisConfigs, motionConfigFileDir + extendedAxisConfigsFileName);
     extendedAxis2ConfigsFile = new ConfigFile("extendedAxis2Configs", m_extendedAxis2Configs, motionConfigFileDir + extendedAxis2ConfigsFileName);
-    extendedAxis3ConfigsFile = new ConfigFile("extendedAxis3Configs", m_extendedAxis3Configs, dutRelatedConfigFileDir + extendedAxis3ConfigsFileName);
-    extendedAxis4ConfigsFile = new ConfigFile("extendedAxis4Configs", m_extendedAxis4Configs, dutRelatedConfigFileDir + extendedAxis4ConfigsFileName);
+    extendedAxis3ConfigsFile = new ConfigFile("extendedAxis3Configs", m_extendedAxis3Configs, motionConfigFileDir + extendedAxis3ConfigsFileName);
+    extendedAxis4ConfigsFile = new ConfigFile("extendedAxis4Configs", m_extendedAxis4Configs, motionConfigFileDir + extendedAxis4ConfigsFileName);
     diConfigsFile = new ConfigFile("diConfigs", m_diConfigs, motionConfigFileDir + diConfigsFileName);
     doConfigsFile = new ConfigFile("doConfigs", m_doConfigs, motionConfigFileDir + doConfigsFileName);
     cylConfigsFile = new ConfigFile("cylinderConfigs", m_cylConfigs, motionConfigFileDir + cylConfigsFileName);
     vacuumConfigsFile = new ConfigFile("vacuumConfigs", m_vacuumConfigs, motionConfigFileDir + vacuumConfigsFileName);
     singleAxisModuleConfigsFile
-        = new ConfigFile("singleAxisModuleConfigs", m_singleAxisModuleConfigs, dutRelatedConfigFileDir + singleAxisModuleConfigsFileName);
-    xyModuleConfigsFile = new ConfigFile("xyModuleConfigs", m_xyModuleConfigs, dutRelatedConfigFileDir + xyModuleConfigsFileName);
-    xyzModuleConfigsFile = new ConfigFile("xyzModuleConfigs", m_xyzModuleConfigs, dutRelatedConfigFileDir + xyzModuleConfigsFileName);
+        = new ConfigFile("singleAxisModuleConfigs", m_singleAxisModuleConfigs, motionConfigFileDir + singleAxisModuleConfigsFileName);
+    xyModuleConfigsFile = new ConfigFile("xyModuleConfigs", m_xyModuleConfigs, motionConfigFileDir + xyModuleConfigsFileName);
+    xyzModuleConfigsFile = new ConfigFile("xyzModuleConfigs", m_xyzModuleConfigs, motionConfigFileDir + xyzModuleConfigsFileName);
 
     axisConfigsFile->populate();
     extendedAxisConfigsFile->populate(true);
@@ -438,6 +438,33 @@ void MotionConfigManager::setAxisVelocityRatio(QString axisName, double ratio)
     axisConfigMap[axisName]->setVelocityRatio(ratio);
 }
 
+SingleAxisPos *MotionConfigManager::getSAxisModulePos(QString moduleName, QString posName) const
+{
+    if (sAxisConfigMap.contains(moduleName))
+    {
+        return sAxisConfigMap[moduleName]->getPos<SingleAxisPos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined SingleAxis: %1").arg(moduleName));
+}
+
+XYModulePos *MotionConfigManager::getXyModulePos(QString moduleName, QString posName) const
+{
+    if (xyModuleConfigMap.contains(moduleName))
+    {
+        return xyModuleConfigMap[moduleName]->getPos<XYModulePos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined XYModule: %1").arg(moduleName));
+}
+
+XYZModulePos *MotionConfigManager::getXyzModulePos(QString moduleName, QString posName) const
+{
+    if (xyzModuleConfigMap.contains(moduleName))
+    {
+        return xyzModuleConfigMap[moduleName]->getPos<XYZModulePos>(posName);
+    }
+    throw SilicolAbort(QString("Undefined XYZModule: %1").arg(moduleName));
+}
+
 AxisModuleConfig *MotionConfigManager::getModuleConfig(QString moduleName, MotionElement::Type moduleType)
 {
     AxisModuleConfig *axisModuleConfig = nullptr;
@@ -465,6 +492,42 @@ AxisModuleConfig *MotionConfigManager::getModuleConfig(QString moduleName, Motio
         }
     }
     return axisModuleConfig;
+}
+
+QObject *MotionConfigManager::sAxisModulePos(QString moduleName, QString posName) const
+{
+    if (sAxisConfigMap.contains(moduleName) && sAxisConfigMap[moduleName]->containsPos(posName))
+    {
+        return sAxisConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::xyModulePos(QString moduleName, QString posName) const
+{
+    if (xyModuleConfigMap.contains(moduleName) && xyModuleConfigMap[moduleName]->containsPos(posName))
+    {
+        return xyModuleConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::xyzModulePos(QString moduleName, QString posName) const
+{
+    if (xyzModuleConfigMap.contains(moduleName) && xyzModuleConfigMap[moduleName]->containsPos(posName))
+    {
+        return xyzModuleConfigMap[moduleName]->getPos<QObject>(posName);
+    }
+    return nullptr;
+}
+
+QObject *MotionConfigManager::softLandingPos(QString axisName, QString softLandingPosName) const
+{
+    if (axisConfigMap.contains(axisName) && axisConfigMap[axisName]->softLandingPosNames().contains(softLandingPosName))
+    {
+        return axisConfigMap[axisName]->getPos(softLandingPosName);
+    }
+    return nullptr;
 }
 
 void MotionConfigManager::config2Dic()

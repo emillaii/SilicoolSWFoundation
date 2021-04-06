@@ -70,6 +70,7 @@ Thumbs.db
 !SCMotion.dll
 !SCVision.dll
 !AdaptVision.dll
+!HikVision.dll
 !libsodium.dll
 !libzmq-v141-mt-4_3_2.dll
 *.exe
@@ -86,5 +87,4 @@ SCVisionLib/
 UtilitiesLib/
 *target_wrapper.bat
 
-/ignoreTest/ignoreTest1
-!ignoreTest3.txt
+*qmlcache.qrc

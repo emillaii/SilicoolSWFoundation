@@ -301,6 +301,16 @@ void VisionManager::performPrResult(QString calibrationName, QString visionLocat
     }
 }
 
+void VisionManager::updatePrResultImage(QString visionLocationName)
+{
+    if (!visionLocations.contains(visionLocationName))
+    {
+        qCCritical(visionCate()) << tr("Undefined vision location:") << visionLocationName;
+        return;
+    }
+    visionLocations[visionLocationName]->updatePrResultImage();
+}
+
 void VisionManager::moveCamera(QString cameraName, double px, double py)
 {
     if (!cameraMap.contains(cameraName))
@@ -392,6 +402,21 @@ void VisionManager::startMoveAndPr()
 void VisionManager::stopMoveAndPr()
 {
     runMoveAndPr = false;
+}
+
+void VisionManager::onDutTypeChanged(QString dutType)
+{
+    QString dutRelatedVisionConfigDir = QString("./config/DutType/%1/vision").arg(dutType);
+    VisionConfigDir::getIns().setDutRelatedConfigDir(dutRelatedVisionConfigDir);
+    visionConfigManager->handleDutChanged(dutRelatedVisionConfigDir);
+    foreach (auto vl, visionLocations.values())
+    {
+        emit vl->config()->prResultImageChanged();
+    }
+    if (m_vision != nullptr)
+    {
+        m_vision->handleDutTypeChanged();
+    }
 }
 
 void VisionManager::initCamera(SCCamera *camera)

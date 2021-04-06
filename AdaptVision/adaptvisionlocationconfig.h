@@ -51,6 +51,8 @@ public slots:
             return;
 
         m_prFileName = prFileName;
+        emit prFileNameChanged(m_prFileName);
+
         if (prFileName.endsWith(".avdata"))
         {
             QString resultImageName = m_prFileName;
@@ -65,7 +67,11 @@ public slots:
                 setPrResultImage("");
             }
         }
-        emit prFileNameChanged(m_prFileName);
+        else
+        {
+            setPrResultImage("");
+        }
+        emit prResultImageChanged();
     }
 
     void setPrType(PrType prType)

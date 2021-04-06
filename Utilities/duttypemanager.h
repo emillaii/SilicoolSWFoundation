@@ -16,8 +16,7 @@ class UTILITIESSHARED_EXPORT DutTypeManager : public QObject
     Q_PROPERTY(int launchResult READ launchResult WRITE setLaunchResult NOTIFY launchResultChanged)
 
 public:
-    explicit DutTypeManager(BasicConfig *basicConfig, QObject *parent = nullptr)
-        : QObject(parent), basicConfig(basicConfig)
+    explicit DutTypeManager(BasicConfig *basicConfig, QObject *parent = nullptr) : QObject(parent), basicConfig(basicConfig)
     {
         updateDutTypes();
     }
@@ -41,6 +40,8 @@ public slots:
     void addDutType(QString dutType, QString copyFromDutType);
 
     void removeDutType(QString dutType);
+
+    void switchTo(QString dutType);
 
     void setLaunchResult(int launchResult)
     {

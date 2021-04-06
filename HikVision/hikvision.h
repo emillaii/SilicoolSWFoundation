@@ -42,6 +42,7 @@ public:
 public:
     void initImpl() override;
     void disposeImpl() override;
+    void handleDutTypeChanged() override;
 
     bool performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult);
 

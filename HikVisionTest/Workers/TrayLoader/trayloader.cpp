@@ -123,6 +123,15 @@ void TrayLoader::moveToPrPos(int unitRowIndex, int unitColumnIndex, int rowIndex
     moveToPrPosImpl(unitRowIndex, unitColumnIndex, rowIndex, columnIndex);
 }
 
+void TrayLoader::prTest()
+{
+    QImage img;
+    img.load("C:\\Users\\Silicool\\Desktop\\Test\\test.jpg");
+    auto image = img.convertToFormat(QImage::Format_Indexed8);
+    PrOffset prOffset;
+    dutDownlookLocation->performPR(image, prOffset);
+}
+
 void TrayLoader::initEventHandle()
 {
     tlXy = MotionElementContainer::getIns()->getItem<XYModule>(XYModuleName::TLXY);

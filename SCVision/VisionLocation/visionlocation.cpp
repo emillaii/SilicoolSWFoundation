@@ -259,6 +259,25 @@ bool VisionLocation::performPR(QImage &image, PrOffset &offset, PRResultStruct &
     }
 }
 
+void VisionLocation::updatePrResultImage()
+{
+    QImage img = getImage();
+    PRResultStruct prResult;
+    PRResultImageInfo *resultImageInfo = nullptr;
+    if (vision->performPr(img, m_config, &resultImageInfo, prResult))
+    {
+        vision->drawResultImage(img, resultImageInfo);
+        QString resultImageName = VisionConfigDir::getIns().prConfigDir() + m_config->locationName() + "_resultImage.jpg";
+        img.save(resultImageName);
+        m_config->setPrResultImage(QString("file:///") + resultImageName);
+        emit m_config->prResultImageChanged();
+    }
+    else
+    {
+        qCCritical(visionCate()) << locationName() << "perform pr failed!";
+    }
+}
+
 bool VisionLocation::result2Offset(const PRResultStruct &prResult, PrOffset &prOffset)
 {
     prOffset.ReSet();

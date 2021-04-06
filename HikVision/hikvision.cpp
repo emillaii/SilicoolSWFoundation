@@ -40,6 +40,15 @@ void HikVision::disposeImpl()
     }
 }
 
+void HikVision::handleDutTypeChanged()
+{
+    if (m_handle != nullptr)
+    {
+        IMVS_PF_CloseSolution(m_handle);
+        loadSolution();
+    }
+}
+
 bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResultImageInfo **resultImageInfo, PRResultStruct &prResult)
 {
     SCTimer sct(QString("performPr: %1").arg(prConfig->locationName()), hikCate());
@@ -48,11 +57,23 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
     SC_ASSERT(hikPrConfig != nullptr);
     SC_ASSERT(image.format() == QImage::Format_Indexed8);
 
+    char *rawImgBuffer = nullptr;
+    bool useRawImgBuffer = (image.width() != image.bytesPerLine());
+    if (useRawImgBuffer)
+    {
+        rawImgBuffer = new char[image.width() * image.height()];
+        SC_ASSERT(rawImgBuffer != nullptr);
+        for (int y = 0; y < image.height(); y++)
+        {
+            memcpy(rawImgBuffer + y * image.width(), image.scanLine(y), image.width());
+        }
+    }
+
     IMVS_PF_INPUT_IMAGE_INFO stImageData;
     stImageData.nDataType = 0;
     stImageData.nModuleID = hikPrConfig->imageSourceModuleId();
-    stImageData.stImageDataInfo.pImgData = (char *)image.bits();
-    stImageData.stImageDataInfo.iImgDataLen = (int)image.sizeInBytes();
+    stImageData.stImageDataInfo.pImgData = useRawImgBuffer ? rawImgBuffer : (char *)image.bits();
+    stImageData.stImageDataInfo.iImgDataLen = image.width() * image.height();
     stImageData.stImageDataInfo.iWidth = image.width();
     stImageData.stImageDataInfo.iHeight = image.height();
     stImageData.stImageDataInfo.iImgFormat = 1;
@@ -61,6 +82,13 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
         SCTimer sct("IMVS_PF_SetImageData", hikCate());
 
         int nRet = IMVS_PF_SetImageData(m_handle, &stImageData);
+
+        if (rawImgBuffer != nullptr)
+        {
+            delete[] rawImgBuffer;
+            rawImgBuffer = nullptr;
+        }
+
         if (IMVS_EC_OK != nRet)
         {
             qCCritical(hikCate()) << prConfig->locationName() << "IMVS_PF_SetImageData Error, error code:" << QString::number(nRet, 16);

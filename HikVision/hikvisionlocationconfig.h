@@ -3,6 +3,7 @@
 
 #include "VisionLocation/visionlocationconfig.h"
 #include "hikvision_global.h"
+#include "visionconfigdir.h"
 
 class HIKVISIONSHARED_EXPORT HikVisionLocationConfig : public VisionLocationConfig
 {
@@ -15,6 +16,7 @@ class HIKVISIONSHARED_EXPORT HikVisionLocationConfig : public VisionLocationConf
 public:
     Q_INVOKABLE HikVisionLocationConfig(QObject *parent = nullptr) : VisionLocationConfig(parent)
     {
+        connect(this, &VisionLocationConfig::locationNameChanged, this, &HikVisionLocationConfig::onLocationNameChanged, Qt::DirectConnection);
         init();
     }
 
@@ -59,6 +61,22 @@ public slots:
 
         m_resultModuleId = resultModuleId;
         emit resultModuleIdChanged(m_resultModuleId);
+    }
+
+    void onLocationNameChanged(QString locationName)
+    {
+        if (!locationName.isEmpty())
+        {
+            QString prResultImageName = VisionConfigDir::getIns().prConfigDir() + locationName + "_resultImage.jpg";
+            if (QFile::exists(prResultImageName))
+            {
+                setPrResultImage(QString("file:///") + prResultImageName);
+            }
+            else
+            {
+                setPrResultImage("");
+            }
+        }
     }
 
 signals:

@@ -80,11 +80,15 @@ private:
 
     void setOptionalProperties();
 
+    void handleDutChanged(QString dutRelatedConfigDir);
+
 private:
     friend class VisionManager;
 
+    const QMetaObject *m_visionLocationConfigMetaObj;
+
     const QString visionConfigDir = "./config/visionConfig/";
-    QString dutRelatedConfigDir;
+    QString m_dutRelatedConfigDir;
 
     const QString vedConfigFileName = "./config/platformConfig/visionElementDefinition.json";
     VisionElementDefinition *ved;

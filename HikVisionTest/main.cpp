@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     VisionManager::getIns().setVisionConfigManager(&visionConfigManager);
     VisionManager::getIns().preInit();
     engine.rootContext()->setContextProperty("wordopLscConfig", visionFactory.wordopLscConfig());
-    auto hikVision = qobject_cast<HikVision*>( VisionManager::getIns().vision());
+    auto hikVision = qobject_cast<HikVision *>(VisionManager::getIns().vision());
     engine.rootContext()->setContextProperty("hikVision", hikVision);
     engine.rootContext()->setContextProperty("hikVisionConfig", hikVision->config());
     VisionManager::getIns().setContextProperty(engine);

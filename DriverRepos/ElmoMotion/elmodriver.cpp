@@ -31,6 +31,14 @@ void ElmoDriver::setCurrent(double current)
     });
 }
 
+void ElmoDriver::elmoMoveTo(double targetPos)
+{
+    int acc = elmoConfig->maxAcc() * elmoConfig->scale();
+    int vel = elmoConfig->maxVel() * elmoConfig->scale() * elmoConfig->velocityRatio();
+    int pos = static_cast<int>(round(targetPos * elmoConfig->scale()));
+    sendCommand(QString("XQ##moveTo(%1,%2,%3)").arg(vel).arg(acc).arg(pos));
+}
+
 double ElmoDriver::getCurrentOutputPos() noexcept
 {
     return getFeedbackPosImpl();
@@ -221,7 +229,7 @@ void ElmoDriver::scaleMaxVelImpl(double ratio)
 
 void ElmoDriver::clearPosImpl()
 {
-    sendCommand(QString("FP[%1]=0").arg(elmoConfig->posSensorSocketNum()));
+    //    sendCommand(QString("FP[%1]=0").arg(elmoConfig->posSensorSocketNum()));
 }
 
 void ElmoDriver::syncProfilerAndFeedbackPos() {}
@@ -237,9 +245,7 @@ void ElmoDriver::softLandDownImpl(double vel, double targetPos, double force, do
 
 void ElmoDriver::softLandUpImpl()
 {
-    resetMaxAcc();
-    resetMaxVel();
-    moveToImpl(posBeforeSoftlanding);
+    elmoMoveTo(posBeforeSoftlanding);
 }
 
 bool ElmoDriver::isSoftLandDownFinished() noexcept

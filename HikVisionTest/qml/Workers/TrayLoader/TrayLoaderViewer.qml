@@ -35,6 +35,13 @@ Item {
             visionLocationName: "DutDownlookLocation2"
             performOriginPrResultVisible: true
         }
+        Button{
+            text: "PrTest"
+            onClicked: {
+                tl.prTest()
+            }
+        }
+
         ConfigRow {
             configModel: tlConfig
             configName: "nChangeTrayAfterContinuallyPrFailed"

@@ -5,6 +5,7 @@
 #include "VisionLocation/visionlocation.h"
 #include "dummycamera.h"
 #include "scvision_global.h"
+#include "visionconfigdir.h"
 #include "visionconfigmanager.h"
 #include "visionfactory.h"
 #include <QObject>
@@ -67,6 +68,8 @@ public:
 
     Q_INVOKABLE void performPrResult(QString calibrationName, QString visionLocationName, bool perfomOriginPrResult);
 
+    Q_INVOKABLE void updatePrResultImage(QString visionLocationName);
+
     Q_INVOKABLE void moveCamera(QString cameraName, double px, double py);
 
     Q_INVOKABLE void startMoveAndPr();
@@ -77,6 +80,9 @@ public:
     {
         return m_vision;
     }
+
+public slots:
+    void onDutTypeChanged(QString dutType);
 
 private:
     void initCamera(SCCamera *camera);

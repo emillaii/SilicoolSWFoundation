@@ -8,6 +8,7 @@ GroupBox{
     property string moduleName: ""
     property string posName: ""
     property bool initSelfOnCompleted: true
+    property bool isYZ: false
 
     ColumnLayout{
         RowLayout{
@@ -15,11 +16,21 @@ GroupBox{
                 id: xPosViewer
                 configName: "xPos"
                 txtWidth: 90
+                Component.onCompleted: {
+                    if(isYZ){
+                        lblName.text = "Y:"
+                    }
+                }
             }
             ConfigRow{
                 id: yPosViewer
                 configName: "yPos"
                 txtWidth: 90
+                Component.onCompleted: {
+                    if(isYZ){
+                        lblName.text = "Z:"
+                    }
+                }
             }
         }
         ModulePosEvent{

@@ -37,6 +37,21 @@ public:
         init();
     }
 
+    QString dutRelatedMotionConfigDir() const
+    {
+        return QString("./config/DutType/%1/motion").arg(m_dutType);
+    }
+
+    QString dutRelatedVisionConfigDir() const
+    {
+        return QString("./config/DutType/%1/vision").arg(m_dutType);
+    }
+
+    QString dutRelatedWorkersConfigDir() const
+    {
+        return QString("./config/DutType/%1/workers").arg(m_dutType);
+    }
+
     LanguageConfig *languageConfig() const
     {
         return m_languageConfig;

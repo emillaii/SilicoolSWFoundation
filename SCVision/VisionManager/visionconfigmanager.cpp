@@ -1,11 +1,11 @@
 #include "visionconfigmanager.h"
 
 VisionConfigManager::VisionConfigManager(const QMetaObject &visionLocationConfigMetaObj, QString configDir, QObject *parent)
-    : QObject(parent), dutRelatedConfigDir(configDir)
+    : QObject(parent), m_visionLocationConfigMetaObj(&visionLocationConfigMetaObj), m_dutRelatedConfigDir(configDir)
 {
-    if (!dutRelatedConfigDir.endsWith("/") && !dutRelatedConfigDir.endsWith("\\"))
+    if (!m_dutRelatedConfigDir.endsWith("/") && !m_dutRelatedConfigDir.endsWith("\\"))
     {
-        dutRelatedConfigDir += "/";
+        m_dutRelatedConfigDir += "/";
     }
 
     ved = new VisionElementDefinition(this);
@@ -13,11 +13,11 @@ VisionConfigManager::VisionConfigManager(const QMetaObject &visionLocationConfig
     vedConfigFile->populate(true);
 
     m_calibrationConfigs = new ConfigObjectArray(&CalibrationConfig::staticMetaObject, this);
-    calibrationConfigsFile = new ConfigFile("CalibrationConfig", m_calibrationConfigs, dutRelatedConfigDir + calibrationConfigsFileName);
+    calibrationConfigsFile = new ConfigFile("CalibrationConfig", m_calibrationConfigs, visionConfigDir + calibrationConfigsFileName);
     calibrationConfigsFile->populate();
 
     m_visionLocationConfigs = new ConfigObjectArray(&visionLocationConfigMetaObj, this);
-    visionLocationConfigsFile = new ConfigFile("VisionLocation", m_visionLocationConfigs, dutRelatedConfigDir + visionLocationConfigsFileName);
+    visionLocationConfigsFile = new ConfigFile("VisionLocation", m_visionLocationConfigs, m_dutRelatedConfigDir + visionLocationConfigsFileName);
     visionLocationConfigsFile->populate();
 
     m_cameraConfigs = new ConfigObjectArray(&CameraConfig::staticMetaObject, this);
@@ -170,4 +170,45 @@ void VisionConfigManager::setOptionalProperties()
     {
         visionLocationConfig->setOptionalCamera(cameraNames);
     }
+}
+
+void VisionConfigManager::handleDutChanged(QString dutRelatedConfigDir)
+{
+    if (!dutRelatedConfigDir.endsWith("/") && !dutRelatedConfigDir.endsWith("\\"))
+    {
+        dutRelatedConfigDir += "/";
+    }
+
+    ConfigObjectArray newVlConfigs(m_visionLocationConfigMetaObj);
+    ConfigFile newVlConfigFile("VisionLocation", &newVlConfigs, dutRelatedConfigDir + visionLocationConfigsFileName);
+    newVlConfigFile.populate();
+
+    visionLocationConfigsFile->setAutoSave(false);
+
+    for (int i = 0; i < newVlConfigs.count(); i++)
+    {
+        auto newVlConfig = newVlConfigs.getConfig<VisionLocationConfig>(i);
+        if (visionLocationConfigMap.contains(newVlConfig->locationName()))
+        {
+            auto currentVlConfig = visionLocationConfigMap[newVlConfig->locationName()];
+            if (currentVlConfig->calibrationName() == newVlConfig->calibrationName())
+            {
+                QJsonValue jv;
+                newVlConfig->write(jv);
+                currentVlConfig->read(jv);
+            }
+            else
+            {
+                qCCritical(visionCate()) << QString(
+                    tr("Load new vision location config failed! Location name: %1, new calibration name: %2, current calibration name: %3")
+                        .arg(currentVlConfig->locationName())
+                        .arg(newVlConfig->calibrationName())
+                        .arg(currentVlConfig->calibrationName()));
+            }
+        }
+    }
+
+    m_dutRelatedConfigDir = dutRelatedConfigDir;
+    visionLocationConfigsFile->resetFileName(m_dutRelatedConfigDir + visionLocationConfigsFileName);
+    visionLocationConfigsFile->setAutoSave(true);
 }

@@ -294,6 +294,11 @@ void Worker::setWorkerConfigDir(QString value)
     workerConfigDir = value;
 }
 
+QString Worker::constWorkerConfigDir()
+{
+    return "./config/workers";
+}
+
 void Worker::clearEvent()
 {
     WorkerEvent event;

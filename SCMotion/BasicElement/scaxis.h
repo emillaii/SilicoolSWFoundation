@@ -326,6 +326,7 @@ protected:
 private slots:
     void onConfigVelChanged(double v);
     void onConfigAccChanged(double v);
+    void onHomeExecutorChanged(AdvancedAxisConfig::HomeExecutor homeExecutor);
 
 private:
     void startHome();
@@ -407,7 +408,7 @@ private:
     bool m_hasBindToMasterAxis = false;
     SCAxis *m_masterAxis = nullptr;
 
-    AdvancedAxisConfig::HomeExecutor homeExecutor;
+    AdvancedAxisConfig::HomeExecutor m_homeExecutor;
     SCDI *homeDoneDi = nullptr;
     SCDO *startHomeDo = nullptr;
 

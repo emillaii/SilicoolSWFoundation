@@ -100,10 +100,12 @@ signals:
     void reqShowBuzyStatus(QString buzyContent);
     void reqHideBuzyStatus();
 
+protected:
+    QMap<QString, Worker *> workers;
+
 private:
     QThread dispatcherThd;
     QVariantMap runningParameter;
-    QMap<QString, Worker *> workers;
     QMap<QString, bool> workersEventHandled;
     QMap<QString, bool> workersHomeDone;
     QMap<QString, bool> workersHomeResult;

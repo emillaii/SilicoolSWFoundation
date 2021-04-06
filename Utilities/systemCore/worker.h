@@ -79,8 +79,11 @@ public:
     void stopEventHandled();
     void purgeEventHandled();
 
-    static QString getWorkerConfigDir();
+    static QString getWorkerConfigDir();    // DUT Related
     static void setWorkerConfigDir(QString value);
+    static QString constWorkerConfigDir();    // Non DUT related
+
+    virtual void handleWorkerConfigDirChanged() {}
 
 protected:
     void clearEvent();

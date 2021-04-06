@@ -327,6 +327,8 @@ signals:
 
     void reverseThetaChanged(bool reverseTheta);
 
+    void prResultImageChanged();
+
 private:
     QString m_cameraName = "";
     int m_lightBrightness = 0;

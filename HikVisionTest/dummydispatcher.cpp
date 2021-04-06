@@ -6,8 +6,7 @@ DummyDispatcher::DummyDispatcher(MasterMotionManager *masterMotionManager, QObje
     uphHelper = new UPHHelper();
 
     trayConfig = new TrayConfig();
-    trayConfigFile
-        = new ConfigFile("TrayConfig", trayConfig, QString("%1/trayConfig.json").arg(Worker::getWorkerConfigDir()));
+    trayConfigFile = new ConfigFile("TrayConfig", trayConfig, QString("%1/trayConfig.json").arg(Worker::getWorkerConfigDir()));
     trayConfigFile->populate();
     trayMap = new DutTrayMap(trayConfig, QString("%1/trayMap.json").arg(Worker::getWorkerConfigDir()));
     tlConfig = new TrayLoaderConfig();

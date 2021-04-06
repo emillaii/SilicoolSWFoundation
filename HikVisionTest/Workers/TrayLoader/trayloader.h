@@ -32,6 +32,7 @@ public slots:
     // 手动调试操作
 public slots:
     void moveToPrPos(int unitRowIndex, int unitColumnIndex, int rowIndex, int columnIndex);
+    void prTest();
 
     // Worker interface
 protected:

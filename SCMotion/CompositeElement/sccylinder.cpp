@@ -24,6 +24,7 @@ void SCCylinder::init()
     {
         falseOutput = MotionElementContainer::getIns()->getItem<SCDO>(m_config->falseOutput());
     }
+
     noFalseInputSNR = m_config->noFalseInputSNR();
     if (noFalseInputSNR)
     {
@@ -38,6 +39,7 @@ void SCCylinder::init()
     {
         falseInput = MotionElementContainer::getIns()->getItem<SCDI>(m_config->falseInput());
     }
+
     noTrueInputSNR = m_config->noTrueInputSNR();
     if (noTrueInputSNR)
     {
@@ -52,6 +54,9 @@ void SCCylinder::init()
     {
         trueInput = MotionElementContainer::getIns()->getItem<SCDI>(m_config->trueInput());
     }
+
+    connect(m_config, &CylinderConfig::noFalseInputSNRChanged, this, &SCCylinder::onNoFalseInputSNRChanged, Qt::UniqueConnection);
+    connect(m_config, &CylinderConfig::noTrueInputSNRChanged, this, &SCCylinder::onNoTrueInputSNRChanged, Qt::UniqueConnection);
 }
 
 SCCylinder::CylinderState SCCylinder::get()
@@ -280,4 +285,58 @@ void SCCylinder::startLoopTest()
 void SCCylinder::stopLoopTest()
 {
     isLoopTest = false;
+}
+
+void SCCylinder::onNoFalseInputSNRChanged(bool value)    // 只会更改本地配置，不会更改远端配置
+{
+    noFalseInputSNR = value;
+    if (noFalseInputSNR)
+    {
+        if (m_config->delayAfterMoveToFalse() < 50)
+        {
+            UIOperation::getIns()->showError(tr("If false input sensor is not attached, delayAfterMoveToFalse must greater than 50! "
+                                                "CylinderName: %1")
+                                                 .arg(m_config->name()));
+            m_config->setDelayAfterMoveToFalse(100);
+        }
+    }
+    else
+    {
+        try
+        {
+            falseInput = MotionElementContainer::getIns()->getItem<SCDI>(m_config->falseInput());
+        }
+        catch (SilicoolException &se)
+        {
+            UIOperation::getIns()->showError(se.what());
+            m_config->setNoFalseInputSNR(true);
+        }
+    }
+}
+
+void SCCylinder::onNoTrueInputSNRChanged(bool value)    // 只会更改本地配置，不会更改远端配置
+{
+    noTrueInputSNR = value;
+    if (noTrueInputSNR)
+    {
+        if (m_config->delayAfterMoveoToTrue() < 50)
+        {
+            UIOperation::getIns()->showError(tr("If true input sensor is not attached, delayAfterMoveoToTrue must greater than 50! "
+                                                "CylinderName: %1")
+                                                 .arg(m_config->name()));
+            m_config->setDelayAfterMoveoToTrue(100);
+        }
+    }
+    else
+    {
+        try
+        {
+            trueInput = MotionElementContainer::getIns()->getItem<SCDI>(m_config->trueInput());
+        }
+        catch (SilicoolException &se)
+        {
+            UIOperation::getIns()->showError(se.what());
+            m_config->setNoTrueInputSNR(true);
+        }
+    }
 }

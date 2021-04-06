@@ -66,43 +66,16 @@ public:
         return axisConfigMap.keys();
     }
 
+    SingleAxisPos *getSAxisModulePos(QString moduleName, QString posName) const;
+    XYModulePos *getXyModulePos(QString moduleName, QString posName) const;
+    XYZModulePos *getXyzModulePos(QString moduleName, QString posName) const;
+
     AxisModuleConfig *getModuleConfig(QString moduleName, MotionElement::Type moduleType);
 
-    Q_INVOKABLE QObject *sAxisModulePos(QString moduleName, QString posName) const
-    {
-        if (sAxisConfigMap.contains(moduleName) && sAxisConfigMap[moduleName]->containsPos(posName))
-        {
-            return sAxisConfigMap[moduleName]->getPos<QObject>(posName);
-        }
-        return nullptr;
-    }
-
-    Q_INVOKABLE QObject *xyModulePos(QString moduleName, QString posName) const
-    {
-        if (xyModuleConfigMap.contains(moduleName) && xyModuleConfigMap[moduleName]->containsPos(posName))
-        {
-            return xyModuleConfigMap[moduleName]->getPos<QObject>(posName);
-        }
-        return nullptr;
-    }
-
-    Q_INVOKABLE QObject *xyzModulePos(QString moduleName, QString posName) const
-    {
-        if (xyzModuleConfigMap.contains(moduleName) && xyzModuleConfigMap[moduleName]->containsPos(posName))
-        {
-            return xyzModuleConfigMap[moduleName]->getPos<QObject>(posName);
-        }
-        return nullptr;
-    }
-
-    Q_INVOKABLE QObject *softLandingPos(QString axisName, QString softLandingPosName) const
-    {
-        if (axisConfigMap.contains(axisName) && axisConfigMap[axisName]->softLandingPosNames().contains(softLandingPosName))
-        {
-            return axisConfigMap[axisName]->getPos(softLandingPosName);
-        }
-        return nullptr;
-    }
+    Q_INVOKABLE QObject *sAxisModulePos(QString moduleName, QString posName) const;
+    Q_INVOKABLE QObject *xyModulePos(QString moduleName, QString posName) const;
+    Q_INVOKABLE QObject *xyzModulePos(QString moduleName, QString posName) const;
+    Q_INVOKABLE QObject *softLandingPos(QString axisName, QString softLandingPosName) const;
 
 private:
     void config2Dic();

@@ -96,7 +96,7 @@ GroupBox {
             Button{
                 text: qsTr("更新图片")
                 onClicked: {
-                    updatePrResultImage()
+                    tem.runSingleCmd(visionManager, "updatePrResultImage", [visionLocationName])
                 }
             }
             Button{
@@ -167,6 +167,9 @@ GroupBox {
             if(!lightBrightnessSlider2.pressed){
                 lightBrightnessSlider2.value = secondLightBrightness
             }
+        }
+        onPrResultImageChanged: {
+            updatePrResultImage()
         }
     }
 

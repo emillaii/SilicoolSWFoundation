@@ -3,6 +3,8 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 ColumnLayout {
+    property bool switchDutTypeEnable: false
+
     RowLayout{
         Label{
             text: qsTr("DutTypes:")
@@ -16,7 +18,19 @@ ColumnLayout {
             icon.source: "qrc:/commonicons/remove.png"
             icon.color: "transparent"
             onClicked: {
-                dutTypeManager.removeDutType(cmbDutType.currentText)
+                tem.runSingleCmd(dutTypeManager, "removeDutType", [cmbDutType.currentText])
+            }
+        }
+        Rectangle{
+            width: 20
+            height: 5
+            color: "transparent"
+        }
+        Button{
+            visible: switchDutTypeEnable
+            text: qsTr("切换到")
+            onClicked: {
+                tem.runSingleCmd(dutTypeManager, "switchTo", [cmbDutType.currentText])
             }
         }
     }

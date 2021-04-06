@@ -53,6 +53,7 @@ public:
 
     virtual void initImpl() {}
     virtual void disposeImpl() {}
+    virtual void handleDutTypeChanged() {}
 
     virtual ~SCVision() {}
 

@@ -14,6 +14,7 @@ public:
     ~ElmoDriver() override;
 
     Q_INVOKABLE void setCurrent(double current);
+    Q_INVOKABLE void elmoMoveTo(double targetPos);
 
     // SCAxis interface
 public:

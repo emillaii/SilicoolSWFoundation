@@ -471,51 +471,7 @@ ApplicationWindow {
             }
         }
 
-        Menu{
-            title: qsTr("HikVision")
-            MenuItem {
-                text: qsTr("配置")
-                onClicked: {
-                    popupHikVisionConfig.open()
-                }
-            }
-            MenuItem {
-                text: qsTr("加载解决方案")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "loadSolution")
-                }
-            }
-            MenuItem {
-                text: qsTr("打开VisionMaster")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "startVisionMaster", [true])
-                }
-            }
-            MenuItem {
-                text: qsTr("关闭VisionMaster")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "startVisionMaster", [false])
-                }
-            }
-            MenuItem {
-                text: qsTr("显示VisionMaster")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "showVisionMaster", [true])
-                }
-            }
-            MenuItem {
-                text: qsTr("隐藏VisionMaster")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "showVisionMaster", [false])
-                }
-            }
-            MenuItem {
-                text: qsTr("打印所有流程模块信息")
-                onClicked: {
-                    tem.runSingleCmd(hikVision, "printProcessModuleIds")
-                }
-            }
-        }
+        HikVisionMenu{}
     }
 
     header: ToolBar {
