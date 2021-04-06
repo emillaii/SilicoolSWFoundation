@@ -229,7 +229,7 @@ void ElmoDriver::scaleMaxVelImpl(double ratio)
 
 void ElmoDriver::clearPosImpl()
 {
-    sendCommand(QString("FP[%1]=0").arg(elmoConfig->posSensorSocketNum()));
+    //    sendCommand(QString("FP[%1]=0").arg(elmoConfig->posSensorSocketNum()));
 }
 
 void ElmoDriver::syncProfilerAndFeedbackPos() {}
