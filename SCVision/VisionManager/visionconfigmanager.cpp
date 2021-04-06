@@ -13,7 +13,7 @@ VisionConfigManager::VisionConfigManager(const QMetaObject &visionLocationConfig
     vedConfigFile->populate(true);
 
     m_calibrationConfigs = new ConfigObjectArray(&CalibrationConfig::staticMetaObject, this);
-    calibrationConfigsFile = new ConfigFile("CalibrationConfig", m_calibrationConfigs, visionConfigDir + calibrationConfigsFileName);
+    calibrationConfigsFile = new ConfigFile("CalibrationConfig", m_calibrationConfigs, dutRelatedConfigDir + calibrationConfigsFileName);
     calibrationConfigsFile->populate();
 
     m_visionLocationConfigs = new ConfigObjectArray(&visionLocationConfigMetaObj, this);
