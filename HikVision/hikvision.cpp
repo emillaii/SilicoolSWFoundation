@@ -73,7 +73,7 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
     stImageData.nDataType = 0;
     stImageData.nModuleID = hikPrConfig->imageSourceModuleId();
     stImageData.stImageDataInfo.pImgData = useRawImgBuffer ? rawImgBuffer : (char *)image.bits();
-    stImageData.stImageDataInfo.iImgDataLen = (int)image.sizeInBytes();
+    stImageData.stImageDataInfo.iImgDataLen = image.width() * image.height();
     stImageData.stImageDataInfo.iWidth = image.width();
     stImageData.stImageDataInfo.iHeight = image.height();
     stImageData.stImageDataInfo.iImgFormat = 1;
