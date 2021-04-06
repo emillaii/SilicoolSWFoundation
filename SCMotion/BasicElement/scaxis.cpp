@@ -46,8 +46,8 @@ void SCAxis::init()
         throw SilicolAbort(tr("Positive limit must greater than negativeLimit! AxisName: %1").arg(name()));
     }
     auto advancedConfig = m_config->advancedAxisConfig();
-    homeExecutor = advancedConfig->homeExecutor();
-    if (homeExecutor == AdvancedAxisConfig::Driver || homeExecutor == AdvancedAxisConfig::DriverThenController)
+    m_homeExecutor = advancedConfig->homeExecutor();
+    if (m_homeExecutor == AdvancedAxisConfig::Driver || m_homeExecutor == AdvancedAxisConfig::DriverThenController)
     {
         homeDoneDi = MotionElementContainer::getIns()->getItem<SCDI>(advancedConfig->homeDoneDiName());
         startHomeDo = MotionElementContainer::getIns()->getItem<SCDO>(advancedConfig->startHomeDoName());
@@ -73,6 +73,7 @@ void SCAxis::init()
         connect(m_config, &AxisConfig::velocityRatioChanged, this, &SCAxis::onConfigVelChanged);
         connect(m_config, &AxisConfig::maxVelChanged, this, &SCAxis::onConfigVelChanged);
         connect(m_config, &AxisConfig::maxAccChanged, this, &SCAxis::onConfigAccChanged);
+        connect(m_config->advancedAxisConfig(), &AdvancedAxisConfig::homeExecutorChanged, this, &SCAxis::onHomeExecutorChanged);
         isConnectConfigChangedSignal = true;
     }
     m_isInit = true;
@@ -80,7 +81,7 @@ void SCAxis::init()
 
 void SCAxis::home(bool waitDone)
 {
-    if (homeExecutor == AdvancedAxisConfig::ClearPos)
+    if (m_homeExecutor == AdvancedAxisConfig::ClearPos)
     {
         qCInfo(motionCate()) << tr("%1 home, just clear pos...").arg(name());
         clearPosImpl();
@@ -103,12 +104,12 @@ void SCAxis::home(bool waitDone)
 
 void SCAxis::waitHomeDone()
 {
-    if (homeExecutor == AdvancedAxisConfig::ClearPos)
+    if (m_homeExecutor == AdvancedAxisConfig::ClearPos)
     {
         return;
     }
 
-    if (homeExecutor == AdvancedAxisConfig::Driver)
+    if (m_homeExecutor == AdvancedAxisConfig::Driver)
     {
         waitDriverHomeDone();
     }
@@ -180,9 +181,12 @@ void SCAxis::stop()
 {
     m_hasStop = true;
     stopImpl();
-    if (homeExecutor == AdvancedAxisConfig::Driver || homeExecutor == AdvancedAxisConfig::DriverThenController)
+    if (m_homeExecutor == AdvancedAxisConfig::Driver || m_homeExecutor == AdvancedAxisConfig::DriverThenController)
     {
-        startHomeDo->set(false);
+        if (startHomeDo != nullptr)
+        {
+            startHomeDo->set(false);
+        }
     }
 }
 
@@ -949,6 +953,29 @@ void SCAxis::onConfigAccChanged(double v)
     resetMaxAcc();
 }
 
+void SCAxis::onHomeExecutorChanged(AdvancedAxisConfig::HomeExecutor homeExecutor)
+{
+    m_homeExecutor = homeExecutor;
+    auto advancedConfig = m_config->advancedAxisConfig();
+    if (m_homeExecutor == AdvancedAxisConfig::Driver || m_homeExecutor == AdvancedAxisConfig::DriverThenController)
+    {
+        try
+        {
+            homeDoneDi = MotionElementContainer::getIns()->getItem<SCDI>(advancedConfig->homeDoneDiName());
+            startHomeDo = MotionElementContainer::getIns()->getItem<SCDO>(advancedConfig->startHomeDoName());
+        }
+        catch (SilicoolException &se)
+        {
+            UIOperation::getIns()->showError(se.what());
+        }
+    }
+    else
+    {
+        homeDoneDi = nullptr;
+        startHomeDo = nullptr;
+    }
+}
+
 void SCAxis::waitArrivedPos(double targetPos, double precision, int timeout)
 {
     waitProfilerStopped(targetPos);
@@ -1178,8 +1205,10 @@ void SCAxis::startHome()
         checkState(false);
         checkIsRunning();
 
-        if (homeExecutor == AdvancedAxisConfig::Driver || homeExecutor == AdvancedAxisConfig::DriverThenController)
+        if (m_homeExecutor == AdvancedAxisConfig::Driver || m_homeExecutor == AdvancedAxisConfig::DriverThenController)
         {
+            SC_ASSERT(startHomeDo != nullptr)
+
             qCInfo(motionCate()) << tr("%1 start home. Handled by driver.").arg(name());
             if (startHomeDo->get())
             {
@@ -1193,7 +1222,7 @@ void SCAxis::startHome()
                 enable();
             }
             startHomeDo->set(true);
-            if (homeExecutor == AdvancedAxisConfig::DriverThenController)
+            if (m_homeExecutor == AdvancedAxisConfig::DriverThenController)
             {
                 m_hasStop = false;
                 waitDriverHomeDone();
@@ -1314,9 +1343,12 @@ void SCAxis::waitControllerHomeDone()
 
 void SCAxis::waitDriverHomeDone()
 {
+    SC_ASSERT(homeDoneDi != nullptr)
+    SC_ASSERT(startHomeDo != nullptr)
+
     QThread::msleep(50);
     ErrorHandler::tryToHandleError(
-        [&] {
+        [this] {
             QElapsedTimer timer;
             timer.start();
             while (true)
