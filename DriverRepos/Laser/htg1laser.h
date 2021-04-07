@@ -5,6 +5,7 @@
 #include "errorHandling/silicolerrorhandler.h"
 #include "highpricisiontimer.h"
 #include "laserdriver.h"
+#include "loghelper.h"
 #include "serialPortWrapper/scserialport.h"
 #include <QObject>
 

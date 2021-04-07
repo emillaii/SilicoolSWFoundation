@@ -14,6 +14,8 @@ LaserDriver::LaserDriver(SerialPortConfig *serialPortConfig, QObject *parent) : 
 
 void LaserDriver::init(LaserStationConfig::SamplePeriod samplePeriod, int stationNum)
 {
+    QMutexLocker t(&locker);
+
     auto sp = static_cast<LaserStationConfig::SamplePeriod>(samplePeriod);
     serialPort->initSerialPort();
     executeCommand("WIN", "+00001", stationNum);       // 初始化Laser
@@ -38,6 +40,8 @@ double LaserDriver::readHeight(int stationNum)
 
 double LaserDriver::readHeightNoErrHandling(int stationNum)
 {
+    QMutexLocker t(&locker);
+
     serialPort->writeData(createComand("RMD", "", stationNum));
     QString data = extractResponseData(serialPort->readData("\r"), "RMD", stationNum);
     return data.toDouble() / 10000;

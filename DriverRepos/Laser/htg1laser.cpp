@@ -32,6 +32,7 @@ double HTG1Laser::readHeight()
 
 double HTG1Laser::readHeightNoErrorHandling()
 {
+    SCTimer t("readHeight", laserStationConfig->logTime());
     return laserDriver->readHeightNoErrHandling(laserStationConfig->stationNum());
 }
 

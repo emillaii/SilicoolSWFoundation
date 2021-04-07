@@ -21,6 +21,7 @@ public:
 
     Q_PROPERTY(SamplePeriod samplePeriod READ samplePeriod WRITE setSamplePeriod NOTIFY samplePeriodChanged)
     Q_PROPERTY(int stationNum READ stationNum WRITE setStationNum NOTIFY stationNumChanged)
+    Q_PROPERTY(bool logTime READ logTime WRITE setLogTime NOTIFY logTimeChanged)
 
 public:
     LaserStationConfig(QObject *parent = nullptr) : ConfigObject(parent)
@@ -36,6 +37,11 @@ public:
     int stationNum() const
     {
         return m_stationNum;
+    }
+
+    bool logTime() const
+    {
+        return m_logTime;
     }
 
 public slots:
@@ -57,14 +63,26 @@ public slots:
         emit stationNumChanged(m_stationNum);
     }
 
+    void setLogTime(bool logTime)
+    {
+        if (m_logTime == logTime)
+            return;
+
+        m_logTime = logTime;
+        emit logTimeChanged(m_logTime);
+    }
+
 signals:
     void samplePeriodChanged(SamplePeriod samplePeriod);
 
     void stationNumChanged(int stationNum);
 
+    void logTimeChanged(bool logTime);
+
 private:
     SamplePeriod m_samplePeriod{ SP200Us };
     int m_stationNum = 0;
+    bool m_logTime = false;
 };
 
 class LaserConfig : public ConfigObject

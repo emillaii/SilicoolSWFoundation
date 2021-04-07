@@ -6,6 +6,8 @@
 #include "laserconfig.h"
 #include "serialPortWrapper/scserialport.h"
 #include "singletonthread.h"
+#include <QMutex>
+#include <QMutexLocker>
 #include <QObject>
 
 class LaserDriver : public QObject
@@ -37,6 +39,7 @@ private:
 private:
     SCSerialPort *serialPort;
     QMap<LaserStationConfig::SamplePeriod, QString> sp2Data;
+    QMutex locker;
 };
 
 #endif    // LASERDRIVER_H

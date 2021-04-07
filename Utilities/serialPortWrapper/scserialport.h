@@ -115,9 +115,9 @@ public:
 
     void clearReadBuffer();
 
-    QByteArray readData(const QString &endMark, int timeout = 10000);
+    QByteArray readData(const QString &endMark, int timeout = 1000);
 
-    QByteArray readData(int length, int timeout = 10000);
+    QByteArray readData(int length, int timeout = 1000);
 
 private slots:
     void onReadyRead();
