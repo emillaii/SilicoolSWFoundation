@@ -58,7 +58,7 @@ void HTG1Laser::run()
     {
         while (isContinuousReadHeight)
         {
-            double height = laserDriver->readHeightNoErrHandling(laserStationConfig->stationNum());
+            double height = readHeightNoErrorHandling();
             setCurrentHeight(height);
             QThread::msleep(samplePeriod);
         }
