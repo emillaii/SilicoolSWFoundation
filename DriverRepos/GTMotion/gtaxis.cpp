@@ -125,8 +125,8 @@ void GTAxis::initImpl()
     checkResult1(GTN_SetTrapPrm(coreNo, index, &trapParam));
     checkResult1(GTN_SetAxisBand(coreNo, index, gtAxisConfig->inPosBand(), gtAxisConfig->inPosHoldTime()));
 
-    double stopAcc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() / AccCoeff * gtAxisConfig->stopAccRatio();
-    checkResult1(GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 20));
+    double stopAcc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
+    checkResult1(GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 5));
 
     if (!isConnectInposParamChangedSig)
     {
@@ -156,7 +156,7 @@ void GTAxis::homeImpl()
     THomePrm homeParam;
     short res = GTN_GetHomePrm(coreNo, index, &homeParam);
     CheckGTAxisResult(res, "GTN_GetHomePrm failed");
-    homeParam.acc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() / AccCoeff * 0.1;
+    homeParam.acc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * 0.1 / AccCoeff;
     homeParam.dec = homeParam.acc;
     homeParam.edge = homeConfig->edge();
     homeParam.mode = homeConfig->gtHomeMode();
@@ -327,7 +327,7 @@ void GTAxis::scaleMaxAccImpl(double ratio)
         try
         {
             checkResult1(GTN_GetTrapPrm(coreNo, index, &trapParam));
-            trapParam.acc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() / AccCoeff * ratio;
+            trapParam.acc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * ratio / AccCoeff;
             trapParam.dec = trapParam.acc;
             checkResult1(GTN_SetTrapPrm(coreNo, index, &trapParam));
         }

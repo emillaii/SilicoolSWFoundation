@@ -31,7 +31,7 @@ void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
     CHECK_GT_PRT(m_yAxis);
     CHECK_GT_PRT(m_shotGlueOut);
 
-    if(qAbs(m_xAxis->getGtAxisConfig()->index() - m_yAxis->getGtAxisConfig()->index()) > 7)
+    if (qAbs(m_xAxis->getGtAxisConfig()->index() - m_yAxis->getGtAxisConfig()->index()) > 7)
     {
         throw SilicolAbort(tr("The range of x y axis index must less than 8!"), EX_LOCATION);
     }
@@ -236,6 +236,7 @@ void GTDispenser::appendLinePoint(const PathEndPoint &point)
 
     double acc = dispenserConfig()->useFlyDispensing() ? dispenserConfig()->flyDispenserConfig()->maxAcc()
                                                        : dispenserConfig()->generalDispenserConfig()->maxAcc();
+    acc = acc * xAxisScale / AccCoeff;
     checkResult1(GTN_LnXY(m_core, m_crd, point.x * xAxisScale, point.y * yAxisScale, point.maxVel * xAxisScale / VelCoeff, acc,
                           point.endVel * xAxisScale / VelCoeff, 0));
 }
