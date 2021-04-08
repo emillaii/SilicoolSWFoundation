@@ -8,6 +8,7 @@
 
 #define VelCoeff (1000)
 #define AccCoeff (1000000)
+#define JerkCoeff (1000000000.0)
 
 #define CheckGTAxisResult(res, errMsg)                                                                                                               \
     if (res != CMD_SUCCESS)                                                                                                                          \
@@ -74,6 +75,7 @@ protected:
 
 private slots:
     void onInposBandParamChanged(int param);
+    void onSmoothParamChanged(double v);
 
 private:
     bool refreshLimitStatus(bool isPositiveLimit);
@@ -89,7 +91,7 @@ private:
     short index;
     THomeStatus homeStatus;
 
-    bool isConnectInposParamChangedSig = false;
+    bool isConnectGtParamChangedSig = false;
 
     const int AxisStatusCacheInvalidTime = 1;
     long axisStatusCache = 0;

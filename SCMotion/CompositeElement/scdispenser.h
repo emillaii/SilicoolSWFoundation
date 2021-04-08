@@ -18,6 +18,7 @@ class SCMOTIONSHARED_EXPORT GeneralDispenserConfig : public ConfigObject
     Q_PROPERTY(double closeOffset READ closeOffset WRITE setCloseOffset NOTIFY closeOffsetChanged)
     Q_PROPERTY(double maxSpeed READ maxSpeed WRITE setMaxSpeed NOTIFY maxSpeedChanged)
     Q_PROPERTY(double maxAcc READ maxAcc WRITE setMaxAcc NOTIFY maxAccChanged)
+    Q_PROPERTY(double maxJerk READ maxJerk WRITE setMaxJerk NOTIFY maxJerkChanged)
     Q_PROPERTY(bool useLineSpeeds READ useLineSpeeds WRITE setUseLineSpeeds NOTIFY useLineSpeedsChanged)
     Q_PROPERTY(ConfigArray *lineSpeeds READ lineSpeeds)
     Q_PROPERTY(bool useLineDisable READ useLineDisable WRITE setUseLineDisable NOTIFY useLineDisableChanged)
@@ -74,6 +75,11 @@ public:
     double maxAcc() const
     {
         return m_maxAcc;
+    }
+
+    double maxJerk() const
+    {
+        return m_maxJerk;
     }
 
 public slots:
@@ -143,6 +149,15 @@ public slots:
         emit maxAccChanged(m_maxAcc);
     }
 
+    void setMaxJerk(double maxJerk)
+    {
+        if (qFuzzyCompare(m_maxJerk, maxJerk))
+            return;
+
+        m_maxJerk = maxJerk;
+        emit maxJerkChanged(m_maxJerk);
+    }
+
 signals:
     void addAnExtraPathChanged(bool addAnExtraPath);
 
@@ -158,6 +173,8 @@ signals:
 
     void maxAccChanged(double maxAcc);
 
+    void maxJerkChanged(double maxJerk);
+
 private:
     bool m_addAnExtraPath = true;
     double m_openOffset = 0;
@@ -168,6 +185,7 @@ private:
     bool m_useLineDisable = false;
     ConfigArray *m_lineDisabled;
     double m_maxAcc = 3000;
+    double m_maxJerk = 300000;
 };
 
 class SCMOTIONSHARED_EXPORT FlyDispenserConfig : public ConfigObject
@@ -176,6 +194,7 @@ class SCMOTIONSHARED_EXPORT FlyDispenserConfig : public ConfigObject
 
     Q_PROPERTY(double maxSpeed READ maxSpeed WRITE setMaxSpeed NOTIFY maxSpeedChanged)
     Q_PROPERTY(double maxAcc READ maxAcc WRITE setMaxAcc NOTIFY maxAccChanged)
+    Q_PROPERTY(double maxJerk READ maxJerk WRITE setMaxJerk NOTIFY maxJerkChanged)
     Q_PROPERTY(double shotGlueDotStep READ shotGlueDotStep WRITE setShotGlueDotStep NOTIFY shotGlueDotStepChanged)
     Q_PROPERTY(double shotGlueDotTime READ shotGlueDotTime WRITE setShotGlueDotTime NOTIFY shotGlueDotTimeChanged)
 
@@ -203,6 +222,11 @@ public:
     double maxAcc() const
     {
         return m_maxAcc;
+    }
+
+    double maxJerk() const
+    {
+        return m_maxJerk;
     }
 
 public slots:
@@ -245,6 +269,15 @@ public slots:
         emit maxAccChanged(m_maxAcc);
     }
 
+    void setMaxJerk(double maxJerk)
+    {
+        if (qFuzzyCompare(m_maxJerk, maxJerk))
+            return;
+
+        m_maxJerk = maxJerk;
+        emit maxJerkChanged(m_maxJerk);
+    }
+
 signals:
     void maxSpeedChanged(double maxSpeed);
 
@@ -254,11 +287,14 @@ signals:
 
     void maxAccChanged(double maxAcc);
 
+    void maxJerkChanged(double maxJerk);
+
 private:
     double m_maxSpeed = 60;
     double m_shotGlueDotStep = 0.1;
     double m_shotGlueDotTime = 0.002;
-    double m_maxAcc = 1000;
+    double m_maxAcc = 3000;
+    double m_maxJerk = 300000;
 };
 
 class SCMOTIONSHARED_EXPORT DispenserConfig : public ConfigObject

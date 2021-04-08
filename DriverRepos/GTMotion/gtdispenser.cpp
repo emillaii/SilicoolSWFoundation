@@ -178,6 +178,7 @@ void GTDispenser::generalDispenseImpl(QVector<PathEndPoint> &dispensePath)
             }
         }
     }
+    checkResult1(GTN_SetCrdJerk(m_core, m_crd, generalDispConfig->maxJerk() * m_xAxis->getGtAxisConfig()->scale() / JerkCoeff));
     checkResult1(GTN_CrdStart(m_core, 1 << (m_crd - 1), 0));
 }
 
@@ -227,6 +228,7 @@ void GTDispenser::flyDispenseImpl(QVector<PathEndPoint> &dispensePath)
         checkResult1(GTN_PosCompareStart(m_core, m_psoIndex));
     }
 
+    checkResult1(GTN_SetCrdJerk(m_core, m_crd, flyDispensingConfig->maxJerk() * m_xAxis->getGtAxisConfig()->scale() / JerkCoeff));
     checkResult1(GTN_CrdStart(m_core, 1 << (m_crd - 1), 0));
 }
 

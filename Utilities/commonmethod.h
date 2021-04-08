@@ -34,6 +34,19 @@ inline QString getCurrentDateTime()
     return QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
 }
 
+inline int getIntFromHexOrDecString(QString value)
+{
+    bool ok = false;
+    uint result = 0;
+    result = value.toInt(&ok, 16);       // hex == 255, ok == true
+    if (ok) {
+        return result;
+    } else {
+        result = value.toInt(&ok, 10);       // dec == 0, ok == false
+    }
+    return result;
+}
+
 template <typename T>
 QVariantList toVariantList(QList<T> source)
 {

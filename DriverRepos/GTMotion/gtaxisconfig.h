@@ -189,6 +189,8 @@ class GTAxisConfig : public AxisConfig
     Q_PROPERTY(int inPosBand READ inPosBand WRITE setInPosBand NOTIFY inPosBandChanged)
     Q_PROPERTY(int inPosHoldTime READ inPosHoldTime WRITE setInPosHoldTime NOTIFY inPosHoldTimeChanged)
     Q_PROPERTY(double stopAccRatio READ stopAccRatio WRITE setStopAccRatio NOTIFY stopAccRatioChanged)
+    Q_PROPERTY(double smoothTime READ smoothTime WRITE setSmoothTime NOTIFY smoothTimeChanged)
+    Q_PROPERTY(double smoothK READ smoothK WRITE setSmoothK NOTIFY smoothKChanged)
     Q_PROPERTY(GTHomeConfig *gtHomeConfig READ gtHomeConfig)
 
 public:
@@ -226,6 +228,16 @@ public:
     double stopAccRatio() const
     {
         return m_stopAccRatio;
+    }
+
+    double smoothTime() const
+    {
+        return m_smoothTime;
+    }
+
+    double smoothK() const
+    {
+        return m_smoothK;
     }
 
 public slots:
@@ -274,6 +286,24 @@ public slots:
         emit stopAccRatioChanged(m_stopAccRatio);
     }
 
+    void setSmoothTime(double smoothTime)
+    {
+        if (qFuzzyCompare(m_smoothTime, smoothTime))
+            return;
+
+        m_smoothTime = smoothTime;
+        emit smoothTimeChanged(m_smoothTime);
+    }
+
+    void setSmoothK(double smoothK)
+    {
+        if (qFuzzyCompare(m_smoothK, smoothK))
+            return;
+
+        m_smoothK = smoothK;
+        emit smoothKChanged(m_smoothK);
+    }
+
 signals:
     void coreNoChanged(int coreNo);
 
@@ -285,6 +315,10 @@ signals:
 
     void stopAccRatioChanged(double stopAccRatio);
 
+    void smoothTimeChanged(double smoothTime);
+
+    void smoothKChanged(double smoothK);
+
 private:
     int m_coreNo = 1;
     int m_index = 1;
@@ -292,6 +326,8 @@ private:
     int m_inPosHoldTime = 3;
     GTHomeConfig *m_gtHomeConfig;
     double m_stopAccRatio = 1;
+    double m_smoothTime = 0;
+    double m_smoothK = 15;
 };
 
 #endif    // GTAXISCONFIG_H
