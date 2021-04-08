@@ -126,13 +126,16 @@ void GTAxis::initImpl()
     checkResult1(GTN_SetAxisBand(coreNo, index, gtAxisConfig->inPosBand(), gtAxisConfig->inPosHoldTime()));
 
     double stopAcc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
-    checkResult1(GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 5));
+    checkResult1(GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 10));
+    checkResult1(GTN_SetAxisMotionSmooth(coreNo, index, gtAxisConfig->smoothTime(), gtAxisConfig->smoothK()));
 
-    if (!isConnectInposParamChangedSig)
+    if (!isConnectGtParamChangedSig)
     {
         connect(gtAxisConfig, &GTAxisConfig::inPosBandChanged, this, &GTAxis::onInposBandParamChanged);
         connect(gtAxisConfig, &GTAxisConfig::inPosHoldTimeChanged, this, &GTAxis::onInposBandParamChanged);
-        isConnectInposParamChangedSig = true;
+        connect(gtAxisConfig, &GTAxisConfig::smoothTimeChanged, this, &GTAxis::onSmoothParamChanged);
+        connect(gtAxisConfig, &GTAxisConfig::smoothKChanged, this, &GTAxis::onSmoothParamChanged);
+        isConnectGtParamChangedSig = true;
     }
     clearPosImpl();
     currentMode = Pos;
@@ -371,6 +374,13 @@ void GTAxis::onInposBandParamChanged(int param)
     Q_UNUSED(param)
     short res = GTN_SetAxisBand(coreNo, index, gtAxisConfig->inPosBand(), gtAxisConfig->inPosHoldTime());
     printError(res, QString("%1 GTN_SetAxisBand failed!").arg(name()));
+}
+
+void GTAxis::onSmoothParamChanged(double v)
+{
+    Q_UNUSED(v)
+    short res = GTN_SetAxisMotionSmooth(coreNo, index, gtAxisConfig->smoothTime(), gtAxisConfig->smoothK());
+    printError(res, QString("%1 GTN_SetAxisMotionSmooth failed!").arg(name()));
 }
 
 bool GTAxis::refreshLimitStatus(bool isPositiveLimit)
