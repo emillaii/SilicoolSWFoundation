@@ -35,6 +35,7 @@ void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
     {
         throw SilicolAbort(tr("The range of x y axis index must less than 8!"), EX_LOCATION);
     }
+    SC_ASSERT(m_shotGlueOut->getGtioConfig()->index() <= 16)
     int xAxisCoreNo = m_xAxis->getGtAxisConfig()->coreNo();
     int yAxisCoreNo = m_yAxis->getGtAxisConfig()->coreNo();
     int shotGlueOutCoreNo = m_shotGlueOut->getGtioConfig()->coreNo();
