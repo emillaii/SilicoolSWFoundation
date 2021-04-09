@@ -79,6 +79,9 @@ void VisionLocation::startContinuallyPerformPr()
     AutoResetProperty p2(m_config, "saveResultImage", m_config->saveResultImage());
     m_config->setSaveResultImage(false);
 
+    HighPrecisionTimer timer;
+    double timeCost;
+
     while (isContinuallyCalculation)
     {
         QImage img = getImage();
@@ -92,7 +95,9 @@ void VisionLocation::startContinuallyPerformPr()
             imgCount = 0;
         }
 
+        timer.start();
         performPR(img, prOffset, prResult);
+        timeCost = timer.elapsedMs();
 
         QFile logFile(continuallyPrLogFileName);
         QDir dir("./continuallyPrData");
@@ -105,16 +110,17 @@ void VisionLocation::startContinuallyPerformPr()
         logFile.open(QIODevice::Append);
         if (!fileExist)
         {
-            QString title = "timeStamp,offsetX_mm,offsetY_mm,offsetTheta_degree,offsetX_pixel,offsetY_pixel\r\n";
+            QString title = "timeStamp,offsetX_mm,offsetY_mm,offsetTheta_degree,offsetX_pixel,offsetY_pixel,timecost\r\n";
             logFile.write(title.toUtf8());
         }
-        QString line = QString("%1,%2,%3,%4,%5,%6\r\n")
+        QString line = QString("%1,%2,%3,%4,%5,%6,%7\r\n")
                            .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz"))
                            .arg(prOffset.X)
                            .arg(prOffset.Y)
                            .arg(prOffset.Theta)
                            .arg(prResult.x)
-                           .arg(prResult.y);
+                           .arg(prResult.y)
+                           .arg(timeCost);
         logFile.write(line.toUtf8());
         logFile.close();
 
