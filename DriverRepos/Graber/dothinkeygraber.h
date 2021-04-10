@@ -61,6 +61,8 @@ public:
     virtual QImage grabImage() override;
     virtual cv::Mat grabImageCV() override;
 
+    void setDeviceName(QString deviceName);
+
 private:
     BOOL SetVoltageMclk(SensorTab CurrentSensor, int iDevID, float Mclk, float Avdd,
                         float Dvdd, float Dovdd, float Afvcc, float vpp);
@@ -72,7 +74,9 @@ public slots:
 private:
     QMutex locker;
     char *m_devName[MAX_DEV];
+    int m_devNum = 0;
     int m_devID = 0;
+    QString m_currentDevName;
     bool m_isOpened = false;
     bool m_isGrabbing = false;
     CameraChannel m_CameraChannels[MAX_DEV];

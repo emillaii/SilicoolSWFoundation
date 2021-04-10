@@ -78,6 +78,7 @@ void DothinkeyGraber::enumerateDevice()
 {
     int deviceNum = 0;
     int ret = EnumerateDevice(m_devName, MAX_DEV, &deviceNum);
+    m_devNum = deviceNum;
     if (DT_ERROR_OK != ret)
     {
         throw  SilicolAbort(tr("enumerateDevice command failed!"));
@@ -86,7 +87,8 @@ void DothinkeyGraber::enumerateDevice()
     {
         throw  SilicolAbort(tr("Dothinkey cannot find device!"));
     }
-    for (int i = 0; i < MAX_DEV; i++)
+    if (deviceNum == 1) m_currentDevName = m_devName[0];
+    for (int i = 0; i < deviceNum; i++)
     {
         if (m_devName[i] != nullptr)
         {
@@ -99,14 +101,18 @@ void DothinkeyGraber::enumerateDevice()
 
 void DothinkeyGraber::openDevice()
 {
-    if(m_devName[0] == nullptr)
+    if(m_devName[m_devID] == nullptr)
     {
         throw SilicolAbort(tr("device name is null! please enumerate device first!"));
     }
+    if (m_devName[m_devID] != m_currentDevName)
+    {
+        throw SilicolAbort(tr("device name mismatch!"));
+    }
 
-    m_CameraChannels[0].CloseCameraChannel();
+    m_CameraChannels[m_devID].CloseCameraChannel();
     int iDevID = -1;
-    if (OpenDevice(m_devName[0], &iDevID, 0) == DT_ERROR_OK)
+    if (OpenDevice(m_devName[m_devID], &iDevID, m_devID) == DT_ERROR_OK)
     {
         m_isOpened = true;
         qInfo("Open device success");
@@ -125,7 +131,7 @@ void DothinkeyGraber::openDevice()
         std::string s(reinterpret_cast<const char *>(pSN), 32);
         if (s.length() > 0) {
             qInfo("Device SN:%s", s.data());
-            m_CameraChannels[0].m_iDevID = iDevID;
+            m_CameraChannels[m_devID].m_iDevID = iDevID;
         }
     }
 }
@@ -133,10 +139,7 @@ void DothinkeyGraber::openDevice()
 void DothinkeyGraber::closeDevice()
 {
     m_isOpened = false;
-    for (CameraChannel cc: m_CameraChannels)
-    {
-        cc.CloseCameraChannel();
-    }
+    m_CameraChannels[m_devID].CloseCameraChannel();
 }
 
 void DothinkeyGraber::startCamera()
@@ -330,6 +333,18 @@ cv::Mat DothinkeyGraber::grabImageCV()
     delete(CameraBuffer);
     CameraBuffer = NULL;
     return img;
+}
+
+void DothinkeyGraber::setDeviceName(QString deviceName)
+{
+    for (int i = 0; i < m_devNum; i++)
+    {
+        QString tmp = reinterpret_cast<char*>(m_devName[i]);
+        if (deviceName == tmp)
+        {
+            m_devID = i;
+        }
+    }
 }
 
 BOOL DothinkeyGraber::SetVoltageMclk(SensorTab CurrentSensor, int iDevID, float Mclk, float Avdd, float Dvdd, float Dovdd, float Afvcc, float vpp)
