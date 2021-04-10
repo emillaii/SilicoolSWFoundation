@@ -78,6 +78,20 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
     stImageData.stImageDataInfo.iHeight = image.height();
     stImageData.stImageDataInfo.iImgFormat = 1;
 
+    int workStatus = 0;
+    int result = IMVS_PF_GetProcessWorkStatus(m_handle, hikPrConfig->processId(), &workStatus);
+    if(result == IMVS_EC_OK && workStatus == 1)
+    {
+        QElapsedTimer timer;
+        timer.start();
+        while (workStatus == 1)
+        {
+            QThread::msleep(1);
+            IMVS_PF_GetProcessWorkStatus(m_handle, hikPrConfig->processId(), &workStatus);
+        }
+        qCWarning(hikCate()) << QString("Wait process stopped... Location name: %1, Process id: %2, time cost: %3ms").arg(hikPrConfig->locationName()).arg(hikPrConfig->processId()).arg(timer.elapsed());
+    }
+
     {
         SCTimer sct("IMVS_PF_SetImageData", hikCate());
 
@@ -263,12 +277,6 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
-        if (info->nModuleID != hikResult->resultModuleId)
-        {
-            return IMVS_EC_OK;
-        }
-
-        hikResult->gotModuleResult = true;
 
         if (strcmp(info->strModuleName, MODU_NAME_HPFEATUREMATCHMODU) == 0)
         {
@@ -280,17 +288,24 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
-            auto matchBaseInfo = hpMathInfo->pstMatchBaseInfo[0];
-            hikResult->theta = matchBaseInfo.stMatchBox.fAngle;
-            hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
-            hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
-            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
             for (int i = 0; i < hpMathInfo->stMatchConInfo.iPtNum; i++)
             {
                 QPointF p1
                     = QPointF(hpMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineX, hpMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineY);
                 hikResult->resultImageInfo->m_points.append(p1);
             }
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
+            auto matchBaseInfo = hpMathInfo->pstMatchBaseInfo[0];
+            hikResult->theta = matchBaseInfo.stMatchBox.fAngle;
+            hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
+            hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
+
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
             hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
                                                  + ")" + ", " + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
@@ -308,18 +323,24 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
-            auto matchBaseInfo = fMathInfo->pstMatchBaseInfo[0];
-            hikResult->theta = matchBaseInfo.stMatchBox.fAngle;
-            hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
-            hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
-
-            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
             for (int i = 0; i < fMathInfo->stMatchConInfo.iPtNum; i++)
             {
                 QPointF p1
                     = QPointF(fMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineX, fMathInfo->stMatchConInfo.pstPatMatchPt[i].fMatchOutlineY);
                 hikResult->resultImageInfo->m_points.append(p1);
             }
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
+            auto matchBaseInfo = fMathInfo->pstMatchBaseInfo[0];
+            hikResult->theta = matchBaseInfo.stMatchBox.fAngle;
+            hikResult->x = matchBaseInfo.stMatchPt.stMatchPt.fPtX;
+            hikResult->y = matchBaseInfo.stMatchPt.stMatchPt.fPtY;
+
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
             hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
                                                  + ")" + ", " + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
@@ -337,10 +358,7 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
-            hikResult->x = rectInfo->stCentralPoint.fPtX;
-            hikResult->y = rectInfo->stCentralPoint.fPtY;
-            hikResult->theta = calcAngle(rectInfo->stEdgeLine0);
-            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
+
             hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine0.stStartPt.fPtX, rectInfo->stEdgeLine0.stStartPt.fPtY,
                                                               rectInfo->stEdgeLine0.stEndPt.fPtX, rectInfo->stEdgeLine0.stEndPt.fPtY));
             hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine1.stStartPt.fPtX, rectInfo->stEdgeLine1.stStartPt.fPtY,
@@ -350,6 +368,17 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->resultImageInfo->m_lines.append(QLineF(rectInfo->stEdgeLine3.stStartPt.fPtX, rectInfo->stEdgeLine3.stStartPt.fPtY,
                                                               rectInfo->stEdgeLine3.stEndPt.fPtX, rectInfo->stEdgeLine3.stEndPt.fPtY));
 
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
+            hikResult->x = rectInfo->stCentralPoint.fPtX;
+            hikResult->y = rectInfo->stCentralPoint.fPtY;
+            hikResult->theta = calcAngle(rectInfo->stEdgeLine0);
+
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
             hikResult->resultImageInfo->m_text = "Center Point:(" + QString::number(hikResult->x, '.', 3) + ","
                                                  + QString::number(hikResult->y, '.', 3) + ")" + ", "
                                                  + "Angle:" + QString::number(hikResult->theta, '.', 6);
@@ -367,11 +396,20 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
+
+            hikResult->resultImageInfo->m_center = QPointF(circleInfo->stCirPt.fPtX, circleInfo->stCirPt.fPtY);
+            hikResult->resultImageInfo->m_radius = circleInfo->fRadius;
+
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
             hikResult->x = circleInfo->stCirPt.fPtX;
             hikResult->y = circleInfo->stCirPt.fPtY;
             hikResult->radius = circleInfo->fRadius;
-            hikResult->resultImageInfo->m_center = QPointF(hikResult->x, hikResult->y);
-            hikResult->resultImageInfo->m_radius = hikResult->radius;
+
             hikResult->resultImageInfo->m_text
                 = "Center Point:(" + QString::number(hikResult->x, '.', 3) + "Radius:" + QString::number(hikResult->radius, '.', 3);
 
@@ -388,8 +426,69 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
             hikResult->fsharpness = imagesharpness->fSharpness;
             hikResult->resultImageInfo->m_text = "image sharpness:(" + QString::number(hikResult->fsharpness, '.', 3);
+
+            hikResult->waiter.wakeAll();
+            return IMVS_EC_OK;
+        }
+
+        if (strcmp(info->strModuleName, MODU_NAME_FORMATMODULE) == 0)
+        {
+            IMVS_PF_FORMAT_MODU_INFO *formatInfo = (IMVS_PF_FORMAT_MODU_INFO *)info->pData;
+
+            if (formatInfo->iStatus != 1)
+            {
+                hikResult->errString = "format result failed!";
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            if (info->nModuleID != hikResult->resultModuleId)
+            {
+                return IMVS_EC_OK;
+            }
+            hikResult->gotModuleResult = true;
+
+            QString formatResult(formatInfo->strFormatOut);
+            auto subStr = formatResult.split(";");
+            if(subStr.count() < 3)
+            {
+                hikResult->errString = QString("Unknown format result: %1").arg(formatResult);
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            bool ok = false;
+            hikResult->x = subStr[0].toDouble(&ok);
+            if(!ok)
+            {
+                hikResult->errString = QString("X string to double failed! String: %1").arg(subStr[0]);
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            hikResult->y = subStr[1].toDouble(&ok);
+            if(!ok)
+            {
+                hikResult->errString = QString("Y string to double failed! String: %1").arg(subStr[1]);
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+            hikResult->theta = subStr[2].toDouble(&ok);
+            if(!ok)
+            {
+                hikResult->errString = QString("Theta string to double failed! String: %1").arg(subStr[2]);
+                hikResult->waiter.wakeAll();
+                return IMVS_EC_OK;
+            }
+
+            hikResult->resultImageInfo->m_point = QPointF(hikResult->x, hikResult->y);
+            hikResult->resultImageInfo->m_text = "Match Point:(" + QString::number(hikResult->x, '.', 3) + "," + QString::number(hikResult->y, '.', 3)
+                                                 + ")" + ", " + "Angle:" + QString::number(hikResult->theta, '.', 6);
 
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
