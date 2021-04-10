@@ -394,7 +394,7 @@ bool GTAxis::refreshLimitStatus(bool isPositiveLimit)
 
 void GTAxis::leaveLimitPos(bool isPositiveLimit)
 {
-    double step = 0.5;
+    double step = 1;
     if (isPositiveLimit)
     {
         step *= -1;
@@ -406,6 +406,7 @@ void GTAxis::leaveLimitPos(bool isPositiveLimit)
             throw ActionError("Axis", QObject::tr("Axis %1 has been stopped!").arg(name()));
         }
         stepMove(step);
+        QThread::msleep(50);
     }
 }
 
