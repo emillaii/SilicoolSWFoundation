@@ -28,12 +28,10 @@ Item {
         HikVisionLocationViewer {
             calibrationName: "DutDownlookCalibration"
             visionLocationName: "DutDownlookLocation1"
-            performOriginPrResultVisible: true
         }
         HikVisionLocationViewer {
             calibrationName: "DutDownlookCalibration"
             visionLocationName: "DutDownlookLocation2"
-            performOriginPrResultVisible: true
         }
         Button{
             text: "PrTest"

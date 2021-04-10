@@ -8,7 +8,6 @@ GroupBox {
     property string calibrationName: ""
     property string visionLocationName: ""
     property bool performPrResultVisible: true
-    property bool performOriginPrResultVisible: false
     property bool calibrateBtnVisible: true
     property bool useCustomCalibrationFunc: false
     property var customCalibrationFunc: null
@@ -32,10 +31,6 @@ GroupBox {
                 id: imageSourceModuleIdCfg
                 configName: "imageSourceModuleId"
             }
-            ConfigRow{
-                id: resultModuleIdCfg
-                configName: "resultModuleId"
-            }
         }
 
         RowLayout{
@@ -57,6 +52,16 @@ GroupBox {
             ColumnLayout{
                 Layout.alignment: Qt.AlignBottom
                 Layout.bottomMargin: 10
+
+                ConfigRow{
+                    id: resultModuleIdCfg
+                    configName: "resultModuleId"
+                }
+                Rectangle{
+                    width: 5
+                    height: 5
+                    color: "transparent"
+                }
 
                 RowLayout{
                     Slider{
@@ -121,13 +126,6 @@ GroupBox {
                 text: qsTr("执行PR结果")
                 onClicked: {
                     performPrResult()
-                }
-            }
-            Button{
-                visible: performOriginPrResultVisible
-                text: qsTr("执行OriginPR结果")
-                onClicked: {
-                    tem.runSingleCmd(visionManager, "performPrResult", [calibrationName, visionLocationName, true])
                 }
             }
             RoundButton{
