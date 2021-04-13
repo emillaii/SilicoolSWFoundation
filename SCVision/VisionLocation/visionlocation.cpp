@@ -457,7 +457,7 @@ void VisionLocation::drawSaveShowResultImage(QImage image, PRResultImageInfo *pr
             if (m_config->saveResultImage())
             {
                 m_camera->saveImage(
-                    image, "",
+                    tmpImage, "",
                     QString("%1_%2_resultImage.jpg").arg(m_config->locationName()).arg(QDateTime::currentDateTime().toString("hh_mm_ss_zzz")));
             }
         });
