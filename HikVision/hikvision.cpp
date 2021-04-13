@@ -80,7 +80,7 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
 
     int workStatus = 0;
     int result = IMVS_PF_GetProcessWorkStatus(m_handle, hikPrConfig->processId(), &workStatus);
-    if(result == IMVS_EC_OK && workStatus == 1)
+    if (result == IMVS_EC_OK && workStatus == 1)
     {
         QElapsedTimer timer;
         timer.start();
@@ -89,7 +89,10 @@ bool HikVision::performPr(QImage &image, VisionLocationConfig *prConfig, PRResul
             QThread::msleep(1);
             IMVS_PF_GetProcessWorkStatus(m_handle, hikPrConfig->processId(), &workStatus);
         }
-        qCWarning(hikCate()) << QString("Wait process stopped... Location name: %1, Process id: %2, time cost: %3ms").arg(hikPrConfig->locationName()).arg(hikPrConfig->processId()).arg(timer.elapsed());
+        qCWarning(hikCate()) << QString("Wait process stopped... Location name: %1, Process id: %2, time cost: %3ms")
+                                    .arg(hikPrConfig->locationName())
+                                    .arg(hikPrConfig->processId())
+                                    .arg(timer.elapsed());
     }
 
     {
@@ -197,17 +200,18 @@ void HikVision::printProcessModuleIds()
     for (int i = 0; i < processInfos.nNum; i++)
     {
         IMVS_PF_PROCESS_INFO *processInfo = &processInfos.astProcessInfo[i];
-        qDebug() << "Process" << processInfo->nProcessID << "name" << processInfo->strProcessName;
+        qDebug() << "Process:" << processInfo->nProcessID << "Name:" << processInfo->strProcessName;
 
-        IMVS_PF_MODULE_INFO_LIST moduleInfos;
-        CHECK_MVS_RES(IMVS_PF_GetModulesByProcessId(m_handle, processInfo->nProcessID, &moduleInfos));
-        qDebug() << "Module count:" << moduleInfos.nNum;
+        //        IMVS_PF_MODULE_INFO_LIST moduleInfos;
+        //        CHECK_MVS_RES(IMVS_PF_GetModulesByProcessId(m_handle, processInfo->nProcessID, &moduleInfos));
+        //        qDebug() << "Module count:" << moduleInfos.nNum;
 
-        for (int j = 0; j < moduleInfos.nNum; j++)
-        {
-            IMVS_PF_MODULE_INFO *moduleInfo = &moduleInfos.astModuleInfo[j];
-            qDebug() << "process" << moduleInfo->nProcessID << "module id" << moduleInfo->nModuleID << "moduleName" << moduleInfo->strModuleName;
-        }
+        //        for (int j = 0; j < moduleInfos.nNum; j++)
+        //        {
+        //            IMVS_PF_MODULE_INFO *moduleInfo = &moduleInfos.astModuleInfo[j];
+        //            qDebug() << "process" << moduleInfo->nProcessID << "module id" << moduleInfo->nModuleID << "moduleName" <<
+        //            moduleInfo->strModuleName;
+        //        }
     }
 }
 
@@ -457,7 +461,7 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
 
             QString formatResult(formatInfo->strFormatOut);
             auto subStr = formatResult.split(";");
-            if(subStr.count() < 3)
+            if (subStr.count() < 3)
             {
                 hikResult->errString = QString("Unknown format result: %1").arg(formatResult);
                 hikResult->waiter.wakeAll();
@@ -465,21 +469,21 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             }
             bool ok = false;
             hikResult->x = subStr[0].toDouble(&ok);
-            if(!ok)
+            if (!ok)
             {
                 hikResult->errString = QString("X string to double failed! String: %1").arg(subStr[0]);
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
             hikResult->y = subStr[1].toDouble(&ok);
-            if(!ok)
+            if (!ok)
             {
                 hikResult->errString = QString("Y string to double failed! String: %1").arg(subStr[1]);
                 hikResult->waiter.wakeAll();
                 return IMVS_EC_OK;
             }
             hikResult->theta = subStr[2].toDouble(&ok);
-            if(!ok)
+            if (!ok)
             {
                 hikResult->errString = QString("Theta string to double failed! String: %1").arg(subStr[2]);
                 hikResult->waiter.wakeAll();
