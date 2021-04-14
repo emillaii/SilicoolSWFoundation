@@ -152,6 +152,9 @@ void PointsTableModel::loadData(const QJsonArray &data)
         if (x.isEmpty())
         {
             x = QString::number(itemRow["x"].toDouble());
+        }
+        if (y.isEmpty())
+        {
             y = QString::number(itemRow["y"].toDouble());
         }
         newRow.append(x);

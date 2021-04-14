@@ -16,12 +16,14 @@ Item {
     property bool isMouseMoveEnable: false  //是否允许鼠标移动绘制事件
 
     function translate(x,y) {
+        x = parseFloat(x)
+        y = parseFloat(y)
         var newPointsArray = []
         for (var index in canvas.arrpoints) {
             var px = parseFloat(canvas.arrpoints[index]["x"])
             var py = parseFloat(canvas.arrpoints[index]["y"])
-            var nx = px + parseFloat(x)
-            var ny = py + parseFloat(y)
+            var nx = px + x
+            var ny = py + y
             newPointsArray.push({"x": nx,
                                  "y": ny,
                                  "z": canvas.arrpoints[index]["z"],
@@ -34,6 +36,7 @@ Item {
 
     //t is rotatation theta in degree
     function rotate(t) {
+        t = parseFloat(t)
         var newPointsArray = []
         for (var index in canvas.arrpoints) {
             var theta = t*Math.PI/180;

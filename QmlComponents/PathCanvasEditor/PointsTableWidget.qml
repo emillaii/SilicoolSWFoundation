@@ -18,7 +18,7 @@ Item {
     property color scrollBarColor: "cyan"
     property int scrollBarWidth: 6
     //列宽
-    property variant columnWidthArr: [50,50,30, 40]
+    property variant columnWidthArr: [80,80,40, 40]
 
     property int emil: 100
 
