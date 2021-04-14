@@ -94,9 +94,9 @@ bool CircleEdgeFitting::PR_Circle_Edge_Fitting(
                                     atl::Dummy<atl::Array<avl::Image>>().Get(), atl::Dummy<atl::Conditional<atl::Array<float>>>().Get());
         qInfo("LocateSingleObject_NCC timeElapsed: %d", timer.elapsed());
 
-        qWarning("LocateSingleObject_NCC finished");
         if (object2D1 != atl::NIL)
         {
+            qInfo("LocateSingleObject_NCC finished score: %f", object2D1.Get().Score());
             avl::CoordinateSystem2D coordinateSystem2D1;
             point2D1.AssignNonNil();
             point2DArray1.AssignNonNil();
@@ -109,14 +109,11 @@ bool CircleEdgeFitting::PR_Circle_Edge_Fitting(
             timer.restart();
             avs::AvsFilter_FitCircleToEdges(
                 fitCircleToEdgesState1, imageInput, circleFittingField1, coordinateSystem2D1, 100, 5, avl::InterpolationMethod::Bilinear,
-                avl::EdgeScanParams(avl::ProfileInterpolationMethod::Quadratic4, 1.0f, 5.0f, avl::EdgeTransition::BrightToDark),
+                avl::EdgeScanParams(avl::ProfileInterpolationMethod::Quadratic4, 1.0f, 5.0f, avl::EdgeTransition::Any),
                 avl::Selection::First, atl::NIL, 0.1f, avl::CircleFittingMethod::AlgebraicTaubin, atl::NIL, circle2D1, edge1DArray1, atl::NIL,
                 atl::NIL, atl::Dummy<atl::Array<avl::Segment2D>>().Get(), atl::Dummy<atl::Array<avl::Rectangle2D>>().Get(),
                 atl::Dummy<atl::Array<avl::Profile>>().Get(), atl::Dummy<atl::Array<avl::Profile>>().Get());
             qInfo("AvsFilter_FitCircleToEdges timeElapsed: %d", timer.elapsed());
-
-            qWarning("AvsFilter_FitCircleToEdges finished");
-
             point2DArray1.Get().Resize(edge1DArray1.Size());
             if (circle2D1 != atl::NIL)
             {
@@ -127,6 +124,8 @@ bool CircleEdgeFitting::PR_Circle_Edge_Fitting(
             else
             {
                 point2D2 = atl::NIL;
+                qWarning("Cannot find edges");
+                return false;
             }
         }
         else
