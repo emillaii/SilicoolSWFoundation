@@ -719,7 +719,10 @@ void SCAxis::startReciprocate(double pos1, int delay1, double pos2, int delay2, 
         {
             return;
         }
-        absMove(pos1);
+        {
+            SCTimer _t(QString("Move to %1").arg(pos1), motionCate());
+            absMove(pos1);
+        }
         if (delay1 > 0)
         {
             QThread::msleep(static_cast<uint>(delay1));
@@ -728,7 +731,10 @@ void SCAxis::startReciprocate(double pos1, int delay1, double pos2, int delay2, 
         {
             return;
         }
-        absMove(pos2);
+        {
+            SCTimer _t(QString("Move to %1").arg(pos2), motionCate());
+            absMove(pos2);
+        }
         if (delay2 > 0)
         {
             QThread::msleep(static_cast<uint>(delay2));
