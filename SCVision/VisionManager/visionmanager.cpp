@@ -409,10 +409,11 @@ void VisionManager::onDutTypeChanged(QString dutType)
     QString dutRelatedVisionConfigDir = QString("./config/DutType/%1/vision").arg(dutType);
     VisionConfigDir::getIns().setDutRelatedConfigDir(dutRelatedVisionConfigDir);
     visionConfigManager->handleDutChanged(dutRelatedVisionConfigDir);
-    foreach (auto vl, visionLocations.values())
+    auto locationConfigs = visionConfigManager->visionLocationConfigMap.values();
+    foreach (auto vlConfig, locationConfigs)
     {
-        vl->config()->resetPrResultImage();
-        emit vl->config()->prResultImageChanged();
+        vlConfig->resetPrResultImage();
+        emit vlConfig->prResultImageChanged();
     }
     if (m_vision != nullptr)
     {
