@@ -6,11 +6,8 @@
 #include "ACSC.h"
 #include "acscardconfig.h"
 
-#define CheckACSCResult(res, errMsg)                                                                                                               \
-    if (res == 0)                                                                                                                          \
-    {                                                                                                                                                \
-        throw ActionError(name(), QString("%1. Error code: %2").arg(errMsg).arg(res));                                                               \
-    }
+#define VelCoeff (1)
+#define AccCoeff (1)
 
 class ACSAxis : public SCAxis
 {
@@ -19,12 +16,12 @@ class ACSAxis : public SCAxis
 public:
 
     ACSAxis(QString name, QObject *parent = nullptr);
-    ACSAxisConfig *getPiAxisConfig() const
+    ACSAxisConfig *getACSAxisConfig() const
     {
         return qobject_cast<ACSAxisConfig *>(config());
     }
 
-    void kill() noexcept;
+    void kill() ;
 
     // SCAxis interface
 public:
@@ -40,13 +37,12 @@ public:
     virtual bool isInPos() noexcept override;
     virtual bool isRunning() noexcept override;
     virtual double getCurrentVel() noexcept override;
-
-    virtual void clearStatus() override{}
+    virtual void clearStatus() override;
 
 protected:
     virtual void initImpl() override;
     virtual void homeImpl() override;
-    virtual bool isHomeDone() noexcept override{return 0;}
+    virtual bool isHomeDone() noexcept override;
     virtual QString homeErrorMsg() override{return "";}
     virtual void operationAfterHome() override{}
     virtual void stopImpl() noexcept override;
@@ -58,35 +54,23 @@ protected:
     virtual double getFeedbackPosImpl() noexcept override;
     virtual bool bindToMasterAxisImpl(bool bind) override
     {
-        // Todo
-        qCritical() << "UnImplemented function...";
-        return false;
+        // do nothing
+        return true;
     }
-    virtual void scaleMaxAccImpl(double ratio) override{
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
-    void clearPosImpl()
-    {
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
-    void syncProfilerAndFeedbackPos()
-    {
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
-    void velocityMoveImpl(Direction dir, double vel, double acc)
-    {
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
-    void scaleMaxVelImpl(double ratio)
-    {
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
+    virtual void scaleMaxAccImpl(double ratio) override;
 
+    void clearPosImpl() override
+    {
+
+    }
+    void syncProfilerAndFeedbackPos() override
+    {
+
+    }
+    void velocityMoveImpl(Direction dir, double vel, double acc)override;
+    void scaleMaxVelImpl(double ratio);
+private:
+    void checkACSCom(int errCode, QString msg);
 private:
     ACSAxisConfig *acsAxisConfig = nullptr;
     HANDLE hComm;

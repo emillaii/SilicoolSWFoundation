@@ -4,6 +4,7 @@
 #include "configManager/configfile.h"
 #include "configManager/configobject.h"
 #include "configManager/configobjectarray.h"
+#include "errorHandling/silicolerror.h"
 
 class ACSCardConfig : public ConfigObject
 {
@@ -80,9 +81,9 @@ class ACSCardConfigManage
 private:
     ACSCardConfigManage()
     {
-        acsCardCfg = new ACSCardConfig();
+        acsCardCfg = new ConfigObjectArray(&ACSCardConfig::staticMetaObject);
         acsCardCfgFile = new ConfigFile("ACSCardConfig", acsCardCfg, "./config/motionConfig/ACSCardConfig.json");
-        acsCardCfgFile->populate(true);
+        acsCardCfgFile->populate();
     }
 
 public:
@@ -92,13 +93,22 @@ public:
         return instance;
     }
 
-    ACSCardConfig *getACSCardCfg() const
+    ConfigObjectArray *getACSCardCfgArray() const
     {
         return acsCardCfg;
     }
+    ACSCardConfig *getACSCardCfg() const
+    {
+        if(acsCardCfg->count() <= 0)
+        {
+            throw SilicolAbort("ACSC core config is null!", EX_LOCATION);
+        }
+        ACSCardConfig *acsCoreCfg = acsCardCfg->getConfig<ACSCardConfig>(0);
+        return acsCoreCfg;
+    }
 private:
     ConfigFile *acsCardCfgFile;
-    ACSCardConfig *acsCardCfg;
+    ConfigObjectArray *acsCardCfg;
 };
 
 #endif // ACSCAEDCONFIG_H

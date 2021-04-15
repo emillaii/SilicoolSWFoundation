@@ -4,6 +4,7 @@
 #include "configManager/configfile.h"
 #include "configManager/configobject.h"
 #include "configManager/configobjectarray.h"
+#include "errorHandling/silicolerror.h"
 
 class PIControlCardConfig : public ConfigObject
 {
@@ -82,7 +83,7 @@ class PICardConfigManager
 private:
     PICardConfigManager()
     {
-        piCoreCfg = new PIControlCardConfig();
+        piCoreCfg = new ConfigObjectArray( &PIControlCardConfig::staticMetaObject);
         piCardCfgFile = new ConfigFile("PICoreConfig", piCoreCfg, "./config/motionConfig/PICoreConfig.json");
         piCardCfgFile->populate(true);
     }
@@ -93,13 +94,23 @@ public:
         return  instance;
     }
 
-    PIControlCardConfig *getPICoreCfg() const
+    ConfigObjectArray *getPICoreCfgArr() const
     {
         return piCoreCfg;
     }
+    PIControlCardConfig *getPICoreCfg() const
+    {
+        if(piCoreCfg->count() <=0)
+        {
+            throw SilicolAbort("PI core config is null!", EX_LOCATION);
+        }
+
+        PIControlCardConfig *coreCfg = piCoreCfg->getConfig<PIControlCardConfig>(0);
+        return coreCfg;
+    }
 private:
     ConfigFile *piCardCfgFile;
-    PIControlCardConfig *piCoreCfg;
+    ConfigObjectArray *piCoreCfg;
 };
 
 #endif // PICONTROLCARDCONFIG_H

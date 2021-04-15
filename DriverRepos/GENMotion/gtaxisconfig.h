@@ -253,6 +253,7 @@ class GTAxisConfig : public AxisConfig
     Q_PROPERTY(int inPosHoldTime READ inPosHoldTime WRITE setInPosHoldTime NOTIFY inPosHoldTimeChanged)
     Q_PROPERTY(int softLandingWindowSize READ softLandingWindowSize WRITE setSoftLandingWindowSize NOTIFY softLandingWindowSizeChanged)
     Q_PROPERTY(int softLandingWindowLen READ softLandingWindowLen WRITE setSoftLandingWindowLen NOTIFY softLandingWindowLenChanged)
+    Q_PROPERTY(double stopAccRatio READ stopAccRatio WRITE setStopAccRatio NOTIFY stopAccRatioChanged)
     Q_PROPERTY(GTHomeConfig *gtHomeConfig READ gtHomeConfig)
 
 public:
@@ -315,6 +316,11 @@ public:
     int jogModeIndex() const
     {
         return m_jogModeIndex;
+    }
+
+    double stopAccRatio() const
+    {
+        return m_stopAccRatio;
     }
 
 public slots:
@@ -408,6 +414,15 @@ public slots:
         emit jogModeIndexChanged(m_jogModeIndex);
     }
 
+    void setStopAccRatio(double stopAccRatio)
+    {
+        if (qFuzzyCompare(m_stopAccRatio, stopAccRatio))
+            return;
+
+        m_stopAccRatio = stopAccRatio;
+        emit stopAccRatioChanged(m_stopAccRatio);
+    }
+
 signals:
     void coreNoChanged(int coreNo);
 
@@ -429,6 +444,8 @@ signals:
 
     void jogModeIndexChanged(int jogModeIndex);
 
+    void stopAccRatioChanged(double stopAccRatio);
+
 private:
     int m_coreNo = 1;
     int m_index = 1;
@@ -441,6 +458,7 @@ private:
     int m_posModeIndex = 8;
     int m_torModeIndex = 4;
     int m_jogModeIndex = 3;
+    double m_stopAccRatio = 1;
 };
 
 #endif    // GTAXISCONFIG_H

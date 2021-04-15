@@ -167,6 +167,8 @@ void GTAxis::initImpl()
     trapParam.dec = trapParam.acc;
     checkResult1(GTN_SetTrapPrm(coreNo, index, &trapParam));
     checkResult1(GTN_SetAxisBand(coreNo, index, gtAxisConfig->inPosBand(), gtAxisConfig->inPosHoldTime()));
+    double stopAcc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
+    checkResult1(GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 5));
     if (!isConnectInposParamChangedSig)
     {
         connect(gtAxisConfig, &GTAxisConfig::inPosBandChanged, this, &GTAxis::onInposBandParamChanged);

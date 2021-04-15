@@ -12,17 +12,17 @@ int XtAxis::generateNewAxisID()
     {
         axisCount = Profile_Get_Axis_Count();
     }
-    return axisCount++;
+    return ++axisCount;
 }
 
 int XtAxis::generateNewThreadID()
 {
-    return threadResource++;
+    return ++threadResource;
 }
 
 int XtAxis::generateNewCalcSlotID()
 {
-    return calculationSlotResource++;
+    return ++calculationSlotResource;
 }
 
 double XtAxis::getCurrentOutputPos() noexcept
