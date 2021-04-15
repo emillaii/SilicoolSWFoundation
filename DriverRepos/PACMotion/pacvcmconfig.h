@@ -12,6 +12,7 @@ class PACVcmConfig : public AxisConfig
     Q_PROPERTY(int findHardLimitCurrent READ findHardLimitCurrent WRITE setFindHardLimitCurrent NOTIFY findHardLimitCurrentChanged)
     Q_PROPERTY(int findIndexDir READ findIndexDir WRITE setFindIndexDir NOTIFY findIndexDirChanged)
     Q_PROPERTY(int homeVel READ homeVel WRITE setHomeVel NOTIFY homeVelChanged)
+    Q_PROPERTY(int indexVel READ indexVel WRITE setIndexVel NOTIFY indexVelChanged)
 
 public:
     Q_INVOKABLE PACVcmConfig(QObject *parent = nullptr) : AxisConfig(parent)
@@ -46,6 +47,11 @@ public:
     int homeVel() const
     {
         return m_homeVel;
+    }
+
+    int indexVel() const
+    {
+        return m_indexVel;
     }
 
 public slots:
@@ -94,6 +100,15 @@ public slots:
         emit homeVelChanged(m_homeVel);
     }
 
+    void setIndexVel(int indexVel)
+    {
+        if (m_indexVel == indexVel)
+            return;
+
+        m_indexVel = indexVel;
+        emit indexVelChanged(m_indexVel);
+    }
+
 signals:
     void vcmAddressChanged(int vcmAddress);
 
@@ -109,12 +124,15 @@ signals:
 
     void homeVelChanged(int homeVel);
 
+    void indexVelChanged(int indexVel);
+
 private:
     int m_vcmAddress = 1;
     int m_findHardLimitDir = 0;
     int m_findHardLimitCurrent = 800;
     int m_findIndexDir = 1;
     int m_homeVel = 10;
+    int m_indexVel = 2;
 };
 
 #endif    // PACVCMCONFIG_H

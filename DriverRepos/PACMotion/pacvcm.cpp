@@ -119,11 +119,13 @@ void PACVcm::initImpl()
 void PACVcm::homeImpl()
 {
     startSoftLanding(m_vcmConfig->homeVel(), m_vcmConfig->findHardLimitDir(), m_vcmConfig->findHardLimitCurrent());
+    QThread::msleep(200);
     waitActionDone(10000);
-    if (!PAC_FindIndex(vcmAddress, m_vcmConfig->homeVel(), m_vcmConfig->maxAcc(), m_vcmConfig->findIndexDir(), false))
+    if (!PAC_FindIndex(vcmAddress, m_vcmConfig->indexVel(), qAbs(m_vcmConfig->indexVel() * 10), m_vcmConfig->findIndexDir(), false))
     {
         throw ActionError(name(), tr("PAC_FindIndex failed!"));
     }
+    QThread::msleep(50);
 }
 
 bool PACVcm::isHomeDone() noexcept
@@ -203,7 +205,7 @@ void PACVcm::scaleMaxAccImpl(double ratio)
 
 void PACVcm::scaleMaxVelImpl(double ratio)
 {
-    PAC_SetAcc(vcmAddress, m_vcmConfig->maxVel() * ratio);
+    PAC_SetVel(vcmAddress, m_vcmConfig->maxVel() * ratio);
 }
 
 void PACVcm::softLandDownImpl(double vel, double targetPos, double force, double margin)
@@ -216,12 +218,14 @@ void PACVcm::softLandDownImpl(double vel, double targetPos, double force, double
     {
         qCDebug(motionCate()) << name() << "softlanding... Fast move to" << minLandingPos;
         moveToImpl(minLandingPos);
+        QThread::msleep(20);
         waitActionDone(30000);
     }
     else if (startSoftLandDownPos > maxLandingPos + 0.1)
     {
         qCDebug(motionCate()) << name() << "softlanding... Fast move to" << maxLandingPos;
         moveToImpl(maxLandingPos);
+        QThread::msleep(20);
         waitActionDone(30000);
     }
     startSoftLanding(vel, DIR_POSITIVE, force);
@@ -255,6 +259,7 @@ void PACVcm::setServoMode(BYTE ucMode, bool checkMode)
         {
             throw ActionError(name(), tr("Set servo mode to %1 failed!").arg(ucMode));
         }
+        QThread::msleep(5);
     });
     currentServoMode = ucMode;
 }
