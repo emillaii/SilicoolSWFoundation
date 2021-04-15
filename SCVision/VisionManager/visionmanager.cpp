@@ -411,6 +411,7 @@ void VisionManager::onDutTypeChanged(QString dutType)
     visionConfigManager->handleDutChanged(dutRelatedVisionConfigDir);
     foreach (auto vl, visionLocations.values())
     {
+        vl->config()->resetPrResultImage();
         emit vl->config()->prResultImageChanged();
     }
     if (m_vision != nullptr)
