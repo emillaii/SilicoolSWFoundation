@@ -165,7 +165,7 @@ void PIAxis::refrenceIfNeed()
     }
     else
     {
-        QString st = tr("PI has refrenced! Are you sure refrence PI by %1 Axis now?");
+        QString st = QString("PI has refrenced! Are you sure refrence PI now");
         if (UIOperation::getIns()->yesNoConfirm(st))
         {
             qInfo() << tr("Start refrence PI again!!");
@@ -244,6 +244,11 @@ int PIAxis::getAxisIndexByName(QString axisName)
 
 bool PIAxis::isInPos() noexcept
 {
+    return !isRunning();
+}
+
+bool PIAxis::isRunning() noexcept
+{
     BOOL bIsMoving = FALSE;
     BOOL ret = PI_IsMoving( m_controllerID, piAxisConfig->piAxisName().toUtf8(), &bIsMoving);
     if (ret != TRUE)
@@ -251,12 +256,7 @@ bool PIAxis::isInPos() noexcept
         qCCritical(motionCate()) << tr("PI_IsMoving() in %1 isInPos() failed!").arg(name());
         return false;
     }
-    return bIsMoving == TRUE ? true : false;
-}
-
-bool PIAxis::isRunning() noexcept
-{
-    return isInPos();
+    return bIsMoving == TRUE;
 }
 
 double PIAxis::getCurrentVel() noexcept

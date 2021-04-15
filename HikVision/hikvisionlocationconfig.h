@@ -63,19 +63,24 @@ public slots:
         emit resultModuleIdChanged(m_resultModuleId);
     }
 
+    void resetPrResultImage() override
+    {
+        QString prResultImageName = VisionConfigDir::getIns().prConfigDir() + locationName() + "_resultImage.jpg";
+        if (QFile::exists(prResultImageName))
+        {
+            setPrResultImage(QString("file:///") + prResultImageName);
+        }
+        else
+        {
+            setPrResultImage("");
+        }
+    }
+
     void onLocationNameChanged(QString locationName)
     {
         if (!locationName.isEmpty())
         {
-            QString prResultImageName = VisionConfigDir::getIns().prConfigDir() + locationName + "_resultImage.jpg";
-            if (QFile::exists(prResultImageName))
-            {
-                setPrResultImage(QString("file:///") + prResultImageName);
-            }
-            else
-            {
-                setPrResultImage("");
-            }
+            resetPrResultImage();
         }
     }
 

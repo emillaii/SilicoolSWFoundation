@@ -14,10 +14,9 @@ void ACSCard::postInit()
     }
 
     ACSCardConfig *acsCoreCfg = ACSCardConfigManage::getIns().getACSCardCfg();
-
     if(acsCoreCfg->ip()== "" || acsCoreCfg->port()== -1)
     {
-        throw SilicolAbort("ACSC ip or port error!", EX_LOCATION);
+        throw SilicolAbort("ACSC core 0 ip or port error!", EX_LOCATION);
     }
 
     m_handle = acsc_OpenCommEthernetTCP(acsCoreCfg->ip().toUtf8().data(), acsCoreCfg->port());

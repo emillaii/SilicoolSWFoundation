@@ -2,20 +2,12 @@
 
 ACSAxis::ACSAxis(QString name, QObject *parent) : SCAxis(name, parent)
 {
-    hComm = (HANDLE)ACSCardConfigManage::getIns().getACSCardCfg()->handle();
 
-    acsAxisConfig = qobject_cast<ACSAxisConfig *>(config());
-    if(acsAxisConfig == nullptr)
-    {
-        throw SilicolAbort(QString("Can not cast AxisConfig to ACSAxisConfig! AxisConfig type: %1")
-                               .arg(config()->metaObject()->className()),
-                           EX_LOCATION);
-    }
 }
 
-void ACSAxis::kill() noexcept
+void ACSAxis::kill()
 {
-    CheckACSCResult(acsc_Kill(hComm, acsAxisConfig->index(), nullptr), "acsc_Kill");
+    checkACSCom(acsc_Kill(hComm, acsAxisConfig->index(), nullptr), "acsc_Kill");
 }
 
 bool ACSAxis::hasAlarm() noexcept
@@ -24,37 +16,48 @@ bool ACSAxis::hasAlarm() noexcept
     char errMsg[256];
     int received;
 
-    CheckACSCResult(acsc_GetMotionError(hComm, acsAxisConfig->index(),&acsc_error, NULL), "acsc_GetMotionError failed");
-
-    if(acsc_error >0)
+    int result = acsc_GetMotorError(hComm, acsAxisConfig->index(),&acsc_error, NULL);
+    if( result == 0)
     {
-        CheckACSCResult(acsc_GetErrorString(hComm,acsc_error,errMsg,255,&received), "acsc_GetErrorString");
-        throw  ActionError(name(), QString("Motor error, errCode: %1; errMsg: %2").arg(acsc_error).arg(errMsg));
+        qCritical(motionCate()) << tr("%1 axis acsc_GetMotionError faile").arg(acsAxisConfig->name());
+        return true;
     }
+
+    if(acsc_error != 0 && acsc_error != 5001)
+    {
+        result = acsc_GetErrorString(hComm, acsc_error, errMsg, 255, &received);
+        qWarning(motionCate()) << QString("Motor error, errCode: %1; errMsg: %2").arg(acsc_error).arg(errMsg);
+        return true;
+    }
+
+    return false;
 }
 
 bool ACSAxis::isInPos() noexcept
 {
-    int state;
-    CheckACSCResult(acsc_GetMotorState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetMotorState");
-
-    return state == ACSC_MST_INPOS;
+    int state = ACSC_MST_MOVE;
+    checkACSCom(acsc_GetMotorState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetMotorState");
+    return state & ACSC_MST_INPOS;
 }
 
 bool ACSAxis::isRunning() noexcept
 {
-    int state;
-    CheckACSCResult(acsc_GetMotorState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetMotorState");
-
-    return state == ACSC_MST_MOVE;
+    int state = ACSC_MST_INPOS;
+    checkACSCom(acsc_GetMotorState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetMotorState");
+    return state & ACSC_MST_MOVE || state & ACSC_MST_ACC;
 }
 
 double ACSAxis::getCurrentVel() noexcept
 {
-    double velocity;
-    CheckACSCResult(acsc_GetVelocity(hComm, acsAxisConfig->index(), &velocity, nullptr), "acsc_GetVelocity");
+    double velocity = 0;
+    checkACSCom(acsc_GetVelocity(hComm, acsAxisConfig->index(), &velocity, nullptr), "acsc_GetVelocity");
 
-    return velocity;
+    return velocity* VelCoeff / acsAxisConfig->scale();
+}
+
+void ACSAxis::clearStatus()
+{
+    clearErrorImpl();
 }
 
 void ACSAxis::initImpl()
@@ -72,13 +75,21 @@ void ACSAxis::initImpl()
 
 void ACSAxis::homeImpl()
 {
-    CheckACSCResult(acsc_RunBuffer(hComm, acsAxisConfig->homeBfIndex(), NULL, NULL), "acsc_RunBuffer");
+    checkACSCom(acsc_RunBuffer(hComm, acsAxisConfig->homeBfIndex(), NULL, NULL), "acsc_RunBuffer");
+}
+
+bool ACSAxis::isHomeDone() noexcept
+{
+    int state = ACSC_PST_RUN;
+    checkACSCom(acsc_GetProgramState(hComm, acsAxisConfig->homeBfIndex(), &state, NULL), "acsc_GetProgramState");
+    return state == ACSC_PST_COMPILED;
 }
 
 void ACSAxis::stopImpl() noexcept
 {
     // The terminated motion finishes using the full third-order deceleration profile and the motion deceleration value.
-    CheckACSCResult(acsc_Halt(hComm, acsAxisConfig->index(), nullptr), "acsc_Halt");
+    qInfo() << "ACS stopImpl..";
+    checkACSCom(acsc_Halt(hComm, acsAxisConfig->index(), nullptr), "acsc_Halt");
 }
 
 void ACSAxis::stopHome()
@@ -88,27 +99,53 @@ void ACSAxis::stopHome()
 
 void ACSAxis::enableImpl()
 {
-    CheckACSCResult(acsc_Enable(hComm, acsAxisConfig->index(), nullptr), "acsc_Enable");
+    checkACSCom(acsc_Enable(hComm, acsAxisConfig->index(), nullptr), "acsc_Enable");
 }
 
 void ACSAxis::disableImpl()
 {
-    CheckACSCResult(acsc_Disable(hComm, acsAxisConfig->index(), nullptr), "acsc_Disable");
+    checkACSCom(acsc_Disable(hComm, acsAxisConfig->index(), nullptr), "acsc_Disable");
 }
 
 void ACSAxis::clearErrorImpl()
 {
-    CheckACSCResult(acsc_RunBuffer(hComm, acsAxisConfig->initBfIndex(), NULL, NULL), "acsc_RunBuffer");
+    char cmd[] = "FCLEAR ALL\r";
+    char *cm = cmd;
+
+    checkACSCom(acsc_Command(hComm, cm, strlen(cm), NULL), "acsc_Command");
 }
 
 void ACSAxis::moveToImpl(double targetPos)
 {
-    CheckACSCResult(acsc_ToPoint(hComm, 0, acsAxisConfig->index(), targetPos, nullptr), "acsc_ToPoint");
+    checkACSCom(acsc_ToPoint(hComm, 0, acsAxisConfig->index(), targetPos, nullptr), "acsc_ToPoint");
 }
 
 double ACSAxis::getFeedbackPosImpl() noexcept
 {
-    double FPosition;
-    CheckACSCResult(acsc_GetFPosition(hComm, acsAxisConfig->index(), &FPosition, nullptr), "acsc_GetFPosition");
-    return FPosition;
+    double FPosition = 0;
+    checkACSCom(acsc_GetFPosition(hComm, acsAxisConfig->index(), &FPosition, nullptr), "acsc_GetFPosition");
+    return FPosition / acsAxisConfig->scale();
+}
+
+void ACSAxis::scaleMaxAccImpl(double ratio)
+{
+    checkACSCom(acsc_SetAcceleration(hComm, acsAxisConfig->index(), acsAxisConfig->maxAcc()*acsAxisConfig->scale() / AccCoeff * ratio, NULL), "acsc_SetAcceleration");
+}
+
+void ACSAxis::velocityMoveImpl(SCAxis::Direction dir, double vel, double acc)
+{
+
+}
+
+void ACSAxis::scaleMaxVelImpl(double ratio)
+{
+    checkACSCom(acsc_SetVelocity(hComm, acsAxisConfig->index(), acsAxisConfig->maxVel()*acsAxisConfig->scale() / VelCoeff * ratio, NULL), "acsc_SetVelocity");
+}
+
+void ACSAxis::checkACSCom(int errCode, QString msg)
+{
+    if (errCode == 0)                                                                                            \
+    {                                                                                                                  \
+        qCritical(motionCate()) << msg << "failed! Error code:" << errCode;                                                    \
+    }
 }

@@ -15,7 +15,6 @@ void PIControlCard::postInit()
     }
 
     PIControlCardConfig *piCoreCfg = PICardConfigManager::getIns().getPICoreCfg();
-
     if(piCoreCfg->ip()== "" || piCoreCfg->port()== -1)
     {
         throw SilicolAbort("PI Hexapos ip or port error!", EX_LOCATION);

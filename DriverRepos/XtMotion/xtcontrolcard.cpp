@@ -51,18 +51,18 @@ void XtControlCard::dispose()
     qCInfo(motionCate(), FUNC);
 
 //    killProcess(QCoreApplication::applicationPid());
-    abort();
+//    abort();
 
-//    XtVcm::releaseAllVcm();
+    XtVcm::releaseAllVcm();
 
-//    if (isInit)
-//    {
-//        //  关不掉
-//        XT_Controler_Extend::Profile_DeInit_Controller();
-//        //                XT_Controler::CloseMotionControlerServer();
-//        //                XT_Controler::ReleaseDevice();
-//        isInit = false;
-//    }
+    if (isInit)
+    {
+        //  关不掉
+        XT_Controler_Extend::Profile_DeInit_Controller();
+        XT_Controler::CloseMotionControlerServer();
+        XT_Controler::ReleaseDevice();
+        isInit = false;
+    }
 }
 
 void XtControlCard::postInitImpl()

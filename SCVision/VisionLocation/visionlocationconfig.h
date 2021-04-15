@@ -71,6 +71,8 @@ public:
         return m_waitImageDelay;
     }
 
+    virtual void resetPrResultImage() {}
+
     void setPrResultImage(QString prResultImage)
     {
         m_prResultImage = prResultImage;
