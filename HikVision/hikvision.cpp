@@ -415,8 +415,7 @@ int HikVision::callBackModuResFunc(IN IMVS_PF_OUTPUT_PLATFORM_INFO *const pstInp
             hikResult->radius = circleInfo->fRadius;
 
             hikResult->resultImageInfo->m_text
-                = "Center Point:(" + QString::number(hikResult->x, '.', 3) + "Radius:" + QString::number(hikResult->radius, '.', 3);
-
+                = QString("Center Point:(%1, %2) Radius: %3").arg(hikResult->x).arg(hikResult->y).arg(hikResult->radius);
             hikResult->waiter.wakeAll();
             return IMVS_EC_OK;
         }
