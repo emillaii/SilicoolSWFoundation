@@ -554,6 +554,7 @@ void SCAxis::scaleMaxVel(double ratio)
     qCDebug(motionCate(), N_FUNC_ARG(ratio));
     scaleMaxVelImpl(ratio);
     currentVelRatio = ratio;
+    nextMoveVelRatio = ratio;
 }
 
 void SCAxis::scaleMaxAcc(double ratio)
@@ -574,6 +575,7 @@ void SCAxis::scaleMaxAcc(double ratio)
     qCDebug(motionCate(), N_FUNC_ARG(ratio));
     scaleMaxAccImpl(ratio);
     currentAccRatio = ratio;
+    nextMoveAccRatio = ratio;
 }
 
 void SCAxis::resetMaxAcc()
