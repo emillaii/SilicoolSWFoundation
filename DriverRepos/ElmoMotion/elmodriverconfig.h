@@ -18,6 +18,7 @@ class ElmoDriverConfig : public AxisConfig
     Q_PROPERTY(double homeVel2 READ homeVel2 WRITE setHomeVel2 NOTIFY homeVel2Changed)
     Q_PROPERTY(double homeMaxCurRatio READ homeMaxCurRatio WRITE setHomeMaxCurRatio NOTIFY homeMaxCurRatioChanged)
     Q_PROPERTY(double softlandingAcc READ softlandingAcc WRITE setSoftlandingAcc NOTIFY softlandingAccChanged)
+    Q_PROPERTY(double maxCurrent READ maxCurrent WRITE setMaxCurrent NOTIFY maxCurrentChanged)
 
 public:
     Q_INVOKABLE ElmoDriverConfig(QObject *parent = nullptr) : AxisConfig(parent)
@@ -71,6 +72,11 @@ public:
     double softlandingAcc() const
     {
         return m_softlandingAcc;
+    }
+
+    double maxCurrent() const
+    {
+        return m_maxCurrent;
     }
 
 public slots:
@@ -156,6 +162,15 @@ public slots:
         emit softlandingAccChanged(m_softlandingAcc);
     }
 
+    void setMaxCurrent(double maxCurrent)
+    {
+        if (qFuzzyCompare(m_maxCurrent, maxCurrent))
+            return;
+
+        m_maxCurrent = maxCurrent;
+        emit maxCurrentChanged(m_maxCurrent);
+    }
+
 signals:
     void posSensorSocketNumChanged(int posSensorSocketNum);
 
@@ -175,6 +190,8 @@ signals:
 
     void softlandingAccChanged(double softlandingAcc);
 
+    void maxCurrentChanged(double maxCurrent);
+
 private:
     int m_posSensorSocketNum = 1;
     QString m_targetIp = "192.168.1.";
@@ -185,6 +202,7 @@ private:
     double m_homeVel2 = -1;
     double m_homeMaxCurRatio = 0.5;
     double m_softlandingAcc = 50;
+    double m_maxCurrent = 1;
 };
 
 #endif    // ELMODRIVERCONFIG_H

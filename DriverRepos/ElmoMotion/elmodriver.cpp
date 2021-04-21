@@ -13,6 +13,7 @@ ElmoDriver::~ElmoDriver()
 
 void ElmoDriver::setCurrent(double current)
 {
+    current = getCurrentInLimitRange(current);
     ErrorHandler::tryToHandleError([this, current] {
         sendCommand(QString("TC=%1").arg(current));
         while (true)
@@ -238,6 +239,7 @@ void ElmoDriver::softLandDownImpl(double vel, double targetPos, double force, do
 {
     Q_UNUSED(targetPos)
     Q_UNUSED(margin)
+    force = getCurrentInLimitRange(force);
     posBeforeSoftlanding = getFeedbackPosImpl();
     sendCommand(
         QString("XQ##softlanding(%1,%2,%3)").arg(vel * elmoConfig->scale()).arg(elmoConfig->softlandingAcc() * elmoConfig->scale()).arg(force));
@@ -303,4 +305,19 @@ int ElmoDriver::getMotionStatus()
         }
     }
     return msCache;
+}
+
+double ElmoDriver::getCurrentInLimitRange(double current)
+{
+    if (current > elmoConfig->maxCurrent())
+    {
+        qCritical(motionCate()) << tr("电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
+        return elmoConfig->maxCurrent();
+    }
+    if (current < elmoConfig->maxCurrent() * -1)
+    {
+        qCritical(motionCate()) << tr("电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
+        return elmoConfig->maxCurrent() * -1;
+    }
+    return current;
 }

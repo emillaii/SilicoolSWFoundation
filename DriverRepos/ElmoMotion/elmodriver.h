@@ -56,6 +56,7 @@ private:
     void sendCommand(QString cmd);
     bool getResponse(QString cmd, QString &response);
     int getMotionStatus();
+    double getCurrentInLimitRange(double current);
 
 private:
     ElmoDriverConfig *elmoConfig = nullptr;
