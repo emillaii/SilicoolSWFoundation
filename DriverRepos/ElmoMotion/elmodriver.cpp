@@ -86,8 +86,7 @@ bool ElmoDriver::isInPos() noexcept
 
 bool ElmoDriver::isRunning() noexcept
 {
-    int ms = getMotionStatus();
-    return ms < 0 || ms > 1;
+    return getMotionStatus() == 2;
 }
 
 double ElmoDriver::getCurrentVel() noexcept
