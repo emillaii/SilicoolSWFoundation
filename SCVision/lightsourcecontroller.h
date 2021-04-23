@@ -15,4 +15,32 @@ public:
     virtual void close(int channel) = 0;
 };
 
+class SCVISIONSHARED_EXPORT DummyLSC : public LightSourceController
+{
+public:
+    void init() override
+    {
+        qInfo("Init dummy light source controller...");
+    }
+    void setBrightness(int channel, int brightness) override
+    {
+        Q_UNUSED(channel)
+        Q_UNUSED(brightness)
+    }
+    bool getBrightness(int channel, int &brightness) override
+    {
+        Q_UNUSED(channel)
+        Q_UNUSED(brightness)
+        return true;
+    }
+    void open(int channel) override
+    {
+        Q_UNUSED(channel)
+    }
+    void close(int channel) override
+    {
+        Q_UNUSED(channel)
+    }
+};
+
 #endif    // LIGHTSOURCECONTROLLER_H

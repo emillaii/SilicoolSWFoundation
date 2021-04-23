@@ -11,9 +11,11 @@ class WordopLSCConfig : public SerialPortConfig
 {
     Q_OBJECT
 
-public:
     Q_PROPERTY(QString lscName READ lscName WRITE setLscName NOTIFY lscNameChanged)
+    Q_PROPERTY(bool closeLightBeforeCloseSW READ closeLightBeforeCloseSW WRITE setCloseLightBeforeCloseSW NOTIFY closeLightBeforeCloseSWChanged)
+    Q_PROPERTY(bool isDummyLSC READ isDummyLSC WRITE setIsDummyLSC NOTIFY isDummyLSCChanged)
 
+public:
     Q_INVOKABLE WordopLSCConfig(QObject *parent = nullptr) : SerialPortConfig(parent)
     {
         setReadOnlyProperty("lscName");
@@ -23,6 +25,16 @@ public:
     QString lscName() const
     {
         return m_lscName;
+    }
+
+    bool closeLightBeforeCloseSW() const
+    {
+        return m_closeLightBeforeCloseSW;
+    }
+
+    bool isDummyLSC() const
+    {
+        return m_isDummyLSC;
     }
 
 public slots:
@@ -35,11 +47,35 @@ public slots:
         emit lscNameChanged(m_lscName);
     }
 
+    void setCloseLightBeforeCloseSW(bool closeLightBeforeCloseSW)
+    {
+        if (m_closeLightBeforeCloseSW == closeLightBeforeCloseSW)
+            return;
+
+        m_closeLightBeforeCloseSW = closeLightBeforeCloseSW;
+        emit closeLightBeforeCloseSWChanged(m_closeLightBeforeCloseSW);
+    }
+
+    void setIsDummyLSC(bool isDummyLSC)
+    {
+        if (m_isDummyLSC == isDummyLSC)
+            return;
+
+        m_isDummyLSC = isDummyLSC;
+        emit isDummyLSCChanged(m_isDummyLSC);
+    }
+
 signals:
     void lscNameChanged(QString lscName);
 
+    void closeLightBeforeCloseSWChanged(bool closeLightBeforeCloseSW);
+
+    void isDummyLSCChanged(bool isDummyLSC);
+
 private:
     QString m_lscName;
+    bool m_closeLightBeforeCloseSW = true;
+    bool m_isDummyLSC = false;
 };
 
 class WordopLightSourceController : public QObject, public LightSourceController
@@ -92,6 +128,7 @@ private:
     const static uint8_t SetOnOffCmd = 0x2a;
     const static uint8_t DevCode = 0x01;
 
+    WordopLSCConfig *m_config;
     SCSerialPort *serialPort;
 
     int devId = 0x00;

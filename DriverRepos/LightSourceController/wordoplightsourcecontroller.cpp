@@ -2,6 +2,8 @@
 
 WordopLightSourceController::WordopLightSourceController(SerialPortConfig *config, QObject *parent) : QObject(parent)
 {
+    m_config = qobject_cast<WordopLSCConfig *>(config);
+
     serialPort = new SCSerialPort("WordopLSC");
     serialPort->setConfig(config);
     serialPort->moveToThread(&SingletonThd::serialPortThd());
@@ -82,9 +84,12 @@ void WordopLightSourceController::dispose()
 {
     if (serialPort->isInit())
     {
-        for (int i = 0; i < 4; i++)
+        if (m_config != nullptr && m_config->closeLightBeforeCloseSW())
         {
-            setBrightness(i, 0);
+            for (int i = 0; i < 4; i++)
+            {
+                setBrightness(i, 0);
+            }
         }
     }
     serialPort->dispose();
