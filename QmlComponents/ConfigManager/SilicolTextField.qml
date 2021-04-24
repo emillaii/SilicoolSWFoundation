@@ -38,17 +38,26 @@ RowLayout{
         txt.implicitHeight = 40
         var propertyType = dataModel.getConfigType(identity)
         if(propertyType === ConfigElementType.Int) {
-            txt.validator = intValidator
+            txt.validator = Qt.createQmlObject("import QtQuick 2.0; IntValidator{}", txt)
             txt.implicitWidth = txtWidth > 0 ? txtWidth : 80
         }else if(propertyType === ConfigElementType.Double){
-            txt.validator = doubleValidator
+            txt.validator = Qt.createQmlObject("import QtQuick 2.0; DoubleValidator{ notation: DoubleValidator.StandardNotation }", txt)
             txt.implicitWidth = txtWidth > 0 ? txtWidth : 120
+            Qt.createQmlObject('import QtQuick.Controls 2.5; ToolTip{
+                                text: self.fullDoubleString
+                                visible: txt.hovered && self.fullDoubleString != self.shortDoubleString
+                                    }', txt)
             self.isDouble = true
         }else if(propertyType === ConfigElementType.Other){
             if(self.selectFileOrFolder){
                 txt.implicitWidth = txtWidth > 0 ? txtWidth : 300
                 createDialog()
                 createButton()
+                Qt.createQmlObject('import QtQuick.Controls 2.5; ToolTip{
+                                    text: txt.text
+                                    visible: txt.hovered
+                                }', txt)
+
             }else{
                 txt.implicitWidth = txtWidth > 0 ? txtWidth : 200
             }
@@ -112,18 +121,6 @@ RowLayout{
             if(!dataModel.setConfig(identity, text)){
                 updateSelf()
             }
-        }
-
-        IntValidator{
-            id: intValidator
-        }
-        DoubleValidator{
-            id: doubleValidator
-            notation: DoubleValidator.StandardNotation
-        }
-        ToolTip{
-            text: self.selectFileOrFolder ? parent.text : self.fullDoubleString
-            visible: parent.hovered && (self.selectFileOrFolder || (self.isDouble && self.fullDoubleString != self.shortDoubleString))
         }
 
         selectByMouse: true

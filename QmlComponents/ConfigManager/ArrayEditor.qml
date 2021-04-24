@@ -272,7 +272,7 @@ BasicConfigEditor{
         delegate: Rectangle{
             id: rect
             color: configNodes.currentIndex == rowIndex ? "darkgray" : "transparent"
-
+            clip: true
             Loader{
                 source: {
                     if(self.isObjectArray)
