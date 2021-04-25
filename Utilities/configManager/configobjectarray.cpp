@@ -116,7 +116,8 @@ bool ConfigObjectArray::add(int index)
         qCritical() << QString("Index %1 out of range [0, %2]").arg(index).arg(this->count());
         return false;
     }
-    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index));
+    return executeAddConfigObject(index);
+    //    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index));
 }
 
 bool ConfigObjectArray::remove(int index)
@@ -126,8 +127,9 @@ bool ConfigObjectArray::remove(int index)
         qCritical() << QString("Index %1 out of range [0, %2)").arg(index).arg(this->count());
         return false;
     }
-    ConfigObject *oldConfigObj = configObjects[index];
-    return ConfigManager::getIns()->executeCommand(new RemoveConfigObjectCommand(this, index, oldConfigObj));
+    return executeRemoveConfigObject(index);
+    //    ConfigObject *oldConfigObj = configObjects[index];
+    //    return ConfigManager::getIns()->executeCommand(new RemoveConfigObjectCommand(this, index, oldConfigObj));
 }
 
 void ConfigObjectArray::handleEvent(int index, QString event)
@@ -317,6 +319,8 @@ bool ConfigObjectArray::executeRemoveConfigObject(int index)
     {
         configObj->uniquelyConnectConfigChangedSignalToSlot(configChangedSignalReceivers[i], configChangedReceiverSlotIndexs[i], false);
     }
+    configObj->setParent(nullptr);
+    configObj->deleteLater();
     emit configRemoved(index);
     return true;
 }
