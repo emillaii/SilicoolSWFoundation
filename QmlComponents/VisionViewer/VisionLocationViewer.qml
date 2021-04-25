@@ -117,10 +117,8 @@ GroupBox {
             RoundButton{
                 icon.source: "qrc:/commonicons/start.png"
                 icon.color: "limeGreen"
-                ToolTip{
-                    text: qsTr("StartContinuallyPerformPr")
-                    visible: parent.hovered
-                }
+                ToolTip.text: qsTr("StartContinuallyPerformPr")
+                ToolTip.visible: hovered
                 onClicked: {
                     tem.runSingleCmd(visionManager, "startContinuallyPerformPr", [visionLocationName])
                 }
@@ -128,10 +126,8 @@ GroupBox {
             RoundButton{
                 icon.source: "qrc:/commonicons/stop.png"
                 icon.color: "red"
-                ToolTip{
-                    text: qsTr("StopContinuallyCalculation")
-                    visible: parent.hovered
-                }
+                ToolTip.text: qsTr("StopContinuallyCalculation")
+                ToolTip.visible: hovered
                 onClicked: {
                     visionManager.stopContinuallyCalculation(visionLocationName)
                 }

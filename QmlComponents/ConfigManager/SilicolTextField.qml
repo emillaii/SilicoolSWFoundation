@@ -43,20 +43,12 @@ RowLayout{
         }else if(propertyType === ConfigElementType.Double){
             txt.validator = Qt.createQmlObject("import QtQuick 2.0; DoubleValidator{ notation: DoubleValidator.StandardNotation }", txt)
             txt.implicitWidth = txtWidth > 0 ? txtWidth : 120
-            Qt.createQmlObject('import QtQuick.Controls 2.5; ToolTip{
-                                text: self.fullDoubleString
-                                visible: txt.hovered && self.fullDoubleString != self.shortDoubleString
-                                    }', txt)
             self.isDouble = true
         }else if(propertyType === ConfigElementType.Other){
             if(self.selectFileOrFolder){
                 txt.implicitWidth = txtWidth > 0 ? txtWidth : 300
                 createDialog()
                 createButton()
-                Qt.createQmlObject('import QtQuick.Controls 2.5; ToolTip{
-                                    text: txt.text
-                                    visible: txt.hovered
-                                }', txt)
 
             }else{
                 txt.implicitWidth = txtWidth > 0 ? txtWidth : 200
@@ -122,6 +114,9 @@ RowLayout{
                 updateSelf()
             }
         }
+
+        ToolTip.text: self.selectFileOrFolder ? text : self.fullDoubleString
+        ToolTip.visible: hovered && (self.selectFileOrFolder || (self.isDouble && self.fullDoubleString != self.shortDoubleString))
 
         selectByMouse: true
         horizontalAlignment: TextInput.AlignHCenter

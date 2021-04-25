@@ -60,10 +60,8 @@ Flickable {
         onClicked: {
             reqShowRelatedDebugger(cameraName, mapToGlobal(x, y))
         }
-        ToolTip{
-            text: qsTr("OpenMotorViewer")
-            visible: parent.hovered
-        }
+        ToolTip.text: qsTr("OpenMotorViewer")
+        ToolTip.visible: hovered
         z: 10
     }
 
@@ -279,10 +277,8 @@ Flickable {
                 image.x = 0
                 image.y = 0
             }
-            ToolTip{
-                text: qsTr("Reset image anchor and scale")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("Reset image anchor and scale")
+            ToolTip.visible: hovered
         }
         ToolButton {
             id: cameraOnOff
@@ -298,10 +294,8 @@ Flickable {
                     tem.runSingleCmd(camera, "open")
                 }
             }
-            ToolTip{
-                text: qsTr("Open/Close")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("Open/Close")
+            ToolTip.visible: hovered
         }
         ToolButton {
             id: cameraStartStop
@@ -317,10 +311,8 @@ Flickable {
                     camera.startShowRealtimeImage()
                 }
             }
-            ToolTip{
-                text: qsTr("LiveView")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("LiveView")
+            ToolTip.visible: hovered
         }
         ToolButton {
             implicitWidth: parent.btnSize
@@ -331,10 +323,8 @@ Flickable {
             onClicked: {
                 camera.setCalcObjectSharpness(!camera.calcObjectSharpness)
             }
-            ToolTip{
-                text: qsTr("计算清晰度")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("计算清晰度")
+            ToolTip.visible: hovered
         }
         ToolButton {
             implicitWidth: parent.btnSize
@@ -345,10 +335,8 @@ Flickable {
             onClicked: {
                 visionManager.handleSingleCameraLiveView(cameraName)
             }
-            ToolTip{
-                text: qsTr("SingleCameraLiveView")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("SingleCameraLiveView")
+            ToolTip.visible: hovered
         }
         ToolButton {
             implicitWidth: parent.btnSize
@@ -357,12 +345,10 @@ Flickable {
             icon.color: "lightGreen"
             icon.source: "qrc:/commonicons/save.png"
             onClicked: {
-                camera.saveImage()
+                tem.runSingleCmd(camera, "saveImage")
             }
-            ToolTip{
-                text: qsTr("SaveImage")
-                visible: parent.hovered
-            }
+            ToolTip.text: qsTr("SaveImage")
+            ToolTip.visible: hovered
         }
         ToolButton {
             implicitWidth: parent.btnSize
@@ -377,10 +363,8 @@ Flickable {
                     reqShowFullScreen()
                 }
             }
-            ToolTip{
-                text: isFullScreenView ? qsTr("CancelFullScreen") : qsTr("FullScreen")
-                visible: parent.hovered
-            }
+            ToolTip.text: isFullScreenView ? qsTr("CancelFullScreen") : qsTr("FullScreen")
+            ToolTip.visible: hovered
         }
     }
 }

@@ -36,10 +36,6 @@ ColumnLayout{
                     width: implicitWidth
                     implicitHeight: 30
                     text: qsTranslate(trContext, String(pageTitle))
-                    ToolTip{
-                        text: tipText.length > 0 ? qsTranslate(trContext, String(tipText)): qsTranslate(trContext, String(pageTitle))
-                        visible: tipText.length > 0 ? parent.hovered : (parent.hovered && pageTitle.length > 4)
-                    }
                 }
             }
         }
@@ -64,12 +60,12 @@ ColumnLayout{
         }
     }
 
-    function addTab(title, component, tipText=""){
-        insertTab(pageModel.count, title, component, tipText)
+    function addTab(title, component){
+        insertTab(pageModel.count, title, component)
     }
 
-    function insertTab(index, title, component, tipText=""){
-        pageModel.insert(index, {"pageTitle": title, "pageComponent": component, "tipText": tipText})
+    function insertTab(index, title, component){
+        pageModel.insert(index, {"pageTitle": title, "pageComponent": component})
     }
 
     function removeTab(index){

@@ -169,20 +169,16 @@ Item{
                 RowLayout{
                     Button{
                         text: "Start"
-                        ToolTip{
-                            visible: parent.hovered
-                            text: "StartLoopTest"
-                        }
+                        ToolTip.text: qsTr("StartLoopTest")
+                        ToolTip.visible: hovered
                         onClicked: {
                             motionManager.executeInstruction(MotionElement.Cylinder, name, "startLoopTest", [])
                         }
                     }
                     Button{
                         text: "Stop"
-                        ToolTip{
-                            visible: parent.hovered
-                            text: "StopLoopTest"
-                        }
+                        ToolTip.text: qsTr("StopLoopTest")
+                        ToolTip.visible: hovered
                         onClicked: {
                             motionManager.executeInstruction(MotionElement.Cylinder, name, "stopLoopTest", [])
                         }

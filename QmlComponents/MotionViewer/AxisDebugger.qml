@@ -258,10 +258,8 @@ Item {
                                             MotionElement.Axis, name,
                                             "clearStatus", [])
                             }
-                            ToolTip {
-                                visible: parent.containsMouse
-                                text: qsTr("Click to clear alarm. Double click to clear status.")
-                            }
+                            ToolTip.text: qsTr("Click to clear alarm. Double click to clear status.")
+                            ToolTip.visible: containsMouse
                         }
                     }
                     Label {
@@ -318,31 +316,15 @@ Item {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("F Pos")
                     }
-
-                    //                    ComboBox{
-                    //                        id: cmbTargetPos
-                    //                        implicitWidth: 130
-                    //                        implicitHeight: 30
-                    //                        editable: true
-                    //                        model: [0.001, 0.01, 0.05, 0.1, 0.5, 1,  5, 10, 20]
-                    //                        ToolTip{
-                    //                            visible: parent.hovered
-                    //                            text: qsTr("Target pos")
-                    //                        }
-                    //                        validator: DoubleValidator{
-                    //                            notation: DoubleValidator.StandardNotation
-                    //                        }
-                    //                    }
                     TextField {
                         id: txtTargetPos
                         implicitWidth: 130
                         implicitHeight: 40
                         text: "1"
                         selectByMouse: true
-                        ToolTip {
-                            visible: parent.hovered
-                            text: qsTr("Target pos")
-                        }
+                        horizontalAlignment: Qt.AlignHCenter
+                        ToolTip.text: qsTr("Target pos")
+                        ToolTip.visible: hovered
                         validator: DoubleValidator {
                             notation: DoubleValidator.StandardNotation
                         }
@@ -352,10 +334,8 @@ Item {
                             implicitWidth: 40
                             implicitHeight: 30
                             text: "Go"
-                            ToolTip {
-                                visible: parent.hovered
-                                text: qsTr("AbsMove")
-                            }
+                            ToolTip.text: qsTr("AbsMove")
+                            ToolTip.visible: hovered
                             onClicked: {
                                 motionManager.executeInstruction(
                                             MotionElement.Axis, name,
@@ -367,10 +347,8 @@ Item {
                             implicitWidth: 40
                             implicitHeight: 30
                             text: "+"
-                            ToolTip {
-                                visible: parent.hovered
-                                text: qsTr("RelMove")
-                            }
+                            ToolTip.text: qsTr("RelMove")
+                            ToolTip.visible: hovered
                             onClicked: {
                                 var step = Number(txtTargetPos.text)
                                 if (step < 0) {
@@ -385,10 +363,8 @@ Item {
                             implicitWidth: 40
                             implicitHeight: 30
                             text: "-"
-                            ToolTip {
-                                visible: parent.hovered
-                                text: qsTr("RelMove")
-                            }
+                            ToolTip.text: qsTr("RelMove")
+                            ToolTip.visible: hovered
                             onClicked: {
                                 var step = Number(txtTargetPos.text)
                                 if (step > 0) {
@@ -409,10 +385,8 @@ Item {
                         icon.width: implicitWidth
                         icon.height: implicitHeight
                         enabled: jogMovable
-                        ToolTip {
-                            visible: parent.hovered
-                            text: qsTr("JogMoveToNegativeDirection")
-                        }
+                        ToolTip.text: qsTr("JogMoveToNegativeDirection")
+                        ToolTip.visible: hovered
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
@@ -432,10 +406,8 @@ Item {
                         icon.width: implicitWidth
                         icon.height: implicitHeight
                         enabled: jogMovable
-                        ToolTip {
-                            visible: parent.hovered
-                            text: qsTr("JogMoveToPositiveDirection")
-                        }
+                        ToolTip.text: qsTr("JogMoveToPositiveDirection")
+                        ToolTip.visible: hovered
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
@@ -455,10 +427,8 @@ Item {
                         icon.width: implicitWidth
                         icon.height: implicitHeight
                         enabled: jogMovable
-                        ToolTip {
-                            visible: parent.hovered
-                            text: qsTr("JogMoveToPositiveDirection")
-                        }
+                        ToolTip.text: qsTr("JogMoveToPositiveDirection")
+                        ToolTip.visible: hovered
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
@@ -478,10 +448,8 @@ Item {
                         icon.width: implicitWidth
                         icon.height: implicitHeight
                         enabled: jogMovable
-                        ToolTip {
-                            visible: parent.hovered
-                            text: qsTr("JogMoveToNegativeDirection")
-                        }
+                        ToolTip.text: qsTr("JogMoveToNegativeDirection")
+                        ToolTip.visible: hovered
                         onPressed: {
                             motionManager.executeInstruction(
                                         MotionElement.Axis, name,
@@ -497,10 +465,8 @@ Item {
                     RowLayout {
                         Slider {
                             id: velSlider
-                            ToolTip {
-                                visible: parent.hovered
-                                text: qsTr("VelocityRatio")
-                            }
+                            ToolTip.text: qsTr("VelocityRatio")
+                            ToolTip.visible: hovered
                             implicitWidth: 130
                             implicitHeight: 30
                             from: 1

@@ -99,10 +99,8 @@ ListView {
             z: 7
             anchors.fill: parent
             hoverEnabled: true
-            ToolTip {
-                text: status
-                visible: parent.containsMouse
-            }
+            ToolTip.text: status
+            ToolTip.visible: containsMouse
             acceptedButtons: {
                 Qt.LeftButton | Qt.RightButton
             }

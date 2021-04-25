@@ -192,10 +192,8 @@ BasicConfigEditor{
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideMiddle
                     }
-                    ToolTip{
-                        text: modelData
-                        visible: mouseArea.containsMouse
-                    }
+                    ToolTip.text: modelData
+                    ToolTip.visible: mouseArea.containsMouse
                     MouseArea{
                         id: mouseArea
                         hoverEnabled: true
