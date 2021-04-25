@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>languagePackage/commonQml_chinese.qm</file>
+        <file>languagePackage/commonQml_english.qm</file>
+        <file>languagePackage/SCMotion_chinese.qm</file>
+        <file>languagePackage/SCMotion_english.qm</file>
+        <file>languagePackage/SCVision_chinese.qm</file>
+        <file>languagePackage/SCVision_english.qm</file>
+        <file>languagePackage/utilities_chinese.qm</file>
+        <file>languagePackage/utilities_english.qm</file>
+    </qresource>
+</RCC>
