@@ -34,6 +34,7 @@ Rectangle {
         y: 2
         width: parent.width - 4
         height: parent.height - 4
+        deleteUnvisibleTab: false
     }
 
     Component{

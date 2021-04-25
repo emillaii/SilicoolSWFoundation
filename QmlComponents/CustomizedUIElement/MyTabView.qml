@@ -61,6 +61,7 @@ ColumnLayout{
                 id: pageView
                 property var title: pageTitle
                 sourceComponent: pageComponent
+                active: !deleteUnvisibleTab || tabBar.currentIndex === index
                 Connections{
                     enabled: deleteUnvisibleTab
                     target: tabBar
