@@ -31,7 +31,11 @@ void VisionManager::setContextProperty(QQmlApplicationEngine &engine)
     {
         qFatal("visionConfigManager was not set!");
     }
-    engine.rootContext()->setContextProperty("visionElementDefinition", visionConfigManager->visionElementDefinition());
+    auto visionDef = visionConfigManager->visionElementDefinition();
+    engine.rootContext()->setContextProperty("visionElementDefinition", visionDef);
+    engine.rootContext()->setContextProperty("$cameraDef", visionDef->cameraNames());
+    engine.rootContext()->setContextProperty("$lscDef", visionDef->lscNames());
+    engine.rootContext()->setContextProperty("$visionLocationDef", visionDef->visionLocationDefinitions());
     engine.rootContext()->setContextProperty("cameraConfigs", visionConfigManager->cameraConfigs());
     engine.rootContext()->setContextProperty("calibrationConfigs", visionConfigManager->calibrationConfigs());
     engine.rootContext()->setContextProperty("visionLocationConfigs", visionConfigManager->visionLocationConfigs());

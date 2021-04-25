@@ -6,6 +6,7 @@ import "../ConfigManager"
 
 Item {
     property var maxListHeight: 700
+    property alias lblTip: lblTip
 
     Component{
         id: cameraConfigger
@@ -43,10 +44,18 @@ Item {
         }
     }
 
-    MyTabView{
-        id: viewer
+    ColumnLayout{
         anchors.fill: parent
-        trContext: "VisionConfigger"
+        Label{
+            id: lblTip
+            visible: text != ""
+        }
+        MyTabView{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            id: viewer
+            trContext: "VisionConfigger"
+        }
     }
 
     Component.onCompleted: {
