@@ -3,8 +3,9 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../CustomizedUIElement"
 
-Item {
+MyTabView {
     id: motionDebugger
+    deleteUnvisibleTab: false
     property var pageInfos: []
     property var diDebuggers: []
     property var doDebuggers: []
@@ -19,16 +20,16 @@ Item {
             pageInfos[pageInfo["pageName"]] = pageInfo
             var elementType = pageInfo["elementType"]
             if(elementType === "DI" || elementType === "DO"){
-                tabview.addTab(pageInfo["pageName"], ioComponent)
+                motionDebugger.addTab(pageInfo["pageName"], ioComponent)
             }
             if(elementType === "Axis"){
-                tabview.addTab(pageInfo["pageName"], axisComponent)
+                motionDebugger.addTab(pageInfo["pageName"], axisComponent)
             }
             if(elementType === "Cylinder"){
-                tabview.addTab(pageInfo["pageName"], cylComponent)
+                motionDebugger.addTab(pageInfo["pageName"], cylComponent)
             }
             if(elementType === "Vacuum"){
-                tabview.addTab(pageInfo["pageName"], vacuumComponent)
+                motionDebugger.addTab(pageInfo["pageName"], vacuumComponent)
             }
         }
         masterMotionManager.subscribeMotionState(this, "updateMotionState")
@@ -125,12 +126,6 @@ Item {
                 vacuumDebuggers.push(this)
             }
         }
-    }
-
-    MyTabView{
-        id: tabview
-
-        anchors.fill: parent
     }
 
     Component.onCompleted: {
