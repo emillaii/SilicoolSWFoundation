@@ -7,6 +7,7 @@ import "../ConfigManager"
 GroupBox {
     property string calibrationName: ""
     property string visionLocationName: ""
+    property double resultImageSourceSizeRatio: 2
     property bool performPrResultVisible: true
     property bool calibrateBtnVisible: true
     property bool useCustomCalibrationFunc: false
@@ -38,6 +39,7 @@ GroupBox {
                     id: prResultImage
                     width: parent.width
                     height: parent.height
+                    sourceSize: Qt.size(width * resultImageSourceSizeRatio, height * resultImageSourceSizeRatio)
                     clip: true
                     cache: false
                     fillMode: Image.PreserveAspectFit
