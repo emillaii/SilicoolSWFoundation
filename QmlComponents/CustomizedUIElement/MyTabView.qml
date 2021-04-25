@@ -7,6 +7,7 @@ ColumnLayout{
     readonly property int count: pageModel.count
     property int indent: 0
     property string trContext: "MyTabView"
+    property bool deleteUnvisibleTab: true
 
     property int __circelRadius: 10
 
@@ -57,8 +58,16 @@ ColumnLayout{
         Repeater{
             model: pageModel
             delegate: Loader{
+                id: pageView
                 property var title: pageTitle
                 sourceComponent: pageComponent
+                Connections{
+                    enabled: deleteUnvisibleTab
+                    target: tabBar
+                    onCurrentIndexChanged: {
+                        pageView.active = (tabBar.currentIndex === index)
+                    }
+                }
             }
         }
     }

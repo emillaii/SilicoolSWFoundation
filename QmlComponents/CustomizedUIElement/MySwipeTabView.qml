@@ -59,6 +59,7 @@ ColumnLayout{
             delegate: Loader{
                 property var title: pageTitle
                 sourceComponent: pageComponent
+                visible: tabBar.currentIndex === index
             }
         }
     }
