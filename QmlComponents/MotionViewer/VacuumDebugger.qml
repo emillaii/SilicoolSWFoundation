@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.12
 import MotionElement 1.0
 
 Item{
+    property int borderMargin: 10
+
     function createItemFunction(name){
         return {"name": name, "feedbackInputState": false, "vacuumizeOutputState": false, "hasBlowOutput": false,
             "blowOutputState": false}
@@ -42,15 +44,8 @@ Item{
         delegate: Frame{
             id: frame
 
-            function setCellWidthHeight(){
-                var borderMargin = 5
-                if(frame.width + borderMargin > viewer.cellWidth){
-                    viewer.cellWidth = frame.width + borderMargin
-                }
-                if(frame.height + borderMargin > viewer.cellHeight){
-                    viewer.cellHeight = frame.height + borderMargin
-                }
-            }
+            verticalPadding: 5
+            horizontalPadding: 5
 
             ColumnLayout{
                 id: layout
@@ -119,7 +114,12 @@ Item{
             }
 
             Component.onCompleted: {
-                frame.setCellWidthHeight()
+                if(frame.width + borderMargin > viewer.cellWidth){
+                    viewer.cellWidth = frame.width + borderMargin
+                }
+                if(frame.height + borderMargin > viewer.cellHeight){
+                    viewer.cellHeight = frame.height + borderMargin
+                }
             }
         }
     }

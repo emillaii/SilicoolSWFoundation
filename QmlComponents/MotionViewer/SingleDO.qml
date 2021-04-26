@@ -10,6 +10,9 @@ Frame{
 
     property bool __ioState: false
 
+    verticalPadding: 5
+    horizontalPadding: 5
+
     RowLayout{
         Label{
             text: name

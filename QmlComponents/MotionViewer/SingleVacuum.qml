@@ -8,7 +8,8 @@ Frame{
 
     property int __vacuumState: 0
 
-    padding: 5
+    verticalPadding: 5
+    horizontalPadding: 5
 
     ColumnLayout{
         spacing: 3

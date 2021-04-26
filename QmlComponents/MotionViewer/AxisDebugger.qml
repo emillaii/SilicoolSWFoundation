@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.12
 import MotionElement 1.0
 
 Item {
+    property int borderMargin: 10
+
     function createItemFunction(name) {
         return {
             "name": name,
@@ -103,18 +105,13 @@ Item {
         cellHeight: 20
         clip: true
 
-        delegate: Rectangle {
-            id: rect
+        delegate: Frame {
+            id: frame
 
-            color: "transparent"
-            property int borderMargin: 10
-
-            border.width: 1
+            verticalPadding: 5
+            horizontalPadding: 5
 
             ColumnLayout {
-                id: layout
-
-                anchors.centerIn: parent
                 spacing: 3
 
                 Label {
@@ -287,30 +284,21 @@ Item {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("home")
                     }
-
-                    Rectangle {
-                        border.width: 1
-                        width: 70
+                    Label {
+                        width: 75
                         height: 30
-                        Text {
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            text: profilerPos.toFixed(5)
-                        }
+                        horizontalAlignment: Text.AlignHCenter
+                        text: profilerPos.toFixed(5)
                     }
                     Label {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("P Pos")
                     }
-                    Rectangle {
-                        border.width: 1
-                        width: 70
+                    Label{
+                        width: 75
                         height: 30
-                        Text {
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            text: feedbackPos.toFixed(5)
-                        }
+                        horizontalAlignment: Text.AlignHCenter
+                        text: feedbackPos.toFixed(5)
                     }
                     Label {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -480,14 +468,11 @@ Item {
                                 }
                             }
                         }
-                        Rectangle {
+                        Label {
                             width: 30
                             height: 30
-                            Text {
-                                anchors.centerIn: parent
-                                text: velSlider.value
-                                horizontalAlignment: Qt.AlignHCenter
-                            }
+                            text: velSlider.value
+                            horizontalAlignment: Qt.AlignHCenter
                         }
                     }
 
@@ -609,13 +594,11 @@ Item {
                 }
 
                 Component.onCompleted: {
-                    rect.width = layout.width + 10
-                    rect.height = layout.height + 10
-                    if (rect.width + rect.borderMargin > viewer.cellWidth) {
-                        viewer.cellWidth = rect.width + rect.borderMargin
+                    if (frame.width + borderMargin > viewer.cellWidth) {
+                        viewer.cellWidth = frame.width + borderMargin
                     }
-                    if (rect.height + rect.borderMargin > viewer.cellHeight) {
-                        viewer.cellHeight = rect.height + rect.borderMargin
+                    if (frame.height + borderMargin > viewer.cellHeight) {
+                        viewer.cellHeight = frame.height + borderMargin
                     }
                 }
             }

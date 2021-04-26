@@ -5,6 +5,7 @@ import MotionElement 1.0
 
 Item{
     property bool isDigitalOutput: false
+    property int borderMargin: 10
 
     function createItemFunction(name){
         return {"name": name, "ioState": false }
@@ -35,18 +36,13 @@ Item{
         cellHeight: 20
         clip: true
 
-        delegate: Rectangle{
-            id: rect
+        delegate: Frame{
+            id: frame
 
-            property int borderMargin: 10
-
-            border.width: 1
-            color: "transparent"
+            verticalPadding: 5
+            horizontalPadding: 5
 
             RowLayout{
-                id: layout
-
-                anchors.centerIn: parent
                 spacing: 10
 
                 Label{
@@ -71,13 +67,11 @@ Item{
                 }
 
                 Component.onCompleted: {
-                    rect.width = layout.width + 10
-                    rect.height = layout.height + 10
-                    if(rect.width + rect.borderMargin > viewer.cellWidth){
-                        viewer.cellWidth = rect.width + rect.borderMargin
+                    if(frame.implicitWidth + borderMargin > viewer.cellWidth){
+                        viewer.cellWidth = frame.implicitWidth + borderMargin
                     }
-                    if(rect.height + rect.borderMargin > viewer.cellHeight){
-                        viewer.cellHeight = rect.height + rect.borderMargin
+                    if(frame.implicitHeight + borderMargin > viewer.cellHeight){
+                        viewer.cellHeight = frame.implicitHeight + borderMargin
                     }
                 }
             }
