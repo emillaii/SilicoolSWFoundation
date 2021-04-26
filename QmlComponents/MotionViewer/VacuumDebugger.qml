@@ -47,6 +47,15 @@ Item{
             verticalPadding: 5
             horizontalPadding: 5
 
+            function setCellWidthHeight(){
+                if(frame.width + borderMargin > viewer.cellWidth){
+                    viewer.cellWidth = frame.width + borderMargin
+                }
+                if(frame.height + borderMargin > viewer.cellHeight){
+                    viewer.cellHeight = frame.height + borderMargin
+                }
+            }
+
             ColumnLayout{
                 id: layout
 
@@ -114,12 +123,7 @@ Item{
             }
 
             Component.onCompleted: {
-                if(frame.width + borderMargin > viewer.cellWidth){
-                    viewer.cellWidth = frame.width + borderMargin
-                }
-                if(frame.height + borderMargin > viewer.cellHeight){
-                    viewer.cellHeight = frame.height + borderMargin
-                }
+                frame.setCellWidthHeight()
             }
         }
     }
