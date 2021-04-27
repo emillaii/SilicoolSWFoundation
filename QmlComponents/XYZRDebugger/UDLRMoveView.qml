@@ -17,6 +17,27 @@ ColumnLayout {
     property bool horizontalVisible: true
     property bool verticalVisible: true
 
+    function onUpKeyPressed(){
+        if(verticalVisible){
+            stepMove(verticalAxisName, 1)
+        }
+    }
+    function onDownKeyPressed(){
+        if(verticalVisible){
+            stepMove(verticalAxisName, -1)
+        }
+    }
+    function onLeftKeyPressed(){
+        if(horizontalVisible){
+            stepMove(horizontalAxisName, -1)
+        }
+    }
+    function onRightKeyPressed(){
+        if(horizontalVisible){
+            stepMove(horizontalAxisName, 1)
+        }
+    }
+
     signal jogMove(string axisType, int dir);
     signal stopJogMove(string axisType)
     signal stepMove(string axisType, int dir)

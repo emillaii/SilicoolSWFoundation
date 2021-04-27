@@ -2,36 +2,94 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../CustomizedUIElement"
+import QtQuick.Window 2.12
 
 Item {
-    id: itemXYZR
-
     property var xyzrDebugger: null
     property var xyzrDebuggerConfig: null
 
     property var __needResize: false
+    property bool __needResetXy: false
 
-    implicitWidth: popupXYZR.implicitWidth
-    implicitHeight: popupXYZR.implicitHeight
+    implicitWidth: windowXYZR.width
+    implicitHeight: windowXYZR.height
+
+    onXChanged: {
+        __needResetXy = true
+    }
+    onYChanged: {
+        __needResetXy = true
+    }
 
     function open(){
-        popupXYZR.open()
+        if(__needResetXy){
+            windowXYZR.x = x
+            windowXYZR.y = y
+        }
+
+        windowXYZR.show()
         if(__needResize){
-            popupXYZR.resize()
+            windowXYZR.resize()
             __needResize = false
         }
     }
 
-    Popup{
-        id: popupXYZR
+    Window{
+        id: windowXYZR
+
+        flags: Qt.FramelessWindowHint
 
         function resize(){
-            implicitHeight = xyzrContent.implicitHeight + 15
-            implicitWidth = xyzrContent.implicitWidth + 15
+            width = xyzrContent.implicitWidth + 20
+            height = xyzrContent.implicitHeight + 20
         }
 
-        contentItem: ColumnLayout{
+        color: mainWindow.color
+
+        ColumnLayout{
             id: xyzrContent
+
+            x: 10
+            y: 10
+
+            focus: true
+
+            Keys.onEscapePressed: {
+                windowXYZR.close()
+            }
+
+            Keys.onPressed: {
+                if(!ckbUseKeyControl.checked){
+                    return
+                }
+                switch(event.key){
+                case 16777235:  //up
+                    udlr1.onUpKeyPressed()
+                    break;
+                case 16777237:  //down
+                    udlr1.onDownKeyPressed()
+                    break;
+                case 16777234:  //left
+                    udlr1.onLeftKeyPressed()
+                    break;
+                case 16777236:  //right
+                    udlr1.onRightKeyPressed()
+                    break;
+                case 87:    //w
+                    udlr2.onUpKeyPressed()
+                    break;
+                case 83:    //s
+                    udlr2.onDownKeyPressed()
+                    break;
+                case 65:    //a
+                    udlr2.onLeftKeyPressed()
+                    break;
+                case 68:    // f
+                    udlr2.onRightKeyPressed()
+                    break;
+                }
+            }
+
             RowLayout{
                 Layout.alignment: Qt.AlignHCenter
 
@@ -42,21 +100,14 @@ Item {
                     icon.source: "qrc:/commonicons/calculator.png"
                     onClicked: {
                         calculatorView.visible = !calculatorView.visible
-                        popupXYZR.resize()
+                        windowXYZR.resize()
                     }
                 }
                 Label{
                     text: xyzrDebuggerConfig.debuggerName
-                }
-                Rectangle{
-                    width: 30
-                    height: 30
-                    color: "transparent"
-                    Image {
-                        anchors.fill: parent
-                        fillMode: Image.PreserveAspectFit
-                        source: "qrc:/commonicons/move.png"
-                    }
+                    height: 150
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
                     MouseArea{
                         property var clickedPos: "0,0"
                         anchors.fill: parent
@@ -67,10 +118,30 @@ Item {
                         onPositionChanged: {
                             if(containsMouse){
                                 var delta = Qt.point(mouse.x - clickedPos.x, mouse.y - clickedPos.y)
-                                itemXYZR.x += delta.x
-                                itemXYZR.y += delta.y
+                                windowXYZR.x += delta.x
+                                windowXYZR.y += delta.y
                             }
                         }
+                    }
+                }
+                CheckBox{
+                    id: ckbUseKeyControl
+                    text: qsTr("使用键盘控制")
+                    checked: false
+                    ToolTip.text: qsTr("上下左右键控制XY，WSAD键控制ZR")
+                    ToolTip.visible: hovered
+                }
+
+                ToolButton{
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    display: AbstractButton.IconOnly
+                    icon.source: "qrc:/commonicons/close.png"
+                    icon.color: "transparent"
+                    icon.width: implicitWidth
+                    icon.height: implicitHeight
+                    onClicked: {
+                        windowXYZR.close()
                     }
                 }
             }
@@ -84,9 +155,6 @@ Item {
                     implicitWidth: 60
                     text: "1"
                 }
-//                Label{
-//                    text: "mm"
-//                }
                 RowLayout{
                     spacing: 0
                     Repeater{
@@ -116,9 +184,6 @@ Item {
                     implicitWidth: 60
                     text: "5"
                 }
-//                Label{
-//                    text: "mm/s"
-//                }
                 RowLayout{
                     spacing: 0
                     Repeater{
@@ -141,6 +206,7 @@ Item {
 
             RowLayout{
                 UDLRMoveView{
+                    id: udlr1
                     leftIcon: "qrc:/commonicons/small_left.png"
                     leftLeftIcon: "qrc:/commonicons/left.png"
                     upIcon: "qrc:/commonicons/small_up.png"
@@ -177,6 +243,7 @@ Item {
                     color: "transparent"
                 }
                 UDLRMoveView{
+                    id: udlr2
                     leftIcon: "qrc:/commonicons/small_ccw.png"
                     leftLeftIcon: "qrc:/commonicons/ccw.png"
                     upIcon: "qrc:/commonicons/small_up.png"
@@ -320,11 +387,12 @@ Item {
             }
         }
 
-        onOpened: {
-            xyzrDebugger.startUpdateAxesPos()
-        }
-        onClosed: {
-            xyzrDebugger.stopUpdateAxesPos()
+        onVisibleChanged: {
+            if(visible){
+                xyzrDebugger.startUpdateAxesPos()
+            }else{
+                xyzrDebugger.stopUpdateAxesPos()
+            }
         }
 
         Connections{
