@@ -284,21 +284,33 @@ Item {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("home")
                     }
-                    Label {
-                        width: 75
+                    Frame{
+                        width: 80
                         height: 30
-                        horizontalAlignment: Text.AlignHCenter
-                        text: profilerPos.toFixed(5)
+                        verticalPadding: 2
+                        horizontalPadding: 2
+                        Label{
+                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            text: profilerPos.toFixed(5)
+                        }
                     }
                     Label {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         text: qsTr("P Pos")
                     }
-                    Label{
-                        width: 75
+                    Frame{
+                        width: 80
                         height: 30
-                        horizontalAlignment: Text.AlignHCenter
-                        text: feedbackPos.toFixed(5)
+                        verticalPadding: 2
+                        horizontalPadding: 2
+                        Label{
+                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            text: feedbackPos.toFixed(5)
+                        }
                     }
                     Label {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
