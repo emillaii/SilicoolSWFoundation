@@ -285,14 +285,15 @@ Item {
                         text: qsTr("home")
                     }
                     Frame{
-                        width: 80
-                        height: 30
+                        implicitWidth: 75
+                        implicitHeight: 25
                         verticalPadding: 2
                         horizontalPadding: 2
                         Label{
                             anchors.fill: parent
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
                             text: profilerPos.toFixed(5)
                         }
                     }
@@ -301,14 +302,15 @@ Item {
                         text: qsTr("P Pos")
                     }
                     Frame{
-                        width: 80
-                        height: 30
+                        implicitWidth: 75
+                        implicitHeight: 25
                         verticalPadding: 2
                         horizontalPadding: 2
                         Label{
                             anchors.fill: parent
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
                             text: feedbackPos.toFixed(5)
                         }
                     }

@@ -62,6 +62,9 @@ Item {
                 if(!ckbUseKeyControl.checked){
                     return
                 }
+                if(event.isAutoRepeat){
+                    return
+                }
                 switch(event.key){
                 case 16777235:  //up
                     udlr1.onUpKeyPressed()
@@ -158,7 +161,7 @@ Item {
                 RowLayout{
                     spacing: 0
                     Repeater{
-                        model: ["5", "1", "0.1", "0.01", "0.001"]
+                        model: ["10", "1", "0.1", "0.01", "0.001"]
                         delegate: RadioButton{
                             text: modelData
                             onClicked: {
