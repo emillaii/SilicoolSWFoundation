@@ -42,11 +42,11 @@ pa=startPos
 bg
 return
 
-function Homing(int Homeac, int sp1, int sp2,  float maxCurRatio )
-global float Plbuf
+function homing(int Homeac, int sp1, int sp2,  float maxCurRatio )
+//global float Plbuf
 UI[1]=UI[1] & 0XFB
 rm=0
-PL[1]=Plbuf
+//PL[1]=Plbuf
 HM[2]=0
 HM[3]=3
 HM[4]=0
