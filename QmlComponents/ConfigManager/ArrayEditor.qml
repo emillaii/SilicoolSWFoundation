@@ -4,6 +4,9 @@ import QtQuick.Layouts 1.3
 import ConfigElementType 1.0
 
 BasicConfigEditor{
+    readonly property int currentSelectedIndex: configNodes.currentIndex
+    readonly property int count: configNodes.count
+
     QtObject{
         id: self
         property bool isObjectArray: false
