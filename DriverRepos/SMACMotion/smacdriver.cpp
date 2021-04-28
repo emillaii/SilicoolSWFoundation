@@ -18,7 +18,19 @@ void SMACDriver::sendComand(QString comd)
     serialPort->writeData(creatCommand(comd));
 }
 
+QString SMACDriver::readData()
+{
+    QString returnData = serialPort->readData("\r");
+    serialPort->clearReadBuffer();
+    return  returnData;
+}
+
+void SMACDriver::clearBuffer()
+{
+    serialPort->clearReadBuffer();
+}
+
 QByteArray SMACDriver::creatCommand(QString data)
 {
-    return (data + "\r\n").toLatin1();
+    return (data + "\r").toLatin1();
 }

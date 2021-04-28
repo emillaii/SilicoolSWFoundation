@@ -14,6 +14,8 @@ public:
     explicit SMACDriver(SerialPortConfig *serialPortConfig, QObject *parent = nullptr);
     void init();
     void sendComand(QString comd);
+    QString readData();
+    void clearBuffer();
 private:
     QByteArray creatCommand(QString data);
 private:
