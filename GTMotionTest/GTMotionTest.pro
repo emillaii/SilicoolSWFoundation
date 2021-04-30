@@ -21,10 +21,10 @@ DEFINES += WIN32_LEAN_AND_MEAN
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SWFoundationDir = ../
+SWFoundationDir = ../SilicoolSWFoundation_trunk/
 LibsDir = ../libs/
 
-RC_ICONS = M.ico
+RC_ICONS = motion.ico
 
 HEADERS += \
     $${SWFoundationDir}DriverRepos/GTMotion/gtaxis.h \
@@ -36,6 +36,7 @@ HEADERS += \
     $${SWFoundationDir}DriverRepos/GTMotion/gtdo.h \
     $${SWFoundationDir}DriverRepos/GTMotion/gtioconfig.h \
     $${SWFoundationDir}DriverRepos/GTMotion/gtresulthandler.h \
+    Workers/MotionCore/MotionCore.h \
     dummydispatcher.h \
     dummymotionelementfactory.h
 
@@ -45,6 +46,7 @@ SOURCES += \
         $${SWFoundationDir}DriverRepos/GTMotion/gtdi.cpp \
         $${SWFoundationDir}DriverRepos/GTMotion/gtdispenser.cpp \
         $${SWFoundationDir}DriverRepos/GTMotion/gtdo.cpp \
+        Workers/MotionCore/MotionCore.cpp \
         dummydispatcher.cpp \
         dummymotionelementfactory.cpp \
         main.cpp

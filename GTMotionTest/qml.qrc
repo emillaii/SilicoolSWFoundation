@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>LoadingAnimation.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>ModuleDebugger.qml</file>
+        <file>MotionProfiler.qml</file>
     </qresource>
 </RCC>

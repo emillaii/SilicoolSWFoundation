@@ -3,9 +3,15 @@
 DummyDispatcher::DummyDispatcher(MasterMotionManager *masterMotionManager, QObject *parent)
     : Dispatcher(parent), masterMotionManager(masterMotionManager)
 {
+    motionCore = new MotionCore();
+
+    registerWorker(motionCore);
 }
 
-void DummyDispatcher::setContextProperty(QQmlApplicationEngine &engine) {}
+void DummyDispatcher::setContextProperty(QQmlApplicationEngine &engine)
+{
+    engine.rootContext()->setContextProperty("motionCore", motionCore);
+}
 
 void DummyDispatcher::handleInit()
 {

@@ -3,6 +3,7 @@
 
 #include "mastermotionmanager.h"
 #include "systemCore/dispatcher.h"
+#include "Workers/MotionCore/MotionCore.h"
 #include "uphhelper.h"
 #include <QObject>
 
@@ -28,6 +29,8 @@ protected:
 
 private:
     MasterMotionManager *masterMotionManager;
+
+    MotionCore *motionCore;
 };
 
 #endif    // DUMMYDISPATCHER_H

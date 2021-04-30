@@ -612,6 +612,13 @@ ApplicationWindow {
         }
     }
 
+    ModuleDebugger{
+        x: 10
+        y: 0
+        width: parent.width - cameraViewers.width - 20
+        height: parent.height
+    }
+
     LogViewContainer {
         id: logViewer
         width: 800
