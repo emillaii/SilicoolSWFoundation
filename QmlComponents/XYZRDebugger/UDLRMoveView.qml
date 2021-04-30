@@ -70,6 +70,7 @@ ColumnLayout {
     }
 
     RowLayout{
+        Layout.alignment: Qt.AlignHCenter
         RowLayout{
             visible: horizontalVisible
             MyRoundBtn{
