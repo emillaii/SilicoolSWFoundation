@@ -1,12 +1,14 @@
 #include "worker.h"
 
 QString Worker::workerConfigDir = "";
+QMap<QString, Worker *> Worker::workers;
 
 Worker::Worker(QString workerName, QObject *parent)
     : QThread(parent), m_workerName(workerName), workerNameBytes(workerName.toUtf8()), m_logCate(workerNameBytes), m_currentOrLastEvent("Invalid")
 {
     Logger::getIns()->registerCategory(&m_logCate);
     m_currentState = SMD::Idle;
+    workers[workerName] = this;
 }
 
 void Worker::handleDebugEvent(QString eventName, QVariantList args)
@@ -126,6 +128,53 @@ void Worker::purgeEventHandled()
 {
     m_currentState = SMD::Ready;
     emit workerEventHandled(m_workerName, SMD::Purge, {});
+}
+
+Worker *Worker::getWorker(QString workerName) const
+{
+    if (workers.contains(workerName))
+    {
+        return workers[workerName];
+    }
+    else
+    {
+        qCWarning(logCate()) << "Undefined worker:" << workerName;
+        return nullptr;
+    }
+}
+
+void Worker::waitWorkerThreadStopped(QStringList workerNames)
+{
+    QList<Worker *> t_workers;
+    foreach (auto workerName, workerNames)
+    {
+        auto worker = getWorker(workerName);
+        if (worker != nullptr)
+        {
+            t_workers.append(worker);
+        }
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+    while (true)
+    {
+        if (timer.elapsed() > 5000)
+        {
+            qCWarning(logCate()) << "waitWorkerThreadStopped..." << workerNames;
+            timer.restart();
+        }
+        bool t_isRun = false;
+        foreach (auto worker, t_workers)
+        {
+            t_isRun |= worker->isRunning();
+        }
+        if (!t_isRun)
+        {
+            return;
+        }
+        QThread::msleep(10);
+    }
 }
 
 void Worker::abortEventHandled()

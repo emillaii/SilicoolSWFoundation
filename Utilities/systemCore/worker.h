@@ -79,6 +79,13 @@ public:
     void stopEventHandled();
     void purgeEventHandled();
 
+    Worker *getWorker(QString workerName) const;
+    ///
+    /// \brief waitWorkerThreadStopped
+    /// Caution dead lock! Do not call this method in method which run on event queue.
+    ///
+    void waitWorkerThreadStopped(QStringList workerNames);
+
     static QString getWorkerConfigDir();    // DUT Related
     static void setWorkerConfigDir(QString value);
     static QString constWorkerConfigDir();    // Non DUT related
@@ -115,6 +122,8 @@ private:
 
 private:
     static QString workerConfigDir;
+    static QMap<QString, Worker *> workers;
+
     SMD::State m_currentState;
     PriorityQueue<WorkerEvent> eventQueue;
     bool isRun = false;
