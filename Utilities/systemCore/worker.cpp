@@ -294,6 +294,10 @@ void Worker::run()
         {
             processEvent(event, true);
         }
+        catch (StoppedError &se)
+        {
+            se.what();
+        }
         catch (SilicoolException &se)
         {
             qCCritical(m_logCate) << se.what();

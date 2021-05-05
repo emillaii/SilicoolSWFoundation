@@ -4,6 +4,7 @@
 #include "TaskEngine/instruction.h"
 #include "errorHandling/errorreporter.h"
 #include "errorHandling/silicolerror.h"
+#include "errorHandling/stoppederror.h"
 #include "priorityqueue.h"
 #include "statemashinedefinition.h"
 #include "uiHelper/uioperation.h"

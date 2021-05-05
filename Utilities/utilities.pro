@@ -132,6 +132,7 @@ HEADERS += \
         errorHandling/scrunnable.h \
         errorHandling/silicolerror.h \
         errorHandling/silicolerrorhandler.h \
+        errorHandling/stoppederror.h \
         extendedqtimer.h \
         externexelaucher.h \
         fileContent/filecontent.h \
