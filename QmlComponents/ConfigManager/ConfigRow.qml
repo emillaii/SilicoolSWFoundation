@@ -11,6 +11,7 @@ RowLayout{
 
     property var childItem: null
     property alias lblName: lblName
+    property string __unit: ""
 
     Label{
         id: lblName
@@ -30,7 +31,6 @@ RowLayout{
     function init(elementType)
     {
         var component = null
-        var unit = ""
         var isTxt = false
         if(elementType === ConfigElementType.Bool){
             component = Qt.createComponent("SilicolCheckBox.qml")
@@ -43,7 +43,7 @@ RowLayout{
                 component = Qt.createComponent("SilicolTextField.qml")
                 isTxt = true
             }
-            unit = configModel.configUnit(configName)
+            __unit = configModel.configUnit(configName)
         }
         if(component !== null){
             var obj = component.createObject(configRow)
@@ -67,8 +67,8 @@ RowLayout{
             console.log("Unknown type: " + elementType)
             return
         }
-        if(unit !== ""){
-            Qt.createQmlObject("import QtQuick 2.0;Label{text: unit}", configRow)
+        if(__unit !== ""){
+            Qt.createQmlObject("import QtQuick.Controls 2.5;Label{text: __unit}", configRow)
         }
     }
 }

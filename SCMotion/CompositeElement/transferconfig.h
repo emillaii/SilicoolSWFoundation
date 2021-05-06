@@ -16,6 +16,8 @@ class SCMOTIONSHARED_EXPORT LoadConfig : public ConfigObject
 public:
     LoadConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
+        setUnit("loadTimeout", "ms");
+        setUnit("delayAfterSNRGotSignal", "ms");
         init();
     }
 
@@ -86,6 +88,8 @@ class SCMOTIONSHARED_EXPORT UnloadConfig : public ConfigObject
 public:
     UnloadConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
+        setUnit("unloadTimeout", "ms");
+        setUnit("delayAfterSNRLostSignal", "ms");
         init();
     }
 
