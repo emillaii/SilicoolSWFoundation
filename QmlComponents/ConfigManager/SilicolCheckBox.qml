@@ -8,6 +8,14 @@ CheckBox {
 
     implicitHeight: 40
 
+    Connections{
+        id: connAuthority
+        target: null
+        onCurrentAuthorityChanged: {
+            updateAuthority()
+        }
+    }
+
     function init(dataModelIsConfigObj=true)
     {
         if(dataModelIsConfigObj){
@@ -15,8 +23,18 @@ CheckBox {
         }
         if(dataModel.isReadOnly(identity)){
             enabled = false
+        }else{
+            if(dataModel.needEngineerAuthority(identity)){
+                updateAuthority()
+                connAuthority.target = userManagement
+            }
         }
+
         updateSelf()
+    }
+
+    function updateAuthority(){
+        enabled = (userManagement.currentAuthority >= 2)
     }
 
     function updateSelf()

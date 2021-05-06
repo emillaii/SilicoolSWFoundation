@@ -30,6 +30,7 @@ RowLayout{
     function init(elementType)
     {
         var component = null
+        var unit = ""
         var isTxt = false
         if(elementType === ConfigElementType.Bool){
             component = Qt.createComponent("SilicolCheckBox.qml")
@@ -42,6 +43,7 @@ RowLayout{
                 component = Qt.createComponent("SilicolTextField.qml")
                 isTxt = true
             }
+            unit = configModel.configUnit(configName)
         }
         if(component !== null){
             var obj = component.createObject(configRow)
@@ -58,12 +60,15 @@ RowLayout{
             obj.init()
             childItem = obj
             childItemInited()
-            if(languageConfig.language == 0){
+            if(languageConfig.language === 0){
                 lblName.text = configModel.translate(configName)
             }
         }else{
             console.log("Unknown type: " + elementType)
             return
         }
-    } 
+        if(unit !== ""){
+            Qt.createQmlObject("import QtQuick 2.0;Label{text: unit}", configRow)
+        }
+    }
 }

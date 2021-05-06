@@ -41,7 +41,17 @@ class UTILITIESSHARED_EXPORT ConfigObject : public ConfigBase
 public:
     ConfigObject(QObject *parent = nullptr);
 
-    void setIdentityProperty(QString identityProperty);
+    ///
+    /// \brief setIdentityProperty
+    /// For config change log
+    ///
+    void setIdentityProperty(const QString &identityProperty);
+
+    void setUnit(const QString &configName, const QString &unit);
+
+    void setEngineerAuthority(const QString &configName);
+
+    void setEngineerAuthorities(const QStringList &configNames);
 
     ///
     /// \brief setOptionalProperty This function should be called before calling
@@ -105,6 +115,10 @@ public:
 
     Q_INVOKABLE QStringList getConfigNamesToShow() const;
 
+    Q_INVOKABLE QString configUnit(QString configName) const;
+
+    Q_INVOKABLE bool needEngineerAuthority(QString configName) const;
+
     Q_INVOKABLE bool isReadOnly(QString configName) const;
 
     Q_INVOKABLE bool isOptional(QString configName) const;
@@ -151,6 +165,8 @@ private:
     QStringList m_readOnlyConfigNames;
     QStringList m_enumConfigNames;
     QStringList m_baseClassNames;
+    QStringList m_needEngineerAuthorityConfigs;
+    QMap<QString, QString> m_configUnits;
     QMap<QString, bool> m_selectFileConfigNames;
     QMap<QString, bool> m_selectFolderConfigNames;
     QMap<QString, ConfigElementInfo::Type> m_configTypes;

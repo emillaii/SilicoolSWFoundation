@@ -2,11 +2,13 @@
 
 SingleAxisPos::SingleAxisPos() : ModulePos()
 {
+    setEngineerAuthority("pos");
     init();
 }
 
 SingleAxisConfig::SingleAxisConfig(QObject *parent) : AxisModuleConfig(&SingleAxisPos::staticMetaObject, parent)
 {
+    setEngineerAuthority("axisName");
     init();
 }
 

@@ -24,6 +24,15 @@ public:
     {
         setReadOnlyProperty("name");
         setIdentityProperty("name");
+        QStringList args;
+        args << "falseInput"
+             << "trueInput"
+             << "falseOutput"
+             << "trueOutput";
+        setEngineerAuthorities(args);
+        setUnit("timeout", "ms");
+        setUnit("delayAfterMoveToFalse", "ms");
+        setUnit("delayAfterMoveoToTrue", "ms");
         init();
     }
 

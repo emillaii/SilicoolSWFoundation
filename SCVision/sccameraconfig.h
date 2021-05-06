@@ -57,6 +57,20 @@ public:
                    << "png"
                    << "bmp";
         setOptionalProperty("defaultImageFormatForSaving", imgFormats);
+        QStringList args;
+        args << "cameraVendor"
+             << "cameraType"
+             << "cameraAddress"
+             << "lscName"
+             << "lightSourceChannel"
+             << "secondLightSourceChannel"
+             << "imageWidth"
+             << "imageHeight"
+             << "horizontalMirror"
+             << "verticalMirror"
+             << "defaultImageFormatForSaving"
+             << "calibrationForMoveCamera";
+        setEngineerAuthorities(args);
         init();
     }
 

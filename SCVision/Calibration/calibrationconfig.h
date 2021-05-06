@@ -214,6 +214,11 @@ public:
         setReadOnlyProperty("calibrationName");
         setReadOnlyProperty("locationName");
         setIdentityProperty("calibrationName");
+        QStringList args;
+        args << "motorXName"
+             << "motorYName"
+             << "calibrationResult";
+        setEngineerAuthorities(args);
         init();
     }
 

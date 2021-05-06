@@ -375,6 +375,18 @@ public:
         setReadOnlyProperty("name");
         setIdentityProperty("name");
         hide("softLandingPoses");
+        QStringList args;
+        args << "advancedAxisConfig"
+             << "scale"
+             << "maxVel"
+             << "maxAcc"
+             << "negativeLimit"
+             << "positiveLimit";
+        setEngineerAuthorities(args);
+        setUnit("scale", "pulse/mm");
+        setUnit("homeTimeout", "ms");
+        setUnit("maxVel", "mm/s");
+        setUnit("maxAcc", "mm/s/s");
         init();
     }
 

@@ -73,7 +73,10 @@ class SCMOTIONSHARED_EXPORT CollisionConditionsConfig : public ConfigObjectArray
     Q_OBJECT
 
 public:
-    CollisionConditionsConfig() : ConfigObjectArray(&DummyCollisionCondition::staticMetaObject) {}
+    CollisionConditionsConfig() : ConfigObjectArray(&DummyCollisionCondition::staticMetaObject)
+    {
+        setEngineerAuthority();
+    }
 
     Q_INVOKABLE bool useTableToRepresent() const
     {
@@ -114,7 +117,10 @@ class SCMOTIONSHARED_EXPORT IgnoreCollisionConditionsConfig : public ConfigObjec
     Q_OBJECT
 
 public:
-    IgnoreCollisionConditionsConfig() : ConfigObjectArray(&DummyIgnoreCollisionCondition::staticMetaObject) {}
+    IgnoreCollisionConditionsConfig() : ConfigObjectArray(&DummyIgnoreCollisionCondition::staticMetaObject)
+    {
+        setEngineerAuthority();
+    }
 
     Q_INVOKABLE bool add(int index, QString ignoreCollisionConditionType);
 

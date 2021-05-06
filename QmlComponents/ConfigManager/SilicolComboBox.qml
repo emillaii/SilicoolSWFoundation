@@ -21,6 +21,14 @@ ComboBox {
         }
     }
 
+    Connections{
+        id: connAuthority
+        target: null
+        onCurrentAuthorityChanged: {
+            updateAuthority()
+        }
+    }
+
     function init(dataModelIsConfigObj=true)
     {
         self.options = dataModel.getOptions(identity)
@@ -28,6 +36,10 @@ ComboBox {
 
         if(dataModelIsConfigObj){
             dataModel.connectNotifySignal(identity, this, "updateSelf")
+        }
+        if(dataModel.needEngineerAuthority(identity)){
+            updateAuthority()
+            connAuthority.target = userManagement
         }
 
         var maxTxtWidth = 0
@@ -43,6 +55,10 @@ ComboBox {
 
         updateSelf()
         self.isInit = true
+    }
+
+    function updateAuthority(){
+        enabled = (userManagement.currentAuthority >= 2)
     }
 
     function updateSelf()

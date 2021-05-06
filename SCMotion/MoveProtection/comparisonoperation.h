@@ -75,6 +75,7 @@ class SCMOTIONSHARED_EXPORT LessThanPosCO : public ComparisonOperation
 public:
     Q_INVOKABLE LessThanPosCO(QObject *parent = nullptr) : ComparisonOperation(parent)
     {
+        setEngineerAuthority("limitPos");
         init();
     }
 
@@ -152,6 +153,8 @@ class SCMOTIONSHARED_EXPORT InPosRangeCO : public ComparisonOperation
 public:
     Q_INVOKABLE InPosRangeCO(QObject *parent = nullptr) : ComparisonOperation(parent)
     {
+        setEngineerAuthority("limitPos1");
+        setEngineerAuthority("limitPos2");
         init();
     }
 
@@ -276,6 +279,7 @@ public:
         qv.append(0);
         qv.append(1);
         setOptionalProperty("limitState", qv);
+        setEngineerAuthority("limitState");
         init();
     }
 

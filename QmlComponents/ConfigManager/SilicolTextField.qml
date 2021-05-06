@@ -22,6 +22,14 @@ RowLayout{
         property var dialog: null
     }
 
+    Connections{
+        id: connAuthority
+        target: null
+        onCurrentAuthorityChanged: {
+            updateAuthority()
+        }
+    }
+
     function init(dataModelIsConfigObj=true)
     {
         if(dataModelIsConfigObj){
@@ -29,7 +37,13 @@ RowLayout{
         }
         if(dataModel.isReadOnly(identity)){
             txt.readOnly = true
+        }else{
+            if(dataModel.needEngineerAuthority(identity)){
+                updateAuthority()
+                connAuthority.target = userManagement
+            }
         }
+
         var isSelectFile = dataModel.isSelectFile(identity)
         var isSelectFolder = dataModel.isSelectFolder(identity)
         self.selectFileOrFolder = isSelectFile || isSelectFolder
@@ -56,6 +70,10 @@ RowLayout{
         }
 
         updateSelf()
+    }
+
+    function updateAuthority(){
+        txt.readOnly = (userManagement.currentAuthority < 2)
     }
 
     function updateSelf()

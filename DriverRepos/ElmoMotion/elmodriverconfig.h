@@ -26,6 +26,17 @@ public:
         QVariantList qv;
         qv << 1 << 2 << 3 << 4;
         setOptionalProperty("posSensorSocketNum", qv);
+        QStringList args;
+        args << "posSensorSocketNum"
+             << "targetIp"
+             << "port"
+             << "homeAcc"
+             << "homeVel1"
+             << "homeVel2"
+             << "homeMaxCurRatio"
+             << "softlandingAcc"
+             << "maxCurrent";
+        setEngineerAuthorities(args);
         init();
     }
 

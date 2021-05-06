@@ -31,7 +31,7 @@ public:
         QVariantList baudrates;
         baudrates << 9600 << 19200 << 38400 << 115200 << 230400 << 460800 << 921600;
         setOptionalProperty("baudrate", baudrates);
-
+        setEngineerAuthority("writeDataMinInterval");
         init();
     }
 

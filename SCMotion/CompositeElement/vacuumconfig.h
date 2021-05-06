@@ -21,6 +21,15 @@ public:
     {
         setReadOnlyProperty("name");
         setIdentityProperty("name");
+        QStringList args;
+        args << "feedbackInputName"
+             << "vacuumizeOutputName"
+             << "blowOutputName";
+        setEngineerAuthorities(args);
+        setUnit("timeout", "ms");
+        setUnit("blowDelayAfterCloseVacuum", "ms");
+        setUnit("blowTime", "ms");
+        setUnit("blowTime2", "ms");
         init();
     }
 

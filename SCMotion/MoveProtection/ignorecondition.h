@@ -82,6 +82,8 @@ public:
     Q_INVOKABLE AxisIgnoreCollisionCondition(QObject *parent = nullptr) : IgnoreCollisionCondition(parent)
     {
         setOptionalProperty("axisName", GlobalMotionElements::getIns().axisNames());
+        setEngineerAuthority("axisName");
+        setEngineerAuthority("moveDirection");
         init();
     }
 
@@ -163,6 +165,8 @@ public:
         qv.append(1);
         setOptionalProperty("targetState", qv);
         setOptionalProperty("cylName", GlobalMotionElements::getIns().cylNames());
+        setEngineerAuthority("cylName");
+        setEngineerAuthority("targetState");
         init();
     }
 

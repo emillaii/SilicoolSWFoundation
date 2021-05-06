@@ -25,6 +25,7 @@ public:
         setReadOnlyProperty("posName");
         setIdentityProperty("posName");
         addEvent("MeasureHeight");
+        setEngineerAuthority("targetPos");
         init();
     }
 

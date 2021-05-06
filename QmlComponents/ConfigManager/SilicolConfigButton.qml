@@ -52,6 +52,14 @@ Button{
         }
     }
 
+    Connections{
+        id: connAuthority
+        target: null
+        onCurrentAuthorityChanged: {
+            updateAuthority()
+        }
+    }
+
     function init(){
         var elementType = dataModel.getConfigType(identity)
         if (elementType === ConfigElementType.ConfigObj){
@@ -63,6 +71,14 @@ Button{
         if(languageConfig.language == 0){
             text = dataModel.translate(identity)
         }
+        if(dataModel.needEngineerAuthority(identity)){
+            updateAuthority()
+            connAuthority.target = userManagement
+        }
+    }
+
+    function updateAuthority(){
+        enabled = (userManagement.currentAuthority >= 2)
     }
 
     function __initEditor(item){

@@ -16,6 +16,7 @@ public:
     {
         setReadOnlyProperty("name");
         setIdentityProperty("name");
+        setEngineerAuthority("reversal");
         init();
     }
 

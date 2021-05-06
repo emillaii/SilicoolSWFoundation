@@ -73,9 +73,19 @@ BasicConfigEditor{
             var configTitles = []
             configTitles.push("index")
             for(var i in self.configNames){
-                var cfgTitle = configModel.translate(self.configNames[i])
+                var cfgName = self.configNames[i]
+                var cfgTitle = cfgName
+                if(languageConfig.language === 0){
+                    cfgTitle = configModel.translate(cfgName)
+                }
+
+                var unit = configModel.configUnit(cfgName)
+                if(unit !== ""){
+                    cfgTitle += "(" + unit + ")"
+                }
+
                 configTitles.push(cfgTitle)
-                self.configTitleToConfigName[cfgTitle] = self.configNames[i]
+                self.configTitleToConfigName[cfgTitle] = cfgName
             }
             titleRepeter.model = configTitles
         }else{
@@ -92,6 +102,14 @@ BasicConfigEditor{
         if(!self.isObjectArray){
             connConfigChanged.target = configModel
         }
+        if(configModel.needEngineerAuthority(0)){
+            updateAuthority()
+            connAuthority.target = userManagement
+        }
+    }
+
+    function updateAuthority(){
+        rowAddRemove.enabled = (userManagement.currentAuthority >= 2)
     }
 
     ListModel{
@@ -124,6 +142,13 @@ BasicConfigEditor{
                 listModel.setProperty(i, "rowIndex", i)
             }
             configNodes.resize()
+        }
+    }
+    Connections{
+        id: connAuthority
+        target: null
+        onCurrentAuthorityChanged: {
+            updateAuthority()
         }
     }
 
@@ -201,9 +226,14 @@ BasicConfigEditor{
                         hoverEnabled: true
                         anchors.fill: parent
                         onDoubleClicked: {
-                            if(index == 0){
+                            var cfgName = self.configTitleToConfigName[modelData]
+                            if(index == 0 || configModel.isReadOnly(cfgName)){
                                 return
                             }
+                            if(configModel.configNeedEngineerAuthority(cfgName) && userManagement.currentAuthority < 2){
+                                return
+                            }
+
                             batchSetCfg.selectedConfig = modelData
                             batchSetCfg.open()
                         }

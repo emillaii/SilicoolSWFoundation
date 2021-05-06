@@ -34,6 +34,12 @@ public:
         setReadOnlyProperty("locationName");
         setReadOnlyProperty("calibrationName");
         setIdentityProperty("locationName");
+        QStringList args;
+        args << "cameraName"
+             << "checkXy"
+             << "reverseTheta"
+             << "maximunAngle";
+        setEngineerAuthorities(args);
         init();
     }
 

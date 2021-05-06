@@ -71,6 +71,7 @@ public:
                       QGenericArgument val4 = QGenericArgument(nullptr));
 
     void setUIAddRemovable(bool uiAddRemovable);
+    void setEngineerAuthority();
 
     ConfigObject *const &at(int index) const;
     ConfigObject *const &operator[](int index) const;
@@ -79,6 +80,12 @@ public:
     Q_INVOKABLE int count() const;
 
     Q_INVOKABLE bool uiAddRemovable() const;
+
+    Q_INVOKABLE bool needEngineerAuthority(QVariant qv) const;
+
+    Q_INVOKABLE bool configNeedEngineerAuthority(QString configName) const;
+
+    Q_INVOKABLE QString configUnit(QString configName) const;
 
     Q_INVOKABLE bool add(int index);
 
@@ -95,6 +102,8 @@ public:
     Q_INVOKABLE void batchSetConfig(QString configName, QVariant value);
 
     Q_INVOKABLE QString translate(QString configName) const;
+
+    Q_INVOKABLE bool isReadOnly(QString configName) const;
 
     template <typename T>
     T *getConfig(int index)
@@ -149,6 +158,7 @@ private:
     QGenericArgument val4;
 
     bool m_uiAddRemovable = true;
+    bool m_needEngineerAuthority = false;
 };
 
 #endif    // CONFIGOBJECTARRAY_H

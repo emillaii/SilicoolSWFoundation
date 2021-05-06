@@ -100,6 +100,7 @@ public:
     Q_INVOKABLE SingleAxisCollision(QObject *parent = nullptr) : CollisionCondition(parent)
     {
         setOptionalProperty("axisName", GlobalMotionElements::getIns().axisNames());
+        setEngineerAuthority("axisName");
     }
 
     QString axisName() const
@@ -238,6 +239,7 @@ public:
     Q_INVOKABLE CylinderCollision(QObject *parent = nullptr) : CollisionCondition(parent)
     {
         setOptionalProperty("cylName", GlobalMotionElements::getIns().cylNames());
+        setEngineerAuthority("cylName");
     }
 
     QString cylName() const
@@ -283,6 +285,7 @@ public:
     DICollision(QObject *parent = nullptr) : CollisionCondition(parent)
     {
         setOptionalProperty("diName", GlobalMotionElements::getIns().diNames());
+        setEngineerAuthority("diName");
     }
 
     QString diName() const

@@ -76,6 +76,11 @@ void ConfigObjectArray::setUIAddRemovable(bool addRemovable)
     m_uiAddRemovable = addRemovable;
 }
 
+void ConfigObjectArray::setEngineerAuthority()
+{
+    m_needEngineerAuthority = true;
+}
+
 ConfigObject *const &ConfigObjectArray::at(int index) const
 {
     if (index < 0 || index >= this->count())
@@ -107,6 +112,22 @@ int ConfigObjectArray::count() const
 bool ConfigObjectArray::uiAddRemovable() const
 {
     return m_uiAddRemovable;
+}
+
+bool ConfigObjectArray::needEngineerAuthority(QVariant qv) const
+{
+    Q_UNUSED(qv)
+    return m_needEngineerAuthority;
+}
+
+bool ConfigObjectArray::configNeedEngineerAuthority(QString configName) const
+{
+    return templateObject->needEngineerAuthority(configName);
+}
+
+QString ConfigObjectArray::configUnit(QString configName) const
+{
+    return templateObject->configUnit(configName);
 }
 
 bool ConfigObjectArray::add(int index)
@@ -174,6 +195,11 @@ void ConfigObjectArray::batchSetConfig(QString configName, QVariant value)
 QString ConfigObjectArray::translate(QString configName) const
 {
     return templateObject->translate(configName);
+}
+
+bool ConfigObjectArray::isReadOnly(QString configName) const
+{
+    return templateObject->isReadOnly(configName);
 }
 
 void ConfigObjectArray::scaleTo(int arrayLength)

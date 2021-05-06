@@ -8,6 +8,12 @@ XYZModulePos::XYZModulePos() : XYModulePos()
     int onTransitionPosPrecisionConfigChangedSlotIndex
         = getMethodIndex(&staticMetaObject, QMetaMethod::Slot, "onTransitionPosPrecisionConfigChanged");
     m_transitionPosPrecisions->uniquelyConnectConfigChangedSignalToSlot(this, onTransitionPosPrecisionConfigChangedSlotIndex, true);
+
+    QStringList args;
+    args << "zPos"
+         << "safetyMoveSequence"
+         << "transitionPosPrecisions";
+    setEngineerAuthorities(args);
     init();
 }
 
@@ -28,6 +34,17 @@ void XYZModulePos::onTimeout()
 
 XYZModuleConfig::XYZModuleConfig(QObject *parent) : AxisModuleConfig(&XYZModulePos::staticMetaObject, parent)
 {
+    QStringList args;
+    args << "xAxisName"
+         << "yAxisName"
+         << "zAxisName"
+         << "zSafetyPos"
+         << "xSafetyPos"
+         << "ySafetyPos"
+         << "useZSafetyPos"
+         << "useXSafetyPos"
+         << "useYSafetyPos";
+    setEngineerAuthorities(args);
     init();
 }
 

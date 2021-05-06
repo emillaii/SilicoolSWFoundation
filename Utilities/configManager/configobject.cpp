@@ -37,7 +37,22 @@ QString SetObjectItemCommand::getUnExecutionLog()
 
 ConfigObject::ConfigObject(QObject *parent) : ConfigBase(ConfigElementInfo::ConfigObj, parent) {}
 
-void ConfigObject::setIdentityProperty(QString identityProperty)
+void ConfigObject::setUnit(const QString &configName, const QString &unit)
+{
+    m_configUnits[configName] = unit;
+}
+
+void ConfigObject::setEngineerAuthority(const QString &configName)
+{
+    m_needEngineerAuthorityConfigs.append(configName);
+}
+
+void ConfigObject::setEngineerAuthorities(const QStringList &configNames)
+{
+    m_needEngineerAuthorityConfigs.append(configNames);
+}
+
+void ConfigObject::setIdentityProperty(const QString &identityProperty)
 {
     identityProp = identityProperty;
 }
@@ -206,6 +221,20 @@ void ConfigObject::connectNotifySignal(QString configName, QQuickItem *receiver,
 QStringList ConfigObject::getConfigNamesToShow() const
 {
     return m_configNamesToShow;
+}
+
+QString ConfigObject::configUnit(QString configName) const
+{
+    if (m_configUnits.contains(configName))
+    {
+        return m_configUnits[configName];
+    }
+    return "";
+}
+
+bool ConfigObject::needEngineerAuthority(QString configName) const
+{
+    return m_needEngineerAuthorityConfigs.contains(configName);
 }
 
 bool ConfigObject::isReadOnly(QString configName) const

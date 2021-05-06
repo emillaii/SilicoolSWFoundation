@@ -68,6 +68,11 @@ class UTILITIESSHARED_EXPORT ConfigArray : public ConfigBase
 public:
     ConfigArray(ConfigElementInfo::Type elementType, QObject *parent = nullptr);
 
+    void setEngineerAuthority()
+    {
+        m_needEngineerAuthority = true;
+    }
+
     void setOptionalProperty(QVariantList &options);
 
     void setReadOnlyProperty()
@@ -131,6 +136,12 @@ public:
         }
         QVariant oldValue = m_members[index];
         return ConfigManager::getIns()->executeCommand(new RemoveArrayItemCommand(this, index, oldValue));
+    }
+
+    Q_INVOKABLE bool needEngineerAuthority(QVariant qv) const
+    {
+        Q_UNUSED(qv)
+        return m_needEngineerAuthority;
     }
 
     Q_INVOKABLE bool isReadOnly() const
@@ -216,6 +227,7 @@ private:
     bool m_isSelectFile = false;
     bool m_isSelectFolder = false;
     bool m_isAbsolutePath = false;
+    bool m_needEngineerAuthority = false;
     QVariantList m_options;
     QVariantList m_members;
 };

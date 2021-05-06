@@ -76,6 +76,12 @@ public:
         setReadOnlyProperty("debuggerName");
         setReadOnlyProperty("shortcut");
         setIdentityProperty("debuggerName");
+        QStringList args;
+        args << "xAxisName"
+             << "yAxisName"
+             << "zAxisName"
+             << "rAxisName";
+        setEngineerAuthorities(args);
         init();
     }
 

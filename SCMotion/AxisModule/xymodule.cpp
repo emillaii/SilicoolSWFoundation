@@ -2,11 +2,19 @@
 
 XYModulePos::XYModulePos() : ModulePos()
 {
+    QStringList args;
+    args << "xPos"
+         << "yPos";
+    setEngineerAuthorities(args);
     init();
 }
 
 XYModuleConfig::XYModuleConfig(QObject *parent) : AxisModuleConfig(&XYModulePos::staticMetaObject, parent)
 {
+    QStringList args;
+    args << "xAxisName"
+         << "yAxisName";
+    setEngineerAuthorities(args);
     init();
 }
 

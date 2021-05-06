@@ -13,6 +13,10 @@ public:
 
     Q_INVOKABLE GTIOConfig(QObject *parent = nullptr) : IOConfig(parent)
     {
+        QStringList args;
+        args << "coreNo"
+             << "index";
+        setEngineerAuthorities(args);
         init();
     }
     int coreNo() const

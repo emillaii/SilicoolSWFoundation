@@ -18,6 +18,11 @@ public:
     Q_INVOKABLE GTCoreConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setSelectFileProperty("setupFileName", false);
+        QStringList args;
+        args << "axisCount"
+             << "diCount"
+             << "doCount";
+        setEngineerAuthorities(args);
         init();
     }
 
@@ -94,17 +99,19 @@ private:
     int m_doCount = 16;
 };
 
-class GTCardConfig: public ConfigObject
+class GTCardConfig : public ConfigObject
 {
     Q_OBJECT
 
     Q_PROPERTY(int cardOpenMode READ cardOpenMode WRITE setCardOpenMode NOTIFY cardOpenModeChanged)
-    Q_PROPERTY(ConfigObjectArray *gtCoreCfgs  READ  gtCoreCfgs)
+    Q_PROPERTY(ConfigObjectArray *gtCoreCfgs READ gtCoreCfgs)
 
 public:
-    GTCardConfig(QObject* parent=nullptr): ConfigObject (parent)
+    GTCardConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         m_gtCoreCfgs = new ConfigObjectArray(&GTCoreConfig::staticMetaObject, this);
+        setEngineerAuthority("cardOpenMode");
+        m_gtCoreCfgs->setEngineerAuthority();
         init();
     }
 
@@ -113,7 +120,7 @@ public:
         return m_cardOpenMode;
     }
 
-    ConfigObjectArray * gtCoreCfgs() const
+    ConfigObjectArray *gtCoreCfgs() const
     {
         return m_gtCoreCfgs;
     }
@@ -133,7 +140,7 @@ signals:
 
 private:
     int m_cardOpenMode = 1;
-    ConfigObjectArray * m_gtCoreCfgs;
+    ConfigObjectArray *m_gtCoreCfgs;
 };
 
 class GTCardCfgManager
@@ -160,10 +167,7 @@ public:
 
 private:
     ConfigFile *gtCardCfgsFile;
-    GTCardConfig* gtCardCfg;
+    GTCardConfig *gtCardCfg;
 };
 
-
 #endif    // GTCONTROLCARDCONFIG_H
-
-

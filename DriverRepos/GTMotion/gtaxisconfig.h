@@ -197,6 +197,18 @@ public:
     Q_INVOKABLE GTAxisConfig(QObject *parent = nullptr) : AxisConfig(parent)
     {
         m_gtHomeConfig = new GTHomeConfig(this);
+        QStringList args;
+        args << "coreNo"
+             << "index"
+             << "inPosBand"
+             << "inPosHoldTime"
+             << "stopAccRatio"
+             << "smoothTime"
+             << "smoothK"
+             << "gtHomeConfig";
+        setEngineerAuthorities(args);
+        setUnit("inPosBand", "pulse");
+        setUnit("inPosHoldTime", "cycle");
         init();
     }
 

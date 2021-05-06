@@ -36,11 +36,7 @@ QString SingleAxisCollision::getCollisionDescription()
     }
     else
     {
-        return QString("%1 from %2 to %3, %4")
-            .arg(axisName())
-            .arg(currentPos)
-            .arg(targetPos)
-            .arg(cmpOperation()->getCmpDescription());
+        return QString("%1 from %2 to %3, %4").arg(axisName()).arg(currentPos).arg(targetPos).arg(cmpOperation()->getCmpDescription());
     }
 }
 
@@ -60,6 +56,11 @@ TwoAxisCollision::TwoAxisCollision(QObject *parent) : CollisionCondition(parent)
 {
     setOptionalProperty("axis1Name", GlobalMotionElements::getIns().axisNames());
     setOptionalProperty("axis2Name", GlobalMotionElements::getIns().axisNames());
+    QStringList args;
+    args << "axis1Name"
+         << "posComposition"
+         << "axis2Name";
+    setEngineerAuthorities(args);
 }
 
 bool TwoAxisCollision::meetCondition(QString name, double targetState)
@@ -84,9 +85,9 @@ bool TwoAxisCollision::meetCondition(QString name, double targetState)
         case Minus:
         {
             return cmpOperation()->compare2(axis1CurrentPos - axis2CurrentPos, axis1CurrentPos - axis2TargetPos)
-                    || cmpOperation()->compare2(axis1TargetPos - axis2CurrentPos, axis1TargetPos - axis2TargetPos)
-                    || cmpOperation()->compare2(axis1CurrentPos - axis2CurrentPos, axis1TargetPos - axis2CurrentPos)
-                    || cmpOperation()->compare2(axis1CurrentPos - axis2TargetPos, axis1TargetPos - axis2TargetPos);
+                   || cmpOperation()->compare2(axis1TargetPos - axis2CurrentPos, axis1TargetPos - axis2TargetPos)
+                   || cmpOperation()->compare2(axis1CurrentPos - axis2CurrentPos, axis1TargetPos - axis2CurrentPos)
+                   || cmpOperation()->compare2(axis1CurrentPos - axis2TargetPos, axis1TargetPos - axis2TargetPos);
         }
     }
     qCritical() << "Unknown TwoAxisCollision::PosComposition:" << posComposition();
@@ -166,10 +167,7 @@ bool CylinderCollision::meetCondition(QString name, double targetState)
 
 QString CylinderCollision::getCollisionDescription()
 {
-    return QString("%1 was in state %2 or will shift to %2 state, %3")
-        .arg(cylName())
-        .arg(cylState)
-        .arg(cmpOperation()->getCmpDescription());
+    return QString("%1 was in state %2 or will shift to %2 state, %3").arg(cylName()).arg(cylState).arg(cmpOperation()->getCmpDescription());
 }
 
 QStringList CylinderCollision::getAffectedMotionElementNames()
