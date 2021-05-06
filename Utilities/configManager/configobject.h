@@ -41,6 +41,8 @@ class UTILITIESSHARED_EXPORT ConfigObject : public ConfigBase
 public:
     ConfigObject(QObject *parent = nullptr);
 
+    void setIdentityProperty(QString identityProperty);
+
     ///
     /// \brief setOptionalProperty This function should be called before calling
     /// init function
@@ -135,6 +137,7 @@ public:
 
 private:
     bool executeSetConfig(const QString &configName, const QVariant &value);
+    QString getIdentity();
 
 private:
     friend class ConfigFile;
@@ -142,6 +145,7 @@ private:
 
     bool isInit = false;
     bool m_isDisableTranslate = false;
+    QString identityProp;
     QStringList m_configNamesToShow;
     QStringList m_hiddenConfigNames;
     QStringList m_readOnlyConfigNames;

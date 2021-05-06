@@ -34,7 +34,7 @@ public:
         {
             colorEnabled.append(false);
         }
-
+        setIdentityProperty("state");
         init();
     }
 

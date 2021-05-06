@@ -23,6 +23,7 @@ public:
     {
         setReadOnlyProperty("axisName");
         setReadOnlyProperty("posName");
+        setIdentityProperty("posName");
         addEvent("MeasureHeight");
         init();
     }

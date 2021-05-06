@@ -3,6 +3,7 @@
 ModulePos::ModulePos()
 {
     setReadOnlyProperty("posName");
+    setIdentityProperty("posName");
     addEvent("MoveTo");
     addEvent("UpdatePos");
     init();
@@ -13,6 +14,7 @@ AxisModuleConfig::AxisModuleConfig(const QMetaObject *modulePosMetaObj, QObject 
     m_modulePositions = new ConfigObjectArray(modulePosMetaObj, this);
     m_modulePositions->setUIAddRemovable(false);
     setReadOnlyProperty("moduleName");
+    setIdentityProperty("moduleName");
     init();
 }
 

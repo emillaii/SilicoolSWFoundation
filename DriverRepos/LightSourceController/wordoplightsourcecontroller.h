@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE WordopLSCConfig(QObject *parent = nullptr) : SerialPortConfig(parent)
     {
         setReadOnlyProperty("lscName");
+        setIdentityProperty("lscName");
         init();
     }
 

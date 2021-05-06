@@ -75,6 +75,7 @@ public:
     {
         setReadOnlyProperty("debuggerName");
         setReadOnlyProperty("shortcut");
+        setIdentityProperty("debuggerName");
         init();
     }
 

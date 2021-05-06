@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE CameraConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setReadOnlyProperty("cameraName");
+        setIdentityProperty("cameraName");
         QVariantList imgFormats;
         imgFormats << "jpg"
                    << "png"

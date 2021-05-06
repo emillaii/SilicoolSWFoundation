@@ -15,16 +15,15 @@ public:
     Q_PROPERTY(QString falseOutput READ falseOutput WRITE setFalseOutput NOTIFY falseOutputChanged)
     Q_PROPERTY(QString trueOutput READ trueOutput WRITE setTrueOutput NOTIFY trueOutputChanged)
     Q_PROPERTY(int timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
-    Q_PROPERTY(int delayAfterMoveToFalse READ delayAfterMoveToFalse WRITE setDelayAfterMoveToFalse NOTIFY
-                   delayAfterMoveToFalseChanged)
-    Q_PROPERTY(int delayAfterMoveoToTrue READ delayAfterMoveoToTrue WRITE setDelayAfterMoveoToTrue NOTIFY
-                   delayAfterMoveoToTrueChanged)
+    Q_PROPERTY(int delayAfterMoveToFalse READ delayAfterMoveToFalse WRITE setDelayAfterMoveToFalse NOTIFY delayAfterMoveToFalseChanged)
+    Q_PROPERTY(int delayAfterMoveoToTrue READ delayAfterMoveoToTrue WRITE setDelayAfterMoveoToTrue NOTIFY delayAfterMoveoToTrueChanged)
     Q_PROPERTY(bool noFalseInputSNR READ noFalseInputSNR WRITE setNoFalseInputSNR NOTIFY noFalseInputSNRChanged)
     Q_PROPERTY(bool noTrueInputSNR READ noTrueInputSNR WRITE setNoTrueInputSNR NOTIFY noTrueInputSNRChanged)
 
     Q_INVOKABLE CylinderConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setReadOnlyProperty("name");
+        setIdentityProperty("name");
         init();
     }
 

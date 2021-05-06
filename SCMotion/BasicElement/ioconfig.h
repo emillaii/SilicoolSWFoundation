@@ -15,6 +15,7 @@ public:
     Q_INVOKABLE IOConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setReadOnlyProperty("name");
+        setIdentityProperty("name");
         init();
     }
 

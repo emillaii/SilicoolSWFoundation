@@ -44,7 +44,8 @@ bool CollisionConditionsConfig::add(int index, QString collisionConditionType, Q
     collisionCondition->setCmpOperation(cmpOperation);
     collisionCondition->init();
 
-    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index, collisionCondition));
+    return executeAddConfigObject(index, collisionCondition);
+    //    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index, collisionCondition));
 }
 
 QStringList CollisionConditionsConfig::getAffectedMotionElementNames()
@@ -126,7 +127,8 @@ bool IgnoreCollisionConditionsConfig::add(int index, QString ignoreCollisionCond
     auto ignoreCollisionCondition = IgnoreCollisionCondition::createInstance(ignoreCollisionConditionTypeEnum, this);
     ignoreCollisionCondition->setIgnoreCollisionConditionType(ignoreCollisionConditionType);
 
-    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index, ignoreCollisionCondition));
+    return executeAddConfigObject(index, ignoreCollisionCondition);
+    //    return ConfigManager::getIns()->executeCommand(new AddConfigObjectComand(this, index, ignoreCollisionCondition));
 }
 
 bool IgnoreCollisionConditionsConfig::read(const QJsonValue &jsonValue)

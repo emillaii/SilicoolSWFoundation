@@ -17,9 +17,9 @@ bool SetObjectItemCommand::unExecute()
 
 QString SetObjectItemCommand::getExecutionLog()
 {
-    return QString("%1,%2,Set,ConfigName:%3,OldValue:%4,NewValue:%5")
+    return QString("%1, Set, %2-->%3, OldValue:%4, NewValue:%5")
         .arg(getCurrentDateTime())
-        .arg(target->objectName())
+        .arg(target->getIdentity())
         .arg(propName)
         .arg(oldValue.toString())
         .arg(newValue.toString());
@@ -27,15 +27,20 @@ QString SetObjectItemCommand::getExecutionLog()
 
 QString SetObjectItemCommand::getUnExecutionLog()
 {
-    return QString("%1,%2,Set,ConfigName:%3,OldValue:%4,NewValue:%5")
+    return QString("%1, Set, %2-->%3, OldValue:%4, NewValue:%5")
         .arg(getCurrentDateTime())
-        .arg(target->objectName())
+        .arg(target->getIdentity())
         .arg(propName)
         .arg(newValue.toString())
         .arg(oldValue.toString());
 }
 
 ConfigObject::ConfigObject(QObject *parent) : ConfigBase(ConfigElementInfo::ConfigObj, parent) {}
+
+void ConfigObject::setIdentityProperty(QString identityProperty)
+{
+    identityProp = identityProperty;
+}
 
 void ConfigObject::setOptionalProperty(const QString &configName, const QVariantList &options)
 {
@@ -415,4 +420,37 @@ bool ConfigObject::executeSetConfig(const QString &configName, const QVariant &v
         qCritical() << QString("Set config failed! %1::%2").arg(metaObject()->className()).arg(configName);
     }
     return result;
+}
+
+QString ConfigObject::getIdentity()
+{
+    QString parentIdentity;
+    if (parent() != nullptr)
+    {
+        ConfigObject *parentCfg = qobject_cast<ConfigObject *>(parent());
+        if (parentCfg != nullptr)
+        {
+            parentIdentity = parentCfg->getIdentity() + "-->";
+        }
+    }
+
+    QString myIdentity;
+    if (!identityProp.isEmpty())
+    {
+        QVariant value = QObject::property(identityProp.toUtf8());
+        if (value.isValid())
+        {
+            myIdentity = value.toString();
+        }
+        else
+        {
+            qCritical() << QString("Invalid identity property name! %1::%2.").arg(metaObject()->className()).arg(identityProp);
+        }
+    }
+    else
+    {
+        myIdentity = objectName();
+    }
+
+    return QString("%1%2.%3").arg(parentIdentity).arg(metaObject()->className()).arg(myIdentity);
 }

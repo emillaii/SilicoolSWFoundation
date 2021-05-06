@@ -373,6 +373,7 @@ public:
         m_advancedAxisConfig = new AdvancedAxisConfig(this);
         m_softLandingPoses = new ConfigObjectArray(&SoftLandingPos::staticMetaObject, this);
         setReadOnlyProperty("name");
+        setIdentityProperty("name");
         hide("softLandingPoses");
         init();
     }

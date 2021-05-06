@@ -33,6 +33,7 @@ public:
     {
         setReadOnlyProperty("locationName");
         setReadOnlyProperty("calibrationName");
+        setIdentityProperty("locationName");
         init();
     }
 

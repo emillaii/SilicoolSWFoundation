@@ -213,6 +213,7 @@ public:
         m_calibrationResult = new CalibrationResult(this);
         setReadOnlyProperty("calibrationName");
         setReadOnlyProperty("locationName");
+        setIdentityProperty("calibrationName");
         init();
     }
 

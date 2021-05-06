@@ -99,6 +99,9 @@ public:
         m_serialPortConfig = new SerialPortConfig(this);
         m_leftLaserConfig = new LaserStationConfig(this);
         m_rightLaserConfig = new LaserStationConfig(this);
+        m_serialPortConfig->setObjectName("LaserSerialPortConfig");
+        m_leftLaserConfig->setObjectName("LeftLaserStationConfig");
+        m_rightLaserConfig->setObjectName("RightLaserStationConfig");
         init();
     }
 

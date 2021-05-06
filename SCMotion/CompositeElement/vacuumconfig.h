@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE VacuumConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setReadOnlyProperty("name");
+        setIdentityProperty("name");
         init();
     }
 
