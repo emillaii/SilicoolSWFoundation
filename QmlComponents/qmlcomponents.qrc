@@ -87,6 +87,7 @@
         <file>VisionViewer/HikVisionLocationViewer.qml</file>
         <file>VisionViewer/HikVisionMenu.qml</file>
         <file>VisionElementDefinition.qml</file>
+        <file>TaskEngineStatesViewer.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

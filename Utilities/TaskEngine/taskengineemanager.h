@@ -27,6 +27,13 @@ public:
 
     explicit TaskEngineeManager(QObject *parent = nullptr, int nTaskEnginee = 3);
 
+    Q_INVOKABLE int taskEngineCount() const
+    {
+        return nTaskEnginee;
+    }
+
+    Q_INVOKABLE QList<bool> getEngineStates() const;
+
     ///
     /// \brief runSingleCmd  run single command on single object
     /// \param target object to run the command

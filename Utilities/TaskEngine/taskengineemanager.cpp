@@ -11,6 +11,16 @@ TaskEngineeManager::TaskEngineeManager(QObject *parent, int nTaskEnginee) : QObj
     }
 }
 
+QList<bool> TaskEngineeManager::getEngineStates() const
+{
+    QList<bool> states;
+    foreach (auto engine, taskEnginees)
+    {
+        states.append(engine->isRunning());
+    }
+    return states;
+}
+
 void TaskEngineeManager::runSingleCmd(QObject *target, QString cmd, QVariantList args, bool checkWorkerInited)
 {
     if (checkWorkerInited && !this->checkWorkerInited(target))

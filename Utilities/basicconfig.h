@@ -29,6 +29,7 @@ public:
     Q_PROPERTY(QString lastInputUser READ lastInputUser WRITE setLastInputUser NOTIFY lastInputUserChanged)
     Q_PROPERTY(ChartTheme chartTheme READ chartTheme WRITE setChartTheme NOTIFY chartThemeChanged)
     Q_PROPERTY(QString macAddress READ macAddress WRITE setMacAddress NOTIFY macAddressChanged)
+    Q_PROPERTY(bool showTaskEngineStates READ showTaskEngineStates WRITE setShowTaskEngineStates NOTIFY showTaskEngineStatesChanged)
 
 public:
     BasicConfig(QObject *parent = nullptr) : ConfigObject(parent)
@@ -82,6 +83,11 @@ public:
         return m_macAddress;
     }
 
+    bool showTaskEngineStates() const
+    {
+        return m_showTaskEngineStates;
+    }
+
 public slots:
     void setDutType(QString dutType)
     {
@@ -128,6 +134,15 @@ public slots:
         emit macAddressChanged(m_macAddress);
     }
 
+    void setShowTaskEngineStates(bool showTaskEngineStates)
+    {
+        if (m_showTaskEngineStates == showTaskEngineStates)
+            return;
+
+        m_showTaskEngineStates = showTaskEngineStates;
+        emit showTaskEngineStatesChanged(m_showTaskEngineStates);
+    }
+
 signals:
     void dutTypeChanged(QString dutType);
 
@@ -139,6 +154,8 @@ signals:
 
     void macAddressChanged(QString macAddress);
 
+    void showTaskEngineStatesChanged(bool showTaskEngineStates);
+
 private:
     LanguageConfig *m_languageConfig;
     QString m_dutType = "DefaultDUT";
@@ -146,6 +163,7 @@ private:
     QString m_lastInputUser;
     ChartTheme m_chartTheme{ ChartThemeLight };
     QString m_macAddress = "";
+    bool m_showTaskEngineStates = false;
 };
 
 #endif    // BASICCONFIG_H
