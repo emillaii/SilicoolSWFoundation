@@ -82,7 +82,6 @@ BasicConfigEditor{
             self.isObjectArray = false
             self.elementType = configModel.getConfigType()
         }
-
         var dataCount = configModel.count()
         for(var i = 0; i < dataCount; i++){
             listModel.append({"rowIndex": i, "rowData": configModel.getConfig(i)})
