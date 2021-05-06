@@ -108,6 +108,7 @@ GroupBox {
             }
             Button{
                 visible: calibrateBtnVisible
+                enabled: userManagement.currentAuthority >= 2
                 text: qsTr("校正")
                 onClicked: {
                     if(useCustomCalibrationFunc){
