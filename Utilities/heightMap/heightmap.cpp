@@ -157,7 +157,7 @@ void HeightMap::onReqSetHeight(int rowIndex, int columnIndex, double value)
                 HeightStruct *heightStruct = &m_heightMap[i][j];
                 if (heightStruct->isValid)
                 {
-                    heightStruct->processedHeight = (value - m_minValue) / (m_maxValue - m_minValue) * m_targetRange + m_offset;
+                    heightStruct->processedHeight = (heightStruct->rawHeight - m_minValue) / (m_maxValue - m_minValue) * m_targetRange + m_offset;
                     emit dataChanged(index(i, j), index(i, j), proccessedHeightRoles);
                 }
             }
@@ -178,7 +178,7 @@ void HeightMap::onReqSave(QString fileName)
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     for (int i = 0; i < m_rows; i++)
     {
-        QByteArray line(m_columns * 20, 0);
+        QString line;
         for (int j = 0; j < m_columns; j++)
         {
             auto heightStruct = &m_heightMap[i][j];
@@ -191,8 +191,8 @@ void HeightMap::onReqSave(QString fileName)
                 line.append(",");
             }
         }
-        line.append("\r\n");
-        file.write(line);
+        line.append("\n");
+        file.write(line.toUtf8());
     }
     file.flush();
     file.close();
