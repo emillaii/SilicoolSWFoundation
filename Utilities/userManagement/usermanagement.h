@@ -1,15 +1,13 @@
 #ifndef USERMANAGEMENT_H
 #define USERMANAGEMENT_H
 
-#include "mysqltablemodel.h"
+#include "DBHelper/dbhelper.h"
+#include "DBHelper/mysqltablemodel.h"
 #include "uiHelper/uioperation.h"
 #include "utilities_global.h"
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QObject>
-#include <qsqldatabase.h>
-#include <qsqlerror.h>
-#include <qsqlquery.h>
 
 class UTILITIESSHARED_EXPORT UserManagement : public QObject
 {
@@ -118,22 +116,8 @@ private:
     {
         return QCryptographicHash::hash(clearText.toUtf8(), QCryptographicHash::Md5).toHex();
     }
-    bool openDB()
-    {
-        if (!db.open())
-        {
-            qCritical() << tr("Open db failed: ") << db.lastError().text();
-            return false;
-        }
-        return true;
-    }
-    void closeDB()
-    {
-        db.close();
-    }
     void _addUser(QString userName, QString password, Authority authority);
     bool hasUser(QString userName);
-    bool isTableExist(QString tableName);
     bool verifyUserPsw(QString userName, QString password);
     bool getUserInfo(QString userName, QString &password, Authority &authority, bool showMsgBoxAsUserDidNotExist = true);
     void initUserNames();
@@ -145,14 +129,10 @@ private:
     QString m_currentUserName = "";
     Authority m_currentAuthority = None;
     QString m_currentAuthorityName = "None";
-    QSqlDatabase db;
-    const QString ConnectionName = "qt_sql_userManagement_connection";
-    const QString DBName = "Users.db";
-    const QString DBUserName = "Silicol";
-    const QString DBPassword = "Silicol_Psw";
+    DBHelper dbHelper;
+    bool isInit = false;
     const int MinUserNameLen = 4;
     const int MinPasswordLen = 6;
-    bool isInit = false;
     bool m_hasLogin = false;
     QStringList m_userNameList;
 };

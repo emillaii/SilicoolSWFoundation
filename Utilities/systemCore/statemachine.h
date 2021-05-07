@@ -1,6 +1,7 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
+#include "alarmhelper.h"
 #include "dispatcher.h"
 #include "errorHandling/silicolerror.h"
 #include "loging/Logger.h"
@@ -66,6 +67,11 @@ public:
     StateMachine(Dispatcher *dispatcher, QObject *parent = nullptr);
 
     ~StateMachine() override;
+
+    MySqlTableModel *alarmModel() const
+    {
+        return alarmHelper.alarmModel();
+    }
 
     SMD::State currentState() const
     {
@@ -304,6 +310,8 @@ private:
     QList<QString> errors;
 
     QMap<SMD::State, QString> state2ColorDescription;
+
+    AlarmHelper alarmHelper;
 };
 
 #endif    // STATEMACHINE_H

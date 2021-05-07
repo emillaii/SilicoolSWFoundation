@@ -40,6 +40,7 @@ REPC_REPLICA += configManager/configShare.rep   \
                TaskEngine/instructionExecutor.rep
 
 SOURCES += \
+        DBHelper/dbhelper.cpp \
         TaskEngine/instruction.cpp \
         TaskEngine/instructionexecutionclient.cpp \
         TaskEngine/instructionexecutionserver.cpp \
@@ -69,6 +70,7 @@ SOURCES += \
         highpricisiontimer.cpp \
         imageprovider.cpp \
         indexvalidator.cpp \
+        jsonHelper/jsonhelper.cpp \
         loghelper.cpp \
         loging/LogCollector.cpp \
         loging/LogToFileHandler.cpp \
@@ -84,6 +86,7 @@ SOURCES += \
         processkiller.cpp \
         serialPortWrapper/scserialport.cpp \
         singletonthread.cpp \
+        systemCore/alarmhelper.cpp \
         systemCore/dispatcher.cpp \
         systemCore/statemachine.cpp \
         systemCore/worker.cpp \
@@ -94,7 +97,7 @@ SOURCES += \
         uiHelper/uioperation.cpp \
         uiHelper/uioperationimpl.cpp \
         uphhelper.cpp \
-        userManagement/mysqltablemodel.cpp \
+        DBHelper/mysqltablemodel.cpp \
         userManagement/usermanagement.cpp \
         zmqWrapper/publisher.cpp \
         zmqWrapper/subscriber.cpp \
@@ -102,6 +105,7 @@ SOURCES += \
         pathCanvasEditor/pointstablemodel.cpp
 
 HEADERS += \
+        DBHelper/dbhelper.h \
         TaskEngine/commandextractor.h \
         TaskEngine/instruction.h \
         TaskEngine/instructionexecutionclient.h \
@@ -140,6 +144,7 @@ HEADERS += \
         highpricisiontimer.h \
         imageprovider.h \
         indexvalidator.h \
+        jsonHelper/jsonhelper.h \
         languageManager/languageconfig.h \
         languageManager/languagemanager.h \
         loghelper.h \
@@ -164,6 +169,7 @@ HEADERS += \
         processkiller.h \
         serialPortWrapper/scserialport.h \
         singletonthread.h \
+        systemCore/alarmhelper.h \
         systemCore/dispatcher.h \
         systemCore/priorityqueue.h \
         systemCore/statemachine.h \
@@ -178,7 +184,7 @@ HEADERS += \
         uiHelper/uioperation.h \
         uiHelper/uioperationimpl.h \
         uphhelper.h \
-        userManagement/mysqltablemodel.h \
+        DBHelper/mysqltablemodel.h \
         userManagement/usermanagement.h \
         utilities_global.h  \
         zmqWrapper/publisher.h \

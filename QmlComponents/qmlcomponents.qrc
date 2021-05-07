@@ -88,6 +88,8 @@
         <file>VisionViewer/HikVisionMenu.qml</file>
         <file>VisionElementDefinition.qml</file>
         <file>TaskEngineStatesViewer.qml</file>
+        <file>AlarmViewer/AlarmsViewer.qml</file>
+        <file>AlarmViewer/PopupAlarmViewer.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

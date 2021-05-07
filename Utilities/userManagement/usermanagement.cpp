@@ -1,43 +1,21 @@
 #include "usermanagement.h"
 
-UserManagement::UserManagement() {}
+UserManagement::UserManagement() : dbHelper("qt_sql_userManagement_connection", "Users.db") {}
 
 UserManagement::~UserManagement()
 {
     if (isInit)
     {
-        closeDB();
         delete userModel;
     }
 }
 
 void UserManagement::init()
 {
-    if (QSqlDatabase::contains(ConnectionName))
+    if (!dbHelper.isTableExist("user"))
     {
-        db = QSqlDatabase::database(ConnectionName);
-    }
-    else
-    {
-        db = QSqlDatabase::addDatabase("QSQLITE", ConnectionName);
-        db.setDatabaseName(DBName);
-        db.setUserName(DBUserName);
-        db.setPassword(DBPassword);
-    }
-    if (!openDB())
-    {
-        return;
-    }
-
-    if (!isTableExist("user"))
-    {
-        QSqlQuery createTable(db);
-        auto res = createTable.prepare(
-            "create table user(name varchar(120) primary key, password varchar(120), authority int)");
-        if (!res)
-        {
-            qCritical() << createTable.lastError().text();
-        }
+        QSqlQuery createTable(dbHelper.db);
+        createTable.prepare("create table user(name varchar(120) primary key, password varchar(120), authority int)");
         if (!createTable.exec())
         {
             qCritical() << createTable.lastError().text();
@@ -49,7 +27,7 @@ void UserManagement::init()
     {
         _addUser("Admin", "SilicoolAdmin", Admin);
     }
-    userModel = new MySqlTableModel(nullptr, db);
+    userModel = new MySqlTableModel(this, dbHelper.db);
     userModel->setTable("user");
     userModel->select();
 
@@ -59,7 +37,7 @@ void UserManagement::init()
 
 int UserManagement::userCount() const
 {
-    QSqlQuery sqlStatement("select * from user", db);
+    QSqlQuery sqlStatement("select * from user", dbHelper.db);
     sqlStatement.exec();
     int countOfUser = 0;
     while (sqlStatement.next())
@@ -73,36 +51,30 @@ void UserManagement::addUser(QString userName, QString password, UserManagement:
 {
     if (currentAuthority() != Admin)
     {
-        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Only Admin can add user!"), MsgBoxIcon::Error,
-                                           OkBtn);
+        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Only Admin can add user!"), MsgBoxIcon::Error, OkBtn);
         return;
     }
     int autho = static_cast<int>(authority);
     if (autho >= Admin || autho <= None)
     {
-
-        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Please select correct authority!"),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Please select correct authority!"), MsgBoxIcon::Error, OkBtn);
         return;
     }
     if (userName.length() < MinUserNameLen)
     {
-        UIOperation::getIns()->showMessage(tr("UserName Error"),
-                                           tr("User name was too short! Min length: %1").arg(MinUserNameLen),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("UserName Error"), tr("User name was too short! Min length: %1").arg(MinUserNameLen), MsgBoxIcon::Error,
+                                           OkBtn);
         return;
     }
     if (password.length() < MinPasswordLen)
     {
-        UIOperation::getIns()->showMessage(tr("Password Error"),
-                                           tr("Password was too short! Min length: %1").arg(MinPasswordLen),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("Password Error"), tr("Password was too short! Min length: %1").arg(MinPasswordLen), MsgBoxIcon::Error,
+                                           OkBtn);
         return;
     }
     if (hasUser(userName))
     {
-        UIOperation::getIns()->showMessage(tr("UserName Error"), tr("User name already existed!"), MsgBoxIcon::Error,
-                                           OkBtn);
+        UIOperation::getIns()->showMessage(tr("UserName Error"), tr("User name already existed!"), MsgBoxIcon::Error, OkBtn);
         return;
     }
     _addUser(userName, password, authority);
@@ -112,8 +84,7 @@ void UserManagement::removeUser(QString userName)
 {
     if (currentAuthority() != Admin)
     {
-        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Only Admin can remove user!"), MsgBoxIcon::Error,
-                                           OkBtn);
+        UIOperation::getIns()->showMessage(tr("Authority Error"), tr("Only Admin can remove user!"), MsgBoxIcon::Error, OkBtn);
         return;
     }
 
@@ -125,11 +96,10 @@ void UserManagement::removeUser(QString userName)
     }
     if (authority == Admin)
     {
-        UIOperation::getIns()->showMessage(tr("UserName Error"), tr("Can not remove Admin account!"), MsgBoxIcon::Error,
-                                           OkBtn);
+        UIOperation::getIns()->showMessage(tr("UserName Error"), tr("Can not remove Admin account!"), MsgBoxIcon::Error, OkBtn);
         return;
     }
-    QSqlQuery remove(db);
+    QSqlQuery remove(dbHelper.db);
     remove.prepare("delete from user where name=?");
     remove.addBindValue(userName);
     if (!remove.exec())
@@ -143,36 +113,30 @@ void UserManagement::removeUser(QString userName)
     emit userNameListChanged(m_userNameList);
 }
 
-bool UserManagement::changePassword(QString userName,
-                                    QString oldPassword,
-                                    QString newPassword,
-                                    QString newPasswordRepeat)
+bool UserManagement::changePassword(QString userName, QString oldPassword, QString newPassword, QString newPasswordRepeat)
 {
     if (newPassword != newPasswordRepeat)
     {
-        UIOperation::getIns()->showMessage(tr("Password Error"), tr("Repeat password error!"), MsgBoxIcon::Error,
-                                           OkBtn);
+        UIOperation::getIns()->showMessage(tr("Password Error"), tr("Repeat password error!"), MsgBoxIcon::Error, OkBtn);
         return false;
     }
     if (newPassword.length() < MinPasswordLen)
     {
-        UIOperation::getIns()->showMessage(tr("Password Error"),
-                                           tr("Password was too short! Min length: %1").arg(MinPasswordLen),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("Password Error"), tr("Password was too short! Min length: %1").arg(MinPasswordLen), MsgBoxIcon::Error,
+                                           OkBtn);
         return false;
     }
     if (!verifyUserPsw(userName, oldPassword))
     {
         return false;
     }
-    QSqlQuery changePsw(db);
+    QSqlQuery changePsw(dbHelper.db);
     changePsw.prepare("update user set password=? where name=?");
     changePsw.addBindValue(cryptograph(newPassword));
     changePsw.addBindValue(userName);
     if (!changePsw.exec())
     {
-        UIOperation::getIns()->showMessage(tr("Change password failed"), changePsw.lastError().text(),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("Change password failed"), changePsw.lastError().text(), MsgBoxIcon::Error, OkBtn);
         return false;
     }
     return true;
@@ -186,8 +150,7 @@ bool UserManagement::login(QString userName, QString password)
     {
         if (queriedPsw != cryptograph(password))
         {
-            UIOperation::getIns()->showMessage(tr("Password Error"), tr("Please input correct password"),
-                                               MsgBoxIcon::Error, OkBtn);
+            UIOperation::getIns()->showMessage(tr("Password Error"), tr("Please input correct password"), MsgBoxIcon::Error, OkBtn);
             return false;
         }
         setCurrentUserName(userName);
@@ -207,7 +170,7 @@ void UserManagement::logout()
 
 void UserManagement::_addUser(QString userName, QString password, UserManagement::Authority authority)
 {
-    QSqlQuery sAddUser(db);
+    QSqlQuery sAddUser(dbHelper.db);
     sAddUser.prepare("insert into user(name, password, authority) values(?,?,?)");
     sAddUser.addBindValue(userName);
     sAddUser.addBindValue(cryptograph(password));
@@ -230,30 +193,6 @@ bool UserManagement::hasUser(QString userName)
     return getUserInfo(userName, queriedPsw, queriedAuthrity, false);
 }
 
-bool UserManagement::isTableExist(QString tableName)
-{
-    QSqlQuery isTableExist(db);
-    if (!isTableExist.prepare("select count(*) from sqlite_master where type='table' and name=?"))
-    {
-        qCritical() << isTableExist.lastError();
-        return false;
-    }
-    isTableExist.addBindValue(tableName);
-    if (!isTableExist.exec())
-    {
-        qCritical() << isTableExist.lastError();
-        return false;
-    }
-    if (isTableExist.next())
-    {
-        return isTableExist.value(0).toInt() != 0;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 bool UserManagement::verifyUserPsw(QString userName, QString password)
 {
     QString queriedPsw;
@@ -262,8 +201,7 @@ bool UserManagement::verifyUserPsw(QString userName, QString password)
     {
         if (queriedPsw != cryptograph(password))
         {
-            UIOperation::getIns()->showMessage(tr("Password Error"), tr("Please input correct password"),
-                                               MsgBoxIcon::Error, OkBtn);
+            UIOperation::getIns()->showMessage(tr("Password Error"), tr("Please input correct password"), MsgBoxIcon::Error, OkBtn);
             return false;
         }
         return true;
@@ -271,22 +209,14 @@ bool UserManagement::verifyUserPsw(QString userName, QString password)
     return false;
 }
 
-bool UserManagement::getUserInfo(QString userName,
-                                 QString &password,
-                                 UserManagement::Authority &authority,
-                                 bool showMsgBoxAsUserDidNotExist)
+bool UserManagement::getUserInfo(QString userName, QString &password, UserManagement::Authority &authority, bool showMsgBoxAsUserDidNotExist)
 {
-    QSqlQuery query(db);
-    auto res = query.prepare("select * from user where name=?");
-    if (!res)
-    {
-        qCritical() << query.lastError();
-    }
+    QSqlQuery query(dbHelper.db);
+    query.prepare("select * from user where name=?");
     query.addBindValue(userName);
     if (!query.exec())
     {
-        UIOperation::getIns()->showMessage(tr("Query user %1 failed").arg(userName), query.lastError().text(),
-                                           MsgBoxIcon::Error, OkBtn);
+        UIOperation::getIns()->showMessage(tr("Query user %1 failed").arg(userName), query.lastError().text(), MsgBoxIcon::Error, OkBtn);
         return false;
     }
     if (query.next())
@@ -299,8 +229,7 @@ bool UserManagement::getUserInfo(QString userName,
     {
         if (showMsgBoxAsUserDidNotExist)
         {
-            UIOperation::getIns()->showMessage(tr("UserName Error"), tr("User %1 did not exist").arg(userName),
-                                               MsgBoxIcon::Error, OkBtn);
+            UIOperation::getIns()->showMessage(tr("UserName Error"), tr("User %1 did not exist").arg(userName), MsgBoxIcon::Error, OkBtn);
         }
         return false;
     }
@@ -309,7 +238,7 @@ bool UserManagement::getUserInfo(QString userName,
 void UserManagement::initUserNames()
 {
     m_userNameList.clear();
-    QSqlQuery sqlStatement("select * from user", db);
+    QSqlQuery sqlStatement("select * from user", dbHelper.db);
     sqlStatement.exec();
     while (sqlStatement.next())
     {

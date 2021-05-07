@@ -30,6 +30,13 @@ StateMachine::~StateMachine() {}
 void StateMachine::errorOccured(QString errorId, QString processName, QString module, QString msg)
 {
     qCCritical(smCate()) << tr("Error occur: id: %1, process: %2, module: %3, msg: %4").arg(errorId).arg(processName).arg(module).arg(msg);
+
+    if (currentSilicoolState == errorState || currentSilicoolState == purgingState || currentSilicoolState == runningState
+        || currentSilicoolState == stoppingState || currentSilicoolState == pausingState)
+    {
+        alarmHelper.appendAlarm(module, msg);
+    }
+
     if (currentSilicoolState != errorState)
     {
         if (currentSilicoolState == purgingState || currentSilicoolState == runningState || currentSilicoolState == stoppingState
