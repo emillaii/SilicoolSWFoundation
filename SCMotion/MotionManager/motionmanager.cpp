@@ -70,6 +70,7 @@ MotionManager::~MotionManager()
 
 void MotionManager::dispose()
 {
+    emit beforeDisposing();
     DiStateMonitor::getIns().stopMonitor();
     motionStateReporter.stopReport();
     m_isInit = false;

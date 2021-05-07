@@ -14,12 +14,19 @@ MotionStatePublisher::MotionStatePublisher(const QList<QString> &definedCylinder
             start();
         }
     });
+    connect(
+        &MotionManager::getIns(), &MotionManager::beforeDisposing, this, [this] { dispose(); }, Qt::DirectConnection);
+}
+
+void MotionStatePublisher::dispose()
+{
+    isRun = false;
+    wait();
 }
 
 MotionStatePublisher::~MotionStatePublisher()
 {
-    isRun = false;
-    wait();
+    dispose();
 }
 
 void MotionStatePublisher::subscribeCylinderState(QString cylName)

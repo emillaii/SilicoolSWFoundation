@@ -4,15 +4,15 @@
 #include "motionmanager.h"
 #include <QThread>
 
-#define SUB_ELEMENT(name, elementType, definedNames, nameContainer)                                                    \
-    if (!definedNames.contains(name))                                                                                  \
-    {                                                                                                                  \
-        qCCritical(motionCate()) << QString("Undefined %1: %2").arg(elementType).arg(name);                            \
-        return;                                                                                                        \
-    }                                                                                                                  \
-    if (!nameContainer.contains(name))                                                                                 \
-    {                                                                                                                  \
-        nameContainer.append(name);                                                                                    \
+#define SUB_ELEMENT(name, elementType, definedNames, nameContainer)                                                                                  \
+    if (!definedNames.contains(name))                                                                                                                \
+    {                                                                                                                                                \
+        qCCritical(motionCate()) << QString("Undefined %1: %2").arg(elementType).arg(name);                                                          \
+        return;                                                                                                                                      \
+    }                                                                                                                                                \
+    if (!nameContainer.contains(name))                                                                                                               \
+    {                                                                                                                                                \
+        nameContainer.append(name);                                                                                                                  \
     }
 
 class MotionStatePublisher : public QThread
@@ -24,6 +24,8 @@ public:
                                   const QList<QString> &definedDis,
                                   const QList<QString> &definedDos,
                                   QObject *parent = nullptr);
+
+    void dispose();
 
     ~MotionStatePublisher() override;
 

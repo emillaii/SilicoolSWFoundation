@@ -151,6 +151,7 @@ public:
 signals:
     void executeDone(QString uuid, QString errMsg, QVariant result);
     void inited();
+    void beforeDisposing();
 
     // MotionManagerSource interface
 public slots:
