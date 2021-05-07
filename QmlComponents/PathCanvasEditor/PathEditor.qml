@@ -110,6 +110,7 @@ Item {
             fileName =  fileName.replace(".json", "")
             fileName += "_resultPath.jpg"
             canvas.save(fileName)
+            pointsTable.testModel.saveRawImage(canvas.imageUrl, fileUrl)
         }
     }
 
@@ -161,7 +162,6 @@ Item {
                         RadioButton{
                             id: rdbDraw
                             text: qsTr("Draw")
-                            checked: true
                         }
                         RadioButton{
                             id: rdbSelect

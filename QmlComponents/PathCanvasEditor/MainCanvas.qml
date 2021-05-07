@@ -5,7 +5,7 @@ Canvas{
     property real radius: 4
     property var arrpoints : []  //Store the normalized point from 0 to 1
     property var selectedPointIndex: 0
-    property var imageUrl: "file:///C:/Users/emil/Documents/build-untitled19-Desktop_Qt_5_12_3_MSVC2017_64bit-Debug/debug/test.jpg"
+    property var imageUrl: "file:///C:/test.jpg"
     property bool isPressed: false
 
     property real imageOffsetX: 0
@@ -20,6 +20,30 @@ Canvas{
 
     width: 1280
     height: 960
+
+    property int __verticalLineCount: 31
+    property int __horizontalLineCount: 23
+    property string __lineColor: "pink"
+    Repeater{
+        model: __verticalLineCount
+        delegate: Rectangle{
+            x: canvas.width / (__verticalLineCount + 1) * (index + 1)
+            width: 1
+            height: canvas.height
+            color: __lineColor
+            opacity: 0.3
+        }
+    }
+    Repeater{
+        model: __horizontalLineCount
+        delegate: Rectangle{
+            y: canvas.height / (__horizontalLineCount + 1) * (index + 1)
+            width: canvas.width
+            height: 1
+            color: __lineColor
+            opacity: 0.3
+        }
+    }
 
     Keys.onPressed: {
 //        console.log(event.key)

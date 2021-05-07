@@ -227,6 +227,26 @@ void PointsTableModel::saveOutputJson(QString filename)
     file.close();
 }
 
+void PointsTableModel::saveRawImage(QString imageUrl, QString filename)
+{
+    filename.replace("file:///", "").replace(".json", "");
+    filename.append("_rawImage.jpg");
+    imageUrl.replace("file:///", "");
+    QFileInfo sourceInfo(imageUrl);
+    if (sourceInfo.isFile() && sourceInfo.exists())
+    {
+        QFileInfo destInfo(filename);
+        if (destInfo.absoluteFilePath() != sourceInfo.absoluteFilePath())
+        {
+            if (destInfo.isFile() && destInfo.exists())
+            {
+                QFile::remove(destInfo.absoluteFilePath());
+            }
+            QFile::copy(sourceInfo.absoluteFilePath(), destInfo.absoluteFilePath());
+        }
+    }
+}
+
 void PointsTableModel::loadJson(QString filename)
 {
     filename.replace("file:///", "");

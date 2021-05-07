@@ -10,7 +10,6 @@ void VisionManager::dispose()
     foreach (auto camera, cameraMap.values())
     {
         camera->close();
-        delete camera;
     }
     cameraMap.clear();
     foreach (auto lsc, lscs.values())

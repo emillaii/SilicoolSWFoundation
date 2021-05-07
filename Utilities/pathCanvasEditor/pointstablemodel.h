@@ -1,6 +1,7 @@
 #ifndef POINTSTABLEMODEL_H
 #define POINTSTABLEMODEL_H
 
+#include "QFileInfo"
 #include "utilities_global.h"
 #include <QAbstractTableModel>
 #include <QHash>
@@ -86,6 +87,7 @@ public slots:
     void updateData(int row, int col, double newValue);
     // Save Output Dispense Path Json file
     void saveOutputJson(QString filename);
+    void saveRawImage(QString imageUrl, QString filename);
     // Load DispensePath Json file
     void loadJson(QString filename);
     QJsonObject checkImageSize(QString filename);
