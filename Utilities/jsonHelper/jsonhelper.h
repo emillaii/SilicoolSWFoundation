@@ -1,6 +1,7 @@
 #ifndef JSONHELPER_H
 #define JSONHELPER_H
 
+#include "utilities_global.h"
 #include <QDebug>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -8,7 +9,7 @@
 #include <QMetaProperty>
 #include <QObject>
 
-class JsonHelper
+class UTILITIESSHARED_EXPORT JsonHelper
 {
 public:
     JsonHelper() = default;

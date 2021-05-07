@@ -67,6 +67,7 @@ SOURCES += \
         externexelaucher.cpp \
         fileContent/filecontent.cpp \
         fileversionhelper.cpp \
+        heightMap/heightmap.cpp \
         highpricisiontimer.cpp \
         imageprovider.cpp \
         indexvalidator.cpp \
@@ -141,6 +142,7 @@ HEADERS += \
         externexelaucher.h \
         fileContent/filecontent.h \
         fileversionhelper.h \
+        heightMap/heightmap.h \
         highpricisiontimer.h \
         imageprovider.h \
         indexvalidator.h \

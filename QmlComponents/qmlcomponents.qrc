@@ -90,6 +90,7 @@
         <file>TaskEngineStatesViewer.qml</file>
         <file>AlarmViewer/AlarmsViewer.qml</file>
         <file>AlarmViewer/PopupAlarmViewer.qml</file>
+        <file>HeightMap.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

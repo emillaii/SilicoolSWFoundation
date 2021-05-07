@@ -2,8 +2,9 @@
 #define STOPPEDERROR_H
 
 #include "silicolerror.h"
+#include "utilities_global.h"
 
-class StoppedError : public SilicolError
+class UTILITIESSHARED_EXPORT StoppedError : public SilicolError
 {
 public:
     StoppedError(const QString &workerName) : SilicolError(workerName, "Stopped")
