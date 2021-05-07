@@ -57,9 +57,9 @@ ColumnLayout{
                 id: pageView
                 property var title: pageTitle
                 sourceComponent: pageComponent
-                active: !deleteUnvisibleTab || tabBar.currentIndex === index
+                active: !(deleteUnvisibleTab && deleteWhenUnvisible) || tabBar.currentIndex === index
                 Connections{
-                    enabled: deleteUnvisibleTab
+                    enabled: deleteUnvisibleTab && deleteWhenUnvisible
                     target: tabBar
                     onCurrentIndexChanged: {
                         pageView.active = (tabBar.currentIndex === index)
@@ -69,12 +69,12 @@ ColumnLayout{
         }
     }
 
-    function addTab(title, component){
-        insertTab(pageModel.count, title, component)
+    function addTab(title, component, deleteWhenUnvisible=true){
+        insertTab(pageModel.count, title, component, deleteWhenUnvisible)
     }
 
-    function insertTab(index, title, component){
-        pageModel.insert(index, {"pageTitle": title, "pageComponent": component})
+    function insertTab(index, title, component, deleteWhenUnvisible=true){
+        pageModel.insert(index, {"pageTitle": title, "pageComponent": component, "deleteWhenUnvisible": deleteWhenUnvisible})
     }
 
     function removeTab(index){
