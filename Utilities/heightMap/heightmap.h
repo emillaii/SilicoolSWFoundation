@@ -34,6 +34,10 @@ class UTILITIESSHARED_EXPORT HeightMap : public QAbstractTableModel
 public:
     explicit HeightMap(QObject *parent = nullptr);
 
+    ~HeightMap() override;
+
+    void deleteMap();
+
     void setDataProcessParam(double targetRange, double offset);
 
     void reset(int rows, int columns);
@@ -156,9 +160,6 @@ private slots:
     void onReqReset(int rows, int columns);
     void onReqSetHeight(int rowIndex, int columnIndex, double value);
     void onReqSave(QString fileName);
-
-private:
-    void deleteMap();
 
 private:
     int m_rows = 0;

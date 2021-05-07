@@ -14,6 +14,11 @@ HeightMap::HeightMap(QObject *parent) : QAbstractTableModel(parent)
     connect(this, &HeightMap::reqSave, this, &HeightMap::onReqSave);
 }
 
+HeightMap::~HeightMap()
+{
+    deleteMap();
+}
+
 void HeightMap::setDataProcessParam(double targetRange, double offset)
 {
     m_targetRange = targetRange;
