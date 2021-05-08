@@ -25,8 +25,6 @@ public:
                                   const QList<QString> &definedDos,
                                   QObject *parent = nullptr);
 
-    void dispose();
-
     ~MotionStatePublisher() override;
 
 signals:
@@ -40,6 +38,7 @@ public slots:
     void subscribeVacuumState(QString vacuumName);
     void subscribeDIState(QString diName);
     void subscribeDOState(QString doName);
+    void dispose();
 
     // QThread interface
 protected:

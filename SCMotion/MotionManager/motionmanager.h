@@ -150,6 +150,9 @@ public:
         return m_moveProtection;
     }
 
+    bool getLocalVacuumState(QString vacuumName);
+    bool getLocalDOState(QString doName);
+
 signals:
     void executeDone(QString uuid, QString errMsg, QVariant result);
     void inited();

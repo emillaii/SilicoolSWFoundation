@@ -192,6 +192,26 @@ void MotionManager::homeMotors(QStringList homeSeq)
     }
 }
 
+bool MotionManager::getLocalVacuumState(QString vacuumName)
+{
+    if(vacuumMap.contains(vacuumName))
+    {
+        return vacuumMap[vacuumName]->get();
+    }
+    qCCritical(motionCate()) << "Unknown local vacuum..." << vacuumName;
+    return false;
+}
+
+bool MotionManager::getLocalDOState(QString doName)
+{
+    if(doMap.contains(doName))
+    {
+        return doMap[doName]->get();
+    }
+    qCCritical(motionCate()) << "Unknown local DO..." << doName;
+    return false;
+}
+
 bool MotionManager::initMotionManager(QByteArray motionElementDefinition)
 {
     if (m_isInit)
