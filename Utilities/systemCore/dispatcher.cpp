@@ -276,7 +276,10 @@ void Dispatcher::checkAllWorkerHandledEvent()
             }
             default:
             {
-                qCCritical(smCate()) << tr("Unknown expected handled event:") << expectedHandledEvent;
+                if (!workers.isEmpty())
+                {
+                    qCCritical(smCate()) << tr("Unknown expected handled event:") << expectedHandledEvent;
+                }
             }
         }
 
