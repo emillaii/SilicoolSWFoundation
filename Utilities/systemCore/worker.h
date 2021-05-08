@@ -23,6 +23,14 @@ public:
 
     Q_INVOKABLE void handleDebugEvent(QString eventName, QVariantList args = QVariantList());
 
+    ///
+    /// \brief createAbortEvent
+    /// \param needReset 若needReset为true,
+    /// Worker处理完该abortEvent后，调用pushEvent向该Worker推送事件时，非框架事件将被忽略，直到Worker处理一个resetEvent
+    /// \return
+    ///
+    WorkerEvent createAbortEvent(bool needReset = true) const;
+
 signals:
     ///
     /// \brief postEvent
@@ -118,7 +126,7 @@ protected:
 
 private:
     void startRun();
-    void abortEventHandled();
+    void abortEventHandled(bool needReset);
     void processEvent(const WorkerEvent &event, bool fromEventQueue);
 
 private:

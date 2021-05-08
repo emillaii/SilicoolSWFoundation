@@ -33,6 +33,13 @@ void Worker::handleDebugEvent(QString eventName, QVariantList args)
     pushEvent(WorkerEvent(eventName, args, 1));
 }
 
+WorkerEvent Worker::createAbortEvent(bool needReset) const
+{
+    WorkerEvent abortEvent(SMD::Abort);
+    abortEvent.eventArgs = needReset;
+    return abortEvent;
+}
+
 void Worker::pushEvent(const WorkerEvent &event)
 {
     if (event.isFrameworkEvent)
@@ -177,9 +184,12 @@ void Worker::waitWorkerThreadStopped(QStringList workerNames)
     }
 }
 
-void Worker::abortEventHandled()
+void Worker::abortEventHandled(bool needReset)
 {
-    m_currentState = SMD::Aborted;
+    if (needReset)
+    {
+        m_currentState = SMD::Aborted;
+    }
     emit workerEventHandled(m_workerName, SMD::Abort, {});
 }
 
@@ -256,7 +266,12 @@ void Worker::processEvent(const WorkerEvent &event, bool fromEventQueue)
         {
             isRun = false;
             eventQueue.clear();
-            abortEventHandled();
+            bool needReset = true;
+            if (event.eventArgs.type() == QVariant::Bool)
+            {
+                needReset = event.eventArgs.toBool();
+            }
+            abortEventHandled(needReset);
         }
         else if (event.eventName == "Reset")
         {

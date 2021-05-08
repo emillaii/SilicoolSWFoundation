@@ -279,6 +279,9 @@ void Dispatcher::checkAllWorkerHandledEvent()
                 qCCritical(smCate()) << tr("Unknown expected handled event:") << expectedHandledEvent;
             }
         }
+
+        expectedHandledEvent = {};
+        workersEventHandled.clear();
     }
 }
 
@@ -286,7 +289,6 @@ void Dispatcher::onWorkerEventHandled(QString workerName, SMD::Event event)
 {
     if (!workersEventHandled.contains(workerName))
     {
-        qCCritical(smCate()) << tr("Unknown worker name:") << workerName;
         return;
     }
 
