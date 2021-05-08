@@ -55,9 +55,15 @@ Item {
                 height: 10
             }
             Button{
-                text: qsTr("自动生成motionElementUILayout文件")
+                text: qsTr("自动生成Motion调试界面配置文件")
                 onClicked: {
                     tem.runSingleCmd(masterMotionManager, "generateMotionElementUILayoutConfigFile")
+                }
+            }
+            Button{
+                text: qsTr("自动生成轴页面回零配置文件")
+                onClicked: {
+                    tem.runSingleCmd(masterMotionManager, "generateAxisPageHomeSeqConfigFile")
                 }
             }
         }

@@ -33,6 +33,11 @@ MasterMotionManager::MasterMotionManager(BasicElementFactory *basicElementFactor
     meUILayoutsConfigFile = new ConfigFile("motionElementUILayout", meUILayouts, meUILayoutsConfigFileName, false);
     meUILayoutsConfigFile->populate(true);
     checkMotionElementUILayoutConfig();
+
+    axisPageHomeSeq = new ConfigObjectArray(&AxisPageHomeSeq::staticMetaObject, this);
+    axisPageHomeSeqConfigFile = new ConfigFile("AxisPageHomeSeq", axisPageHomeSeq, axisPageHomeSeqConfigFileName, false);
+    axisPageHomeSeqConfigFile->populate();
+    axisPageHomeSeqConfigToMap();
 }
 
 MasterMotionManager::~MasterMotionManager()
@@ -117,6 +122,48 @@ void MasterMotionManager::generateMotionElementUILayoutConfigFile()
         }
     }
     t_meUILayoutsConfigFile->save();
+}
+
+void MasterMotionManager::generateAxisPageHomeSeqConfigFile()
+{
+    if (!UIOperation::getIns()->okCancelConfirm(
+            tr("此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(axisPageHomeSeqConfigFileName)))
+    {
+        return;
+    }
+    axisPageHomeSeq->scaleTo(0);
+    for (int i = 0; i < meUILayouts->count(); i++)
+    {
+        auto meUILayout = meUILayouts->getConfig<MotionElementUILayout>(i);
+        if (meUILayout->elementType() == "Axis")
+        {
+            auto homeSeq = new AxisPageHomeSeq(axisPageHomeSeq);
+            homeSeq->setPageName(meUILayout->pageName());
+            QJsonValue jv;
+            meUILayout->pageElements()->write(jv);
+            homeSeq->pageElements()->read(jv);
+            axisPageHomeSeq->executeAddConfigObject(axisPageHomeSeq->count(), homeSeq);
+        }
+    }
+}
+
+QStringList MasterMotionManager::getHomeSeq(QString pageName) const
+{
+    QStringList homeSeq;
+    if (axisPageHomeSeqMap.contains(pageName))
+    {
+        auto cfg = axisPageHomeSeqMap[pageName];
+        for (int i = 0; i < cfg->homeSeq()->count(); i++)
+        {
+            homeSeq.append(cfg->homeSeq()->at(i).toString());
+        }
+    }
+    return homeSeq;
+}
+
+bool MasterMotionManager::isValidHomeSeq(QString pageName) const
+{
+    return axisPageHomeSeqMap.contains(pageName);
 }
 
 void MasterMotionManager::setAxisVelocityRatio(QString axisName, double ratio)
@@ -444,6 +491,40 @@ void MasterMotionManager::checkMotionElementUILayoutConfig()
             default:
             {
             }
+        }
+    }
+}
+
+void MasterMotionManager::axisPageHomeSeqConfigToMap()
+{
+    auto axisNames = motionConfigManager()->axisNames();
+    for (int i = 0; i < axisPageHomeSeq->count(); i++)
+    {
+        auto cfg = axisPageHomeSeq->getConfig<AxisPageHomeSeq>(i);
+        if (cfg->isValid())
+        {
+            QStringList unknownAxisNames;
+            auto seq = cfg->homeSeq();
+            for (int j = 0; j < seq->count(); j++)
+            {
+                auto parallelHomeSeq = seq->at(j).toString().split(",");
+                foreach (auto axisName, parallelHomeSeq)
+                {
+                    if (!axisNames.contains(axisName))
+                    {
+                        unknownAxisNames.append(axisName);
+                    }
+                }
+            }
+            if (!unknownAxisNames.isEmpty())
+            {
+                qCWarning(motionCate()) << QString("Unknown axis names in AxisPageHomeSeq.%1:").arg(cfg->pageName()) << unknownAxisNames;
+                cfg->setIsValid(false);
+            }
+        }
+        if (cfg->isValid())
+        {
+            axisPageHomeSeqMap[cfg->pageName()] = cfg;
         }
     }
 }

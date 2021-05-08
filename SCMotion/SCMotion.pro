@@ -94,6 +94,7 @@ HEADERS += \
     CompositeElement/transferconfig.h \
     CompositeElement/twoaxisplanner.h \
     CompositeElement/vacuumconfig.h \
+    MotionManager/axispagehomeseq.h \
     MotionManager/distatemonitor.h \
     MotionManager/globalmotionelements.h \
     MotionManager/motionconfigmanager.h \

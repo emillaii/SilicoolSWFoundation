@@ -143,6 +143,8 @@ public:
 
     void moveMultiAxes(QList<QString> axisNames, QList<double> targetPos, bool isAbsMove = true);
 
+    Q_INVOKABLE void homeMotors(QStringList homeSeq);
+
     MoveProtection *moveProtection() const
     {
         return m_moveProtection;

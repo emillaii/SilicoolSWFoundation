@@ -5,6 +5,8 @@ import MotionElement 1.0
 
 Item {
     property int borderMargin: 10
+    property bool __homeMotorsBtnVisible: false
+    property string __pageName: ""
 
     function createItemFunction(name) {
         return {
@@ -25,8 +27,10 @@ Item {
         }
     }
 
-    function init(axisNames) {
+    function init(pageName, axisNames, homeMotorsBtnVisible) {
         itemModel.initItemModel(axisNames, createItemFunction)
+        __pageName = pageName
+        __homeMotorsBtnVisible = homeMotorsBtnVisible
     }
 
     function updateMotionState(axisStates) {
@@ -87,6 +91,14 @@ Item {
         }
         Label {
             text: globalVelocitySlider.value
+        }
+        Button{
+            visible: __homeMotorsBtnVisible
+            text: qsTr("回零本页面电机")
+            onClicked: {
+                var homeSeq = masterMotionManager.getHomeSeq(__pageName)
+                tem.runSingleCmd(motionManager, "homeMotors", [homeSeq])
+            }
         }
     }
 

@@ -72,7 +72,8 @@ MyTabView {
                 width = motionDebugger.width - 20
                 height = motionDebugger.height - 40
                 var pageName = parent.title
-                init(pageInfos[pageName]["pageElements"])
+                var homeMotorsBtnVisible = masterMotionManager.isValidHomeSeq(pageName)
+                init(pageName, pageInfos[pageName]["pageElements"], homeMotorsBtnVisible)
                 axisDebuggers.push(this)
             }
         }

@@ -1,6 +1,7 @@
 #ifndef MASTERMOTIONMANAGER_H
 #define MASTERMOTIONMANAGER_H
 
+#include "MotionManager/axispagehomeseq.h"
 #include "MotionManager/motionconfigmanager.h"
 #include "MotionManager/motionelementuilayout.h"
 #include "MotionManager/motionmanager.h"
@@ -50,6 +51,12 @@ public:
 
     Q_INVOKABLE void generateMotionElementUILayoutConfigFile();
 
+    Q_INVOKABLE void generateAxisPageHomeSeqConfigFile();
+
+    Q_INVOKABLE bool isValidHomeSeq(QString pageName) const;
+
+    Q_INVOKABLE QStringList getHomeSeq(QString pageName) const;
+
     Q_INVOKABLE void setAxisVelocityRatio(QString axisName, double ratio);
 
     double globalVelocityRatio() const
@@ -92,6 +99,7 @@ private slots:
 
 private:
     void checkMotionElementUILayoutConfig();
+    void axisPageHomeSeqConfigToMap();
     void subscribePosReq();
     void subscribeModulePosReq(AxisModuleConfig *axisModuleConfig);
     void subscribeMeasureHeightReq(ConfigObjectArray *axisConfigs);
@@ -105,6 +113,11 @@ private:
     const QString meUILayoutsConfigFileName = "./config/platformConfig/motionElementUILayout.json";
     ConfigObjectArray *meUILayouts;
     ConfigFile *meUILayoutsConfigFile;
+
+    const QString axisPageHomeSeqConfigFileName = "./config/platformConfig/axisPageHomeSeq.json";
+    ConfigObjectArray *axisPageHomeSeq;
+    ConfigFile *axisPageHomeSeqConfigFile;
+    QMap<QString, AxisPageHomeSeq *> axisPageHomeSeqMap;
 
     MotionConfigManager *m_motionConfigManager;
     MotionStatePublisher *m_motionStatePublisher;

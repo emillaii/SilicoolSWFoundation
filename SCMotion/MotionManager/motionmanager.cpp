@@ -175,6 +175,23 @@ void MotionManager::moveMultiAxes(QList<QString> axisNames, QList<double> target
     }
 }
 
+void MotionManager::homeMotors(QStringList homeSeq)
+{
+    foreach (auto motors, homeSeq)
+    {
+        auto motorList = motors.split(",");
+        QStringList uuids;
+        foreach (auto motor, motorList)
+        {
+            uuids.append(executeInstruction(MotionElement::Axis, motor, "home", QVariantList(), true));
+        }
+        foreach (auto uuid, uuids)
+        {
+            getInstructionExecutionResult(uuid);
+        }
+    }
+}
+
 bool MotionManager::initMotionManager(QByteArray motionElementDefinition)
 {
     if (m_isInit)
