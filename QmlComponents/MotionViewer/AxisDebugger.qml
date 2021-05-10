@@ -306,7 +306,7 @@ Item {
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
-                            text: profilerPos.toFixed(5)
+                            text: Math.round(profilerPos * 100000) / 100000
                         }
                     }
                     Label {
@@ -323,7 +323,7 @@ Item {
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
-                            text: feedbackPos.toFixed(5)
+                            text: Math.round(feedbackPos * 100000) / 100000
                         }
                     }
                     Label {
