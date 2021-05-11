@@ -12,6 +12,16 @@ void Transfer::init(SCAxis *belt, SCDI *sensor)
     SC_ASSERT(loadConfig != nullptr || unloadConfig != nullptr);
 }
 
+void Transfer::disableUnload()
+{
+    isDisableUnload = true;
+}
+
+void Transfer::enableUnload()
+{
+    isDisableUnload = false;
+}
+
 void Transfer::loadTray()
 {
     SC_ASSERT(loadConfig != nullptr);
@@ -77,6 +87,15 @@ void Transfer::unloadTray()
     SC_ASSERT(unloadConfig != nullptr);
     SC_ASSERT(belt != nullptr && sensor != nullptr);
 
+    DiStateMonitor::getIns().registerDi(sensor->name());
+    if (!isConnSig)
+    {
+        connect(&DiStateMonitor::getIns(), &DiStateMonitor::diStateChanged, this, &Transfer::onDiStateChanged, Qt::DirectConnection);
+        isConnSig = true;
+    }
+    AutoUnregisterDi t(sensor->name());
+    sensorLostSignal = false;
+
     belt->velocityMove(unloadConfig->beltRunDirection());
     ErrorHandler::tryToHandleGeneralError<void>(
         [this] {
@@ -84,7 +103,7 @@ void Transfer::unloadTray()
             timer.start();
             while (true)
             {
-                if (sensor->checkState(false))
+                if (trayUnloaded())
                 {
                     if (unloadConfig->delayAfterSNRLostSignal() > 0)
                     {
@@ -98,7 +117,7 @@ void Transfer::unloadTray()
                     belt->stop();
                     throw GeneralError(name, tr("Unload tray timeout!"));
                 }
-                QThread::msleep(1);
+                QThread::msleep(3);
             }
         },
         [this] { belt->velocityMove(unloadConfig->beltRunDirection()); });
@@ -130,4 +149,25 @@ void Transfer::returnbackTray(SCDI *entranceSNR)
             }
         },
         [this] { belt->velocityMove(SCAxis::oppositeDir(loadConfig->beltRunDirection())); });
+}
+
+void Transfer::onDiStateChanged(QString diName, bool state)
+{
+    if (sensor != nullptr && sensor->name() == diName)
+    {
+        if (!state)
+        {
+            sensorLostSignalTime = QDateTime::currentMSecsSinceEpoch();
+        }
+        sensorLostSignal = !state;
+    }
+}
+
+bool Transfer::trayUnloaded()
+{
+    if (isDisableUnload)
+    {
+        return true;
+    }
+    return sensorLostSignal && ((QDateTime::currentMSecsSinceEpoch() - sensorLostSignalTime) >= unloadConfig->snrLostSignalHoldTime());
 }

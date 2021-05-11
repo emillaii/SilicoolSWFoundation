@@ -83,12 +83,14 @@ class SCMOTIONSHARED_EXPORT UnloadConfig : public ConfigObject
 
     Q_PROPERTY(SCAxis::Direction beltRunDirection READ beltRunDirection WRITE setBeltRunDirection NOTIFY beltRunDirectionChanged)
     Q_PROPERTY(int unloadTimeout READ unloadTimeout WRITE setUnloadTimeout NOTIFY unloadTimeoutChanged)
+    Q_PROPERTY(int snrLostSignalHoldTime READ snrLostSignalHoldTime WRITE setSnrLostSignalHoldTime NOTIFY snrLostSignalHoldTimeChanged)
     Q_PROPERTY(int delayAfterSNRLostSignal READ delayAfterSNRLostSignal WRITE setDelayAfterSNRLostSignal NOTIFY delayAfterSNRLostSignalChanged)
 
 public:
     UnloadConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         setUnit("unloadTimeout", "ms");
+        setUnit("snrLostSignalHoldTime", "ms");
         setUnit("delayAfterSNRLostSignal", "ms");
         init();
     }
@@ -106,6 +108,11 @@ public:
     int delayAfterSNRLostSignal() const
     {
         return m_delayAfterSNRLostSignal;
+    }
+
+    int snrLostSignalHoldTime() const
+    {
+        return m_snrLostSignalHoldTime;
     }
 
 public slots:
@@ -136,6 +143,15 @@ public slots:
         emit delayAfterSNRLostSignalChanged(m_delayAfterSNRLostSignal);
     }
 
+    void setSnrLostSignalHoldTime(int snrLostSignalHoldTime)
+    {
+        if (m_snrLostSignalHoldTime == snrLostSignalHoldTime)
+            return;
+
+        m_snrLostSignalHoldTime = snrLostSignalHoldTime;
+        emit snrLostSignalHoldTimeChanged(m_snrLostSignalHoldTime);
+    }
+
 signals:
     void beltRunDirectionChanged(SCAxis::Direction beltRunDirection);
 
@@ -143,10 +159,13 @@ signals:
 
     void delayAfterSNRLostSignalChanged(int delayAfterSNRLostSignal);
 
+    void snrLostSignalHoldTimeChanged(int snrLostSignalHoldTime);
+
 private:
     SCAxis::Direction m_beltRunDirection{ SCAxis::Positive };
     int m_unloadTimeout = 10000;
     int m_delayAfterSNRLostSignal = -1;
+    int m_snrLostSignalHoldTime = -1;
 };
 
 #endif    // TRANSFERCONFIG_H
