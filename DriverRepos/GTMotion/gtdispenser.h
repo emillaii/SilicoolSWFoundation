@@ -33,7 +33,10 @@ private:
 private:
     const double MinLineLen = 0.001;
 
-    static int GtDispenserCount;
+    static int GtCore1DispenserCount;
+    static int GtCore2DispenserCount;
+    bool giveCrdIndex = false;
+
     short m_crd = 1;
     int m_psoIndex = 1;
 

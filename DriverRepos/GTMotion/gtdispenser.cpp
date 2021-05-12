@@ -1,17 +1,11 @@
 #include "gtdispenser.h"
 
-int GTDispenser::GtDispenserCount = 0;
+int GTDispenser::GtCore1DispenserCount = 0;
+int GTDispenser::GtCore2DispenserCount = 0;
 
 GTDispenser::GTDispenser(const QLoggingCategory &logCate, DispenserConfig *dispenserConfig, QObject *parent)
     : SCDispenser(logCate, dispenserConfig, parent)
 {
-    GtDispenserCount++;
-    m_crd = GtDispenserCount;
-    m_psoIndex = m_crd;
-    if (GtDispenserCount > 2)
-    {
-        qWarning(logCate) << "More than 2 GTDispenser was created...";
-    }
 }
 
 void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGlueOut)
@@ -47,7 +41,33 @@ void GTDispenser::init(SCAxis *xAxis, SCAxis *yAxis, SCAxis *zAxis, SCDO *shotGl
     {
         throw SilicolAbort(tr("Interpolation related xy axes must have the same scale!"), EX_LOCATION);
     }
+
+    SC_ASSERT(xAxisCoreNo == 1 || xAxisCoreNo == 2)
     m_core = xAxisCoreNo;
+    if (!giveCrdIndex)
+    {
+        if (m_core == 1)
+        {
+            GtCore1DispenserCount++;
+            m_crd = GtCore1DispenserCount;
+            m_psoIndex = m_crd;
+            if (GtCore1DispenserCount > 2)
+            {
+                qWarning() << "More than 2 GTDispenser was created in Core1...";
+            }
+        }
+        else
+        {
+            GtCore2DispenserCount++;
+            m_crd = GtCore2DispenserCount;
+            m_psoIndex = m_crd;
+            if (GtCore2DispenserCount > 2)
+            {
+                qWarning() << "More than 2 GTDispenser was created in Core2...";
+            }
+        }
+        giveCrdIndex = true;
+    }
     SCDispenser::init(xAxis, yAxis, zAxis, shotGlueOut);
 }
 
