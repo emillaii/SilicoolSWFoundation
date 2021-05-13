@@ -90,6 +90,7 @@ class LaserConfig : public ConfigObject
     Q_OBJECT
 
     Q_PROPERTY(SerialPortConfig *serialPortConfig READ serialPortConfig)
+    Q_PROPERTY(LaserStationConfig *auxLaserConfig READ auxLaserConfig)
     Q_PROPERTY(LaserStationConfig *leftLaserConfig READ leftLaserConfig)
     Q_PROPERTY(LaserStationConfig *rightLaserConfig READ rightLaserConfig)
 
@@ -97,9 +98,11 @@ public:
     LaserConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         m_serialPortConfig = new SerialPortConfig(this);
+        m_auxLaserConfig = new LaserStationConfig(this);
         m_leftLaserConfig = new LaserStationConfig(this);
         m_rightLaserConfig = new LaserStationConfig(this);
         m_serialPortConfig->setObjectName("LaserSerialPortConfig");
+        m_auxLaserConfig->setObjectName("AuxLaserStationConfig");
         m_leftLaserConfig->setObjectName("LeftLaserStationConfig");
         m_rightLaserConfig->setObjectName("RightLaserStationConfig");
         init();
@@ -120,10 +123,16 @@ public:
         return m_rightLaserConfig;
     }
 
+    LaserStationConfig *auxLaserConfig() const
+    {
+        return m_auxLaserConfig;
+    }
+
 private:
     SerialPortConfig *m_serialPortConfig;
     LaserStationConfig *m_leftLaserConfig;
     LaserStationConfig *m_rightLaserConfig;
+    LaserStationConfig *m_auxLaserConfig;
 };
 
 #endif    // LASERCONFIG_H
