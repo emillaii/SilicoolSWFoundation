@@ -271,7 +271,7 @@ void GTAxis::velocityMoveImpl(Direction dir, double vel, double acc)
         TJogPrm jogParam;
         checkResult1(GTN_GetJogPrm(coreNo, index, &jogParam));
         jogParam.acc = acc * gtAxisConfig->scale() / AccCoeff;
-        jogParam.dec = jogParam.acc;
+        jogParam.dec = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
         checkResult1(GTN_SetJogPrm(coreNo, index, &jogParam));
     }
     catch (SilicoolException &se)
