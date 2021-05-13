@@ -104,6 +104,8 @@ private:
     const int LineLen = 60;
     const int LineWidth = 5;
 
+    bool isOpenVisionMaster = false;
+
     QMap<int, HikVisionResult *> hikResults;
     QMutex hikResultsLocker;
     ConfigFile *hikVisionConfigFile;

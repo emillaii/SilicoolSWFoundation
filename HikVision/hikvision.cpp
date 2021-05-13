@@ -180,15 +180,22 @@ void HikVision::startVisionMaster(bool start)
     if (start)
     {
         CHECK_MVS_RES(IMVS_PF_StartVisionMaster(m_handle, hikVisionConfig->visionMasterPath().toUtf8(), 10000));
+        isOpenVisionMaster = true;
     }
     else
     {
+        isOpenVisionMaster = false;
         CHECK_MVS_RES(IMVS_PF_CloseVisionMaster(m_handle));
     }
 }
 
 void HikVision::showVisionMaster(bool show)
 {
+    if (show && !isOpenVisionMaster)
+    {
+        startVisionMaster(true);
+        QThread::msleep(100);
+    }
     CHECK_MVS_RES(IMVS_PF_ShowVisionMaster(m_handle, show ? 1 : 0));
 }
 
