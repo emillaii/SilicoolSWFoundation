@@ -49,8 +49,8 @@ void ModulePos::setAxisModuleConfig(AxisModuleConfig *value)
 
 void AxisModule::init()
 {
-    axisModuleConfig->modulePos2Dic();
-    qCDebug(motionCate()) << "Init" << axisModuleConfig->moduleName();
+    m_axisModuleConfig->modulePos2Dic();
+    qCDebug(motionCate()) << "Init" << m_axisModuleConfig->moduleName();
     initImpl();
 }
 

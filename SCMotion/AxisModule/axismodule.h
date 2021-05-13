@@ -174,14 +174,19 @@ class SCMOTIONSHARED_EXPORT AxisModule : public QObject
     Q_OBJECT
 
 public:
-    AxisModule(AxisModuleConfig *axisModuleConfig, QObject *parent = nullptr) : QObject(parent), axisModuleConfig(axisModuleConfig) {}
+    AxisModule(AxisModuleConfig *axisModuleConfig, QObject *parent = nullptr) : QObject(parent), m_axisModuleConfig(axisModuleConfig) {}
 
     void init();
+
+    AxisModuleConfig *axisModuleConfig() const
+    {
+        return m_axisModuleConfig;
+    }
 
     template <typename T>
     T *getPos(QString posName)
     {
-        return axisModuleConfig->getPos<T>(posName);
+        return m_axisModuleConfig->getPos<T>(posName);
     }
 
     bool useVelInPosCfg() const;
@@ -200,7 +205,7 @@ protected:
     virtual void initImpl() = 0;
 
 private:
-    AxisModuleConfig *axisModuleConfig;
+    AxisModuleConfig *m_axisModuleConfig;
     bool m_useVelInPosCfg = true;
     bool m_useAccInPosCfg = true;
 };
