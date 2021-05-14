@@ -366,9 +366,28 @@ void SCAxis::tryToMove(double targetPos, uint checkInterval, int stepCount, doub
     waitArrivedPos(targetPos, precision);
 }
 
+void SCAxis::waitStopped()
+{
+    int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
+    if (remainedDelay > 0)
+    {
+        QThread::msleep(remainedDelay);
+    }
+    QElapsedTimer timer;
+    timer.start();
+    while (isRunning())
+    {
+        QThread::msleep(1);
+        if (timer.elapsed() > 30000)
+        {
+            timer.restart();
+            qCWarning(motionCate()) << "Waiting axis stopped..." << name();
+        }
+    }
+}
+
 void SCAxis::waitProfilerStopped(double targetPos)
 {
-    const int CheckRunningDelayAfterMove = 3;
     int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
     if (remainedDelay > 0)
     {
@@ -713,16 +732,26 @@ void SCAxis::startReciprocate(double pos1, int delay1, double pos2, int delay2, 
     isReciprocating = true;
     AutoResetBool t(&isReciprocating, false);
 
+    double profileTime = 0;
+    double settlingTime = 0;
+    QElapsedTimer timer;
+
     for (int i = 0; i < times; i++)
     {
         if (!isReciprocating)
         {
             return;
         }
-        {
-            SCTimer _t(QString("Move to %1").arg(pos1), motionCate());
-            absMove(pos1);
-        }
+
+        timer.restart();
+        absMove(pos1, false);
+        waitProfilerStopped(pos1);
+        profileTime = timer.elapsed();
+        timer.restart();
+        waitArrivedPos(pos1, 0.1);
+        settlingTime = timer.elapsed();
+        qDebug(motionCate()) << QString("Move to %1, Profile time: %2ms, Settling time: %3ms.").arg(pos1).arg(profileTime).arg(settlingTime);
+
         if (delay1 > 0)
         {
             QThread::msleep(static_cast<uint>(delay1));
@@ -731,10 +760,16 @@ void SCAxis::startReciprocate(double pos1, int delay1, double pos2, int delay2, 
         {
             return;
         }
-        {
-            SCTimer _t(QString("Move to %1").arg(pos2), motionCate());
-            absMove(pos2);
-        }
+
+        timer.restart();
+        absMove(pos2, false);
+        waitProfilerStopped(pos2);
+        profileTime = timer.elapsed();
+        timer.restart();
+        waitArrivedPos(pos2, 0.1);
+        settlingTime = timer.elapsed();
+        qDebug(motionCate()) << QString("Move to %1, Profile time: %2ms, Settling time: %3ms.").arg(pos2).arg(profileTime).arg(settlingTime);
+
         if (delay2 > 0)
         {
             QThread::msleep(static_cast<uint>(delay2));

@@ -190,6 +190,8 @@ public:
 
     void tryToMove(double targetPos, uint checkInterval = 10, int stepCount = 10, double precision = 0.1, int timeout = 60000);
 
+    // 等待规划停止，不检测是否停在目标位置
+    void waitStopped();
     // 等待规划停止，检查规划是否停在目标位置
     void waitProfilerStopped(double targetPos);
     void waitProfilerStopped();
@@ -392,6 +394,7 @@ private:
 
 private:
     const double MinStep = 0.00001;
+    const int CheckRunningDelayAfterMove = 3;
 
     bool isConnectConfigChangedSignal = false;
 
