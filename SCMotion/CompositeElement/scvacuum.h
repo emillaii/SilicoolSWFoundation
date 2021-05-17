@@ -1,4 +1,4 @@
-#ifndef SCVACUUM_H
+﻿#ifndef SCVACUUM_H
 #define SCVACUUM_H
 
 #include "BasicElement/scdi.h"
@@ -7,6 +7,7 @@
 #include "extendedqtimer.h"
 #include "motionutility.h"
 #include "scmotion_global.h"
+#include "singletonthread.h"
 #include "vacuumconfig.h"
 #include <QObject>
 

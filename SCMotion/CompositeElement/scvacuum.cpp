@@ -1,4 +1,4 @@
-#include "scvacuum.h"
+﻿#include "scvacuum.h"
 
 SCVacuum::SCVacuum(QString name, QObject *parent) : QObject(parent)
 {
@@ -6,6 +6,7 @@ SCVacuum::SCVacuum(QString name, QObject *parent) : QObject(parent)
     MotionElementContainer::getIns()->registerItem<SCVacuum>(name, this);
     schedulingTimer.setSingleShot(true);
     connect(&schedulingTimer, &QTimer::timeout, this, &SCVacuum::closeBlowOutput, Qt::DirectConnection);
+    schedulingTimer.moveToThread(&SingletonThd::timerThread());
 }
 
 VacuumConfig *SCVacuum::config() const

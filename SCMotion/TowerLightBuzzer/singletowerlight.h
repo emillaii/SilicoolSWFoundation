@@ -2,8 +2,10 @@
 #define SINGLETOWERLIGHT_H
 
 #include "BasicElement/scdo.h"
+#include "extendedqtimer.h"
 #include "mashineStateIndicator/buzzer.h"
 #include "motionutility.h"
+#include "singletonthread.h"
 #include <QObject>
 #include <QTimer>
 
@@ -23,7 +25,7 @@ private:
 private:
     SCDO *m_output;
     BlinkConfig *m_blinkConfig;
-    QTimer timer;
+    ExtendedQTimer timer;
     bool nextBlinkingState = true;
 };
 
