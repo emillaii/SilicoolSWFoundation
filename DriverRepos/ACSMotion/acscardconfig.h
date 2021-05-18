@@ -14,7 +14,7 @@ class ACSCardConfig : public ConfigObject
     Q_PROPERTY(int handle READ handle WRITE setHandle NOTIFY handleChanged)
 
 public:
-    Q_INVOKABLE ACSCardConfig(QObject *parent = nullptr)
+    Q_INVOKABLE ACSCardConfig(QObject *parent = nullptr): ConfigObject (parent)
     {
         setSelectFileProperty("setupFileName", false);
         init();

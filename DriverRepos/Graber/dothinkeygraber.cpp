@@ -14,7 +14,7 @@ DothinkeyGraber::DothinkeyGraber(QObject *parent) : SCGraber(parent)
 {
     for (int i = 0; i < MAX_DEV; i++)
     {
-        m_devName[i] = new char[1024];
+        m_devName[i] = new char[1024*4];
     }
 }
 
@@ -224,7 +224,6 @@ void DothinkeyGraber::startCamera()
     {
         qCritical("[DothinkeyStartCamera] Init Sensor Failed! size: %d mode: %d  result: %d\r\n", pSensor->ParaListSize, pSensor->mode, result);
         throw SilicolAbort(tr("Init Sensor Failed!"));
-
     }
 
     if (pSensor->type == D_YUV || pSensor->type == D_YUV_SPI || pSensor->type == D_YUV_MTK_S)
