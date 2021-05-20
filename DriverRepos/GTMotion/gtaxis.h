@@ -76,6 +76,7 @@ protected:
 private slots:
     void onInposBandParamChanged(int param);
     void onSmoothParamChanged(double v);
+    void onStopAccChanged(double v);
 
 private:
     bool refreshLimitStatus(bool isPositiveLimit);

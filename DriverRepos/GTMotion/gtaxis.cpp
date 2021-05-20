@@ -135,6 +135,8 @@ void GTAxis::initImpl()
         connect(gtAxisConfig, &GTAxisConfig::inPosHoldTimeChanged, this, &GTAxis::onInposBandParamChanged);
         connect(gtAxisConfig, &GTAxisConfig::smoothTimeChanged, this, &GTAxis::onSmoothParamChanged);
         connect(gtAxisConfig, &GTAxisConfig::smoothKChanged, this, &GTAxis::onSmoothParamChanged);
+        connect(gtAxisConfig, &GTAxisConfig::stopAccRatioChanged, this, &GTAxis::onStopAccChanged);
+        connect(gtAxisConfig, &GTAxisConfig::maxAccChanged, this, &GTAxis::onStopAccChanged);
         isConnectGtParamChangedSig = true;
     }
     clearPosImpl();
@@ -381,6 +383,14 @@ void GTAxis::onSmoothParamChanged(double v)
     Q_UNUSED(v)
     short res = GTN_SetAxisMotionSmooth(coreNo, index, gtAxisConfig->smoothTime(), gtAxisConfig->smoothK());
     printError(res, QString("%1 GTN_SetAxisMotionSmooth failed!").arg(name()));
+}
+
+void GTAxis::onStopAccChanged(double v)
+{
+    Q_UNUSED(v)
+    double stopAcc = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
+    short res = GTN_SetStopDec(coreNo, index, stopAcc, stopAcc * 10);
+    printError(res, QString("%1 GTN_SetStopDec failed!").arg(name()));
 }
 
 bool GTAxis::refreshLimitStatus(bool isPositiveLimit)
