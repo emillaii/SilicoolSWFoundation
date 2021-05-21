@@ -1,4 +1,4 @@
-#include "visionconfigmanager.h"
+﻿#include "visionconfigmanager.h"
 
 VisionConfigManager::VisionConfigManager(const QMetaObject &visionLocationConfigMetaObj, QString configDir, QObject *parent)
     : QObject(parent), m_visionLocationConfigMetaObj(&visionLocationConfigMetaObj), m_dutRelatedConfigDir(configDir)
@@ -35,7 +35,13 @@ VisionConfigManager::VisionConfigManager(const QMetaObject &visionLocationConfig
     config2Dic();
     removeRedundantConfig();
     createLostConfig();
+    checkLocationCalibrationPairNameChanged();
     setOptionalProperties();
+}
+
+bool VisionConfigManager::calibrationBtnVisible(QString locationName, QString calibrationName)
+{
+    return calibrationConfigMap.contains(calibrationName) && calibrationConfigMap[calibrationName]->locationName() == locationName;
 }
 
 void VisionConfigManager::config2Dic()
@@ -153,6 +159,40 @@ void VisionConfigManager::removeRedundantConfig()
             {
                 cameraConfigMap.remove(cameraName);
             }
+        }
+    }
+}
+
+void VisionConfigManager::checkLocationCalibrationPairNameChanged()
+{
+    QStringList checkedCalibrationNames;
+    auto vlDefinitions = ved->visionLocationDefinitions();
+    for (int i = 0; i < vlDefinitions->count(); i++)
+    {
+        auto vlDefinition = vlDefinitions->getConfig<VisionLocationDefinition>(i);
+        auto locationConfig = visionLocationConfigMap[vlDefinition->locationName()];
+        if (locationConfig->calibrationName() != vlDefinition->calibrationName())
+        {
+            qCWarning(visionCate()) << QString(u8"检测到PR所用的标定名称改变！PR名：%1，原标定名：%2，新标定名：%3，现在自动应用新的标定名！")
+                                           .arg(vlDefinition->locationName())
+                                           .arg(locationConfig->calibrationName())
+                                           .arg(vlDefinition->calibrationName());
+            locationConfig->setCalibrationName(vlDefinition->calibrationName());
+        }
+
+        if (!checkedCalibrationNames.contains(vlDefinition->calibrationName()))
+        {
+            auto calibrationConfig = calibrationConfigMap[vlDefinition->calibrationName()];
+            if (calibrationConfig->locationName() != vlDefinition->locationName())
+            {
+                qCWarning(visionCate()) << QString(u8"检测到标定时所用的PR名称改变！标定名：%1，原PR名：%2，新PR名：%"
+                                                   u8"3，现在自动应用新的PR名！若多个PR使用同一个标定，则标定时使用第一个PR。")
+                                               .arg(vlDefinition->calibrationName())
+                                               .arg(calibrationConfig->locationName())
+                                               .arg(vlDefinition->locationName());
+                calibrationConfig->setLocationName(vlDefinition->locationName());
+            }
+            checkedCalibrationNames.append(vlDefinition->calibrationName());
         }
     }
 }

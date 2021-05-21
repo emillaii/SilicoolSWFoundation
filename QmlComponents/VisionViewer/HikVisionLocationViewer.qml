@@ -1,4 +1,4 @@
-import QtQuick 2.12
+﻿import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import ConfigElementType 1.0
@@ -203,6 +203,9 @@ GroupBox {
             lightBrightnessSlider.value = __visionLocationConfig.lightBrightness
             lightBrightnessSlider2.value = __visionLocationConfig.secondLightBrightness
             connVisionLocationConfigChanged.target = __visionLocationConfig
+            if(calibrateBtnVisible && !visionConfigManager.calibrationBtnVisible(visionLocationName, calibrationName)){
+                calibrateBtnVisible = false
+            }
         }
     }
 }

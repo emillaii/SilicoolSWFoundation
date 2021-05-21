@@ -1,4 +1,4 @@
-#ifndef VISIONCONFIGMANAGER_H
+﻿#ifndef VISIONCONFIGMANAGER_H
 #define VISIONCONFIGMANAGER_H
 
 #include "Calibration/calibrationconfig.h"
@@ -71,12 +71,16 @@ public:
         return visionLocationConfigMap[visionLocationName];
     }
 
+    Q_INVOKABLE bool calibrationBtnVisible(QString locationName, QString calibrationName);
+
 private:
     void config2Dic();
 
     void createLostConfig();
 
     void removeRedundantConfig();
+
+    void checkLocationCalibrationPairNameChanged();
 
     void setOptionalProperties();
 
