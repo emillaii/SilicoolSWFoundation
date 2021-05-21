@@ -19,6 +19,87 @@ Item {
         connConfigRemoved.target = configModel
     }
 
+    Popup{
+        id: popupRenameMotin
+
+        x: 900
+        y: 30
+        closePolicy: Popup.CloseOnEscape
+
+        ColumnLayout{
+            Label{
+                text: qsTr("按'ESC'退出！")
+            }
+            Label{
+                text: qsTr("请确认本次开启软件前，renameManagerConfig.json中，将enable设为true！")
+            }
+            Label{
+                text: qsTr("重命名完成后，请改回false，以免影响运行性能!")
+            }
+            Label{
+                text: qsTr("重命名完成后，请不要再修改任何配置，并立即重启软件！")
+            }
+            RowLayout{
+                Label{
+                    text: qsTr("元素类型:")
+                }
+                ComboBox{
+                    id: cmbElementType
+                    model: ["Axis", "DI", "DO", "Vacuum", "Cyl", "AxisModule"]
+                }
+            }
+            RowLayout{
+                Label{
+                    text: qsTr("原名称:")
+                }
+                TextField{
+                    id: txtOldName
+                    implicitWidth: 300
+                    selectByMouse: true
+                }
+            }
+            RowLayout{
+                Label{
+                    text: qsTr("新名称:")
+                }
+                TextField{
+                    id: txtNewName
+                    implicitWidth: 300
+                    selectByMouse: true
+                }
+            }
+            Button{
+                text: qsTr("重命名")
+                onClicked: {
+                    if(cmbElementType.currentText == ""){
+                        return
+                    }
+                    if(cmbElementType.currentText == "Axis"){
+                        masterMotionManager.renameAxis(txtOldName.text, txtNewName.text)
+                    }
+                    else if(cmbElementType.currentText == "DI"){
+                        masterMotionManager.renameDi(txtOldName.text, txtNewName.text)
+                    }
+                    else if(cmbElementType.currentText == "DO"){
+                        masterMotionManager.renameDo(txtOldName.text, txtNewName.text)
+                    }
+                    else if(cmbElementType.currentText == "Vacuum"){
+                        masterMotionManager.renameVacuum(txtOldName.text, txtNewName.text)
+                    }
+                    else if(cmbElementType.currentText == "Cyl"){
+                        masterMotionManager.renameCyl(txtOldName.text, txtNewName.text)
+                    }
+                    else if(cmbElementType.currentText == "AxisModule"){
+                        masterMotionManager.renameAxisModule(txtOldName.text, txtNewName.text)
+                    }
+
+                    txtOldName.clear()
+                    txtNewName.clear()
+                }
+            }
+        }
+    }
+
     ColumnLayout{
         anchors.fill: parent
 
@@ -64,6 +145,12 @@ Item {
                 text: qsTr("自动生成轴页面回零配置文件")
                 onClicked: {
                     tem.runSingleCmd(masterMotionManager, "generateAxisPageHomeSeqConfigFile")
+                }
+            }
+            Button{
+                text: qsTr("重命名")
+                onClicked: {
+                    popupRenameMotin.open()
                 }
             }
         }

@@ -1,7 +1,8 @@
-#ifndef CYLINDERCONFIG_H
+﻿#ifndef CYLINDERCONFIG_H
 #define CYLINDERCONFIG_H
 
 #include "configManager/configobject.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 
 class SCMOTIONSHARED_EXPORT CylinderConfig : public ConfigObject
@@ -34,6 +35,11 @@ public:
         setUnit("delayAfterMoveToFalse", "ms");
         setUnit("delayAfterMoveoToTrue", "ms");
         init();
+        RenameManager::getIns().subscribeDiNameChanged(this, "falseInput");
+        RenameManager::getIns().subscribeDiNameChanged(this, "trueInput");
+        RenameManager::getIns().subscribeDoNameChanged(this, "falseOutput");
+        RenameManager::getIns().subscribeDoNameChanged(this, "trueOutput");
+        RenameManager::getIns().subscribeCylNameChanged(this, "name");
     }
 
     void setOptionalIO(QVariantList optionalDIs, QVariantList optionalDOs)

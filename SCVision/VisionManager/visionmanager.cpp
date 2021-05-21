@@ -1,4 +1,4 @@
-#include "visionmanager.h"
+﻿#include "visionmanager.h"
 
 VisionManager::~VisionManager()
 {
@@ -406,6 +406,24 @@ void VisionManager::startMoveAndPr()
 void VisionManager::stopMoveAndPr()
 {
     runMoveAndPr = false;
+}
+
+void VisionManager::renameCamera(QString oldName, QString newName)
+{
+    auto camNames = visionConfigManager->visionElementDefinition()->cameraNames();
+    for (int i = 0; i < camNames->count(); i++)
+    {
+        if (camNames->at(i).toString() == oldName)
+        {
+            camNames->setConfig(i, newName);
+        }
+    }
+    RenameManager::getIns().renameCamera(oldName, newName);
+}
+
+void VisionManager::renamePR(QString oldName, QString newName)
+{
+    RenameManager::getIns().renamePr(oldName, newName);
 }
 
 void VisionManager::onDutTypeChanged(QString dutType)

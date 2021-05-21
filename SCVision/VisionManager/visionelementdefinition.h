@@ -1,9 +1,10 @@
-#ifndef VISIONELEMENTDEFINITION_H
+﻿#ifndef VISIONELEMENTDEFINITION_H
 #define VISIONELEMENTDEFINITION_H
 
 #include "configManager/configarray.h"
 #include "configManager/configobject.h"
 #include "configManager/configobjectarray.h"
+#include "renameManager/renamemanager.h"
 #include "scvision_global.h"
 
 class SCVISIONSHARED_EXPORT VisionLocationDefinition : public ConfigObject
@@ -18,6 +19,7 @@ public:
     {
         disableTranslate();
         init();
+        RenameManager::getIns().subscribePrNameChanged(this, "locationName");
     }
     QString locationName() const
     {

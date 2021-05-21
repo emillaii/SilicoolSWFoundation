@@ -1,4 +1,4 @@
-#include "singleaxis.h"
+﻿#include "singleaxis.h"
 
 SingleAxisPos::SingleAxisPos() : ModulePos()
 {
@@ -10,6 +10,7 @@ SingleAxisConfig::SingleAxisConfig(QObject *parent) : AxisModuleConfig(&SingleAx
 {
     setEngineerAuthority("axisName");
     init();
+    RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
 }
 
 SingleAxis::SingleAxis(QString moduleName, SingleAxisConfig *sAxisConfig, QObject *parent) : AxisModule(sAxisConfig, parent), sAxisConfig(sAxisConfig)

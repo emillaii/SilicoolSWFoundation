@@ -1,4 +1,4 @@
-#include "xyzmodule.h"
+﻿#include "xyzmodule.h"
 
 XYZModulePos::XYZModulePos() : XYModulePos()
 {
@@ -46,6 +46,9 @@ XYZModuleConfig::XYZModuleConfig(QObject *parent) : AxisModuleConfig(&XYZModuleP
          << "useYSafetyPos";
     setEngineerAuthorities(args);
     init();
+    RenameManager::getIns().subscribeAxisNameChanged(this, "xAxisName");
+    RenameManager::getIns().subscribeAxisNameChanged(this, "yAxisName");
+    RenameManager::getIns().subscribeAxisNameChanged(this, "zAxisName");
 }
 
 XYZModule::XYZModule(QString name, XYZModuleConfig *xyzModuleConfig, QObject *parent)

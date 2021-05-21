@@ -1,8 +1,9 @@
-#ifndef SCCAMERACONFIG_H
+﻿#ifndef SCCAMERACONFIG_H
 #define SCCAMERACONFIG_H
 
 #include "configManager/configobject.h"
 #include "enumhelper.h"
+#include "renameManager/renamemanager.h"
 #include "scvision_global.h"
 
 class SCVISIONSHARED_EXPORT CameraConfig : public ConfigObject
@@ -72,6 +73,7 @@ public:
              << "calibrationForMoveCamera";
         setEngineerAuthorities(args);
         init();
+        RenameManager::getIns().subscribeCameraNameChanged(this, "cameraName");
     }
 
     void setOptionalLscName(QVariantList optionalLscNames)

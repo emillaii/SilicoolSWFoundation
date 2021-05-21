@@ -1,4 +1,4 @@
-#ifndef MASTERMOTIONMANAGER_H
+﻿#ifndef MASTERMOTIONMANAGER_H
 #define MASTERMOTIONMANAGER_H
 
 #include "MotionManager/axispagehomeseq.h"
@@ -10,6 +10,7 @@
 #include "XYZRDebugger/xyzrdebuggermanager.h"
 #include "configManager/configobjectarray.h"
 #include "motionelementdefinition.h"
+#include "renameManager/renamemanager.h"
 #include "rep_motionManager_replica.h"
 #include "scmotion_global.h"
 #include <QObject>
@@ -74,6 +75,14 @@ public:
     void handleAbort();
     void handleReset();
 
+    // For rename
+    Q_INVOKABLE void renameAxis(QString oldName, QString newName);
+    Q_INVOKABLE void renameDi(QString oldName, QString newName);
+    Q_INVOKABLE void renameDo(QString oldName, QString newName);
+    Q_INVOKABLE void renameVacuum(QString oldName, QString newName);
+    Q_INVOKABLE void renameCyl(QString oldName, QString newName);
+    Q_INVOKABLE void renameAxisModule(QString oldName, QString newName);
+
 public slots:
     void initMotionManagers();
     void updateMoveProtections();
@@ -104,6 +113,7 @@ private:
     void subscribeModulePosReq(AxisModuleConfig *axisModuleConfig);
     void subscribeMeasureHeightReq(ConfigObjectArray *axisConfigs);
     void addPage(QString elementType, QString pageName, const QStringList &names, ConfigObjectArray *uiLayouts);
+    void renameUILayoutConfig(QString elementType, const QString &oldName, const QString &newName);
 
 private:
     const QString medsConfigFileName = "./config/platformConfig/motionElementDefinition.json";

@@ -1,10 +1,11 @@
-#ifndef XYMODULE_H
+﻿#ifndef XYMODULE_H
 #define XYMODULE_H
 
 #include "BasicElement/scaxis.h"
 #include "MotionManager/motionelementcontainer.h"
 #include "axismodule.h"
 #include "configManager/configobjectarray.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 #include <QObject>
 

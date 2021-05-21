@@ -1,4 +1,4 @@
-#ifndef VISIONMANAGER_H
+﻿#ifndef VISIONMANAGER_H
 #define VISIONMANAGER_H
 
 #include "Calibration/calibration.h"
@@ -80,6 +80,10 @@ public:
     {
         return m_vision;
     }
+
+    // For rename
+    Q_INVOKABLE void renameCamera(QString oldName, QString newName);
+    Q_INVOKABLE void renamePR(QString oldName, QString newName);
 
 public slots:
     void onDutTypeChanged(QString dutType);

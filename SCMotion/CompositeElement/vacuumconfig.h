@@ -1,7 +1,8 @@
-#ifndef VACUUMCONFIG_H
+﻿#ifndef VACUUMCONFIG_H
 #define VACUUMCONFIG_H
 
 #include "configManager/configobject.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 
 class SCMOTIONSHARED_EXPORT VacuumConfig : public ConfigObject
@@ -31,6 +32,10 @@ public:
         setUnit("blowTime", "ms");
         setUnit("blowTime2", "ms");
         init();
+        RenameManager::getIns().subscribeDiNameChanged(this, "feedbackInputName");
+        RenameManager::getIns().subscribeDoNameChanged(this, "vacuumizeOutputName");
+        RenameManager::getIns().subscribeDoNameChanged(this, "blowOutputName");
+        RenameManager::getIns().subscribeVacuumNameChanged(this, "name");
     }
 
     void setOptionalIO(QVariantList optionalDIs, QVariantList optionalDOs)

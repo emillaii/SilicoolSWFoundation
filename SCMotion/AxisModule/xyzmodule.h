@@ -1,7 +1,8 @@
-#ifndef XYZMODULE_H
+﻿#ifndef XYZMODULE_H
 #define XYZMODULE_H
 
 #include "configManager/configarray.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 #include "xymodule.h"
 

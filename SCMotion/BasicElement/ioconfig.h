@@ -1,4 +1,4 @@
-#ifndef IOCONFIG_H
+﻿#ifndef IOCONFIG_H
 #define IOCONFIG_H
 
 #include "configManager/configobject.h"

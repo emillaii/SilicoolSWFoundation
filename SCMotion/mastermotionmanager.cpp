@@ -1,4 +1,4 @@
-#include "mastermotionmanager.h"
+﻿#include "mastermotionmanager.h"
 
 MasterMotionManager::MasterMotionManager(BasicElementFactory *basicElementFactory, QString dutRelatedConfigFileDir, QObject *parent)
     : ObjectLivedThreadInstructionExecutor(parent)
@@ -21,6 +21,7 @@ MasterMotionManager::MasterMotionManager(BasicElementFactory *basicElementFactor
         nodes.append(node);
         motionManagerReplicas.append(replica);
     }
+    m_motionConfigManager->subscribeIONameChanged();
     XYZRDebuggerManager::getIns().setOptionalAxisNames(toVariantList(m_motionConfigManager->axisNames()));
     m_motionConfigManager->extractSoftLandingPos();
     m_motionConfigManager->initMoveProtectionConfig();
@@ -189,6 +190,113 @@ void MasterMotionManager::handleAbort()
 void MasterMotionManager::handleReset()
 {
     runIns("resetImpl", QVariantList(), false);
+}
+
+void MasterMotionManager::renameAxis(QString oldName, QString newName)
+{
+    renameUILayoutConfig("Axis", oldName, newName);
+    for (int i = 0; i < axisPageHomeSeq->count(); i++)
+    {
+        auto t_axisPageHomeSeq = axisPageHomeSeq->getConfig<AxisPageHomeSeq>(i);
+        for (int j = 0; j < t_axisPageHomeSeq->pageElements()->count(); j++)
+        {
+            if (t_axisPageHomeSeq->pageElements()->at(j).toString() == oldName)
+            {
+                t_axisPageHomeSeq->pageElements()->setConfig(j, newName);
+            }
+        }
+        for (int j = 0; j < t_axisPageHomeSeq->homeSeq()->count(); j++)
+        {
+            auto homeSeq = t_axisPageHomeSeq->homeSeq()->at(j).toString();
+            homeSeq.replace(oldName, newName);
+            t_axisPageHomeSeq->homeSeq()->setConfig(j, homeSeq);
+        }
+    }
+    RenameManager::getIns().renameAxis(oldName, newName);
+}
+
+void MasterMotionManager::renameDi(QString oldName, QString newName)
+{
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        auto med = m_meds->getConfig<MotionElementDefinition>(i);
+        for (int j = 0; j < med->diNames()->count(); j++)
+        {
+            if (med->diNames()->at(j).toString() == oldName)
+            {
+                med->diNames()->setConfig(j, newName);
+            }
+        }
+    }
+    renameUILayoutConfig("DI", oldName, newName);
+    RenameManager::getIns().renameDi(oldName, newName);
+}
+
+void MasterMotionManager::renameDo(QString oldName, QString newName)
+{
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        auto med = m_meds->getConfig<MotionElementDefinition>(i);
+        for (int j = 0; j < med->doNames()->count(); j++)
+        {
+            if (med->doNames()->at(j).toString() == oldName)
+            {
+                med->doNames()->setConfig(j, newName);
+            }
+        }
+    }
+    renameUILayoutConfig("DO", oldName, newName);
+    RenameManager::getIns().renameDo(oldName, newName);
+}
+
+void MasterMotionManager::renameVacuum(QString oldName, QString newName)
+{
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        auto med = m_meds->getConfig<MotionElementDefinition>(i);
+        for (int j = 0; j < med->vacuumNames()->count(); j++)
+        {
+            if (med->vacuumNames()->at(j).toString() == oldName)
+            {
+                med->vacuumNames()->setConfig(j, newName);
+            }
+        }
+    }
+    renameUILayoutConfig("Vacuum", oldName, newName);
+    RenameManager::getIns().renameVacuum(oldName, newName);
+}
+
+void MasterMotionManager::renameCyl(QString oldName, QString newName)
+{
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        auto med = m_meds->getConfig<MotionElementDefinition>(i);
+        for (int j = 0; j < med->cylNames()->count(); j++)
+        {
+            if (med->cylNames()->at(j).toString() == oldName)
+            {
+                med->cylNames()->setConfig(j, newName);
+            }
+        }
+    }
+    renameUILayoutConfig("Cylinder", oldName, newName);
+    RenameManager::getIns().renameCyl(oldName, newName);
+}
+
+void MasterMotionManager::renameAxisModule(QString oldName, QString newName)
+{
+    for (int i = 0; i < m_meds->count(); i++)
+    {
+        auto med = m_meds->getConfig<MotionElementDefinition>(i);
+        for (int j = 0; j < med->axisModules()->count(); j++)
+        {
+            if (med->cylNames()->at(j).toString() == oldName)
+            {
+                med->cylNames()->setConfig(j, newName);
+            }
+        }
+    }
+    RenameManager::getIns().renameAxisModule(oldName, newName);
 }
 
 void MasterMotionManager::initMotionManagers()
@@ -585,4 +693,22 @@ void MasterMotionManager::addPage(QString elementType, QString pageName, const Q
         pageElements->setConfig(i, names[i]);
     }
     uiLayouts->executeAddConfigObject(uiLayouts->count(), page);
+}
+
+void MasterMotionManager::renameUILayoutConfig(QString elementType, const QString &oldName, const QString &newName)
+{
+    for (int i = 0; i < meUILayouts->count(); i++)
+    {
+        auto meUILayout = meUILayouts->getConfig<MotionElementUILayout>(i);
+        if (meUILayout->elementType() == elementType)
+        {
+            for (int j = 0; j < meUILayout->pageElements()->count(); j++)
+            {
+                if (meUILayout->pageElements()->at(j).toString() == oldName)
+                {
+                    meUILayout->pageElements()->setConfig(j, newName);
+                }
+            }
+        }
+    }
 }

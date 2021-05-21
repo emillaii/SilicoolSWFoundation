@@ -1,8 +1,9 @@
-#ifndef MOVEANDPRCONFIG_H
+﻿#ifndef MOVEANDPRCONFIG_H
 #define MOVEANDPRCONFIG_H
 
 #include "configManager/configobject.h"
 #include "configManager/configobjectarray.h"
+#include "renameManager/renamemanager.h"
 
 class AxisMoveConfig : public ConfigObject
 {
@@ -17,6 +18,7 @@ public:
     Q_INVOKABLE AxisMoveConfig(QObject *parent = nullptr) : ConfigObject(parent)
     {
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
     }
 
     QString axisName() const
@@ -97,8 +99,7 @@ class MoveAndPrConfig : public ConfigObject
     Q_OBJECT
 
     Q_PROPERTY(ConfigObjectArray *axisMoveConfigs READ axisMoveConfigs)
-    Q_PROPERTY(
-        QString visionLocationName READ visionLocationName WRITE setVisionLocationName NOTIFY visionLocationNameChanged)
+    Q_PROPERTY(QString visionLocationName READ visionLocationName WRITE setVisionLocationName NOTIFY visionLocationNameChanged)
     Q_PROPERTY(int delayBeforePr READ delayBeforePr WRITE setDelayBeforePr NOTIFY delayBeforePrChanged)
     Q_PROPERTY(int times READ times WRITE setTimes NOTIFY timesChanged)
 
@@ -107,6 +108,7 @@ public:
     {
         m_axisMoveConfigs = new ConfigObjectArray(&AxisMoveConfig::staticMetaObject, this);
         init();
+        RenameManager::getIns().subscribePrNameChanged(this, "visionLocationName");
     }
 
     ConfigObjectArray *axisMoveConfigs() const

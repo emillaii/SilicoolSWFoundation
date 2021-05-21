@@ -1,7 +1,8 @@
-#ifndef XYZRDEBUGGERCONFIG_H
+﻿#ifndef XYZRDEBUGGERCONFIG_H
 #define XYZRDEBUGGERCONFIG_H
 
 #include "configManager/configobject.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 
 class SCMOTIONSHARED_EXPORT XYZRDebuggerDefinition : public ConfigObject
@@ -83,6 +84,10 @@ public:
              << "rAxisName";
         setEngineerAuthorities(args);
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "xAxisName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "yAxisName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "zAxisName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "rAxisName");
     }
 
     void setOptionalAxisName(QVariantList &axisNames)

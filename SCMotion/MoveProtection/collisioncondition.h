@@ -1,4 +1,4 @@
-#ifndef COLLISIONCONDITION_H
+﻿#ifndef COLLISIONCONDITION_H
 #define COLLISIONCONDITION_H
 
 #include "MotionManager/globalmotionelements.h"
@@ -6,6 +6,7 @@
 #include "comparisonoperation.h"
 #include "configManager/configobject.h"
 #include "errorHandling/actionerror.h"
+#include "renameManager/renamemanager.h"
 #include "rep_motionManager_source.h"
 #include "scmotion_global.h"
 #include <QDebug>
@@ -101,6 +102,7 @@ public:
     {
         setOptionalProperty("axisName", GlobalMotionElements::getIns().axisNames());
         setEngineerAuthority("axisName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
     }
 
     QString axisName() const

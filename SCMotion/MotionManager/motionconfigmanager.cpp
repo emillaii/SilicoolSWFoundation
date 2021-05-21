@@ -1,4 +1,4 @@
-#include "motionconfigmanager.h"
+﻿#include "motionconfigmanager.h"
 
 MotionConfigManager::MotionConfigManager(BasicElementFactory *basicElementFactory, QString configFileDir, QObject *parent)
     : QObject(parent), basicElementFactory(basicElementFactory), dutRelatedConfigFileDir(configFileDir)
@@ -436,6 +436,18 @@ void MotionConfigManager::setGlobalVelocityRatio(double globalVelocityRatio)
 void MotionConfigManager::setAxisVelocityRatio(QString axisName, double ratio)
 {
     axisConfigMap[axisName]->setVelocityRatio(ratio);
+}
+
+void MotionConfigManager::subscribeIONameChanged()
+{
+    foreach (auto diConfig, diConfigMap.values())
+    {
+        RenameManager::getIns().subscribeDiNameChanged(diConfig, "name");
+    }
+    foreach (auto doConfig, doConfigMap.values())
+    {
+        RenameManager::getIns().subscribeDoNameChanged(doConfig, "name");
+    }
 }
 
 SingleAxisPos *MotionConfigManager::getSAxisModulePos(QString moduleName, QString posName) const

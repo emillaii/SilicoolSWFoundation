@@ -85,6 +85,7 @@ SOURCES += \
         errorHandling/errorreporter.cpp \
         mymath.cpp \
         processkiller.cpp \
+        renameManager/renamemanager.cpp \
         serialPortWrapper/scserialport.cpp \
         singletonthread.cpp \
         systemCore/alarmhelper.cpp \
@@ -169,6 +170,8 @@ HEADERS += \
         mymath.h \
         pathCanvasEditor/patheditorconfig.h \
         processkiller.h \
+        renameManager/renamemanager.h \
+        renameManager/renamemanagerconfig.h \
         serialPortWrapper/scserialport.h \
         singletonthread.h \
         systemCore/alarmhelper.h \

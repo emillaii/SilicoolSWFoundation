@@ -1,4 +1,4 @@
-#include "axismodule.h"
+﻿#include "axismodule.h"
 
 ModulePos::ModulePos()
 {
@@ -16,6 +16,7 @@ AxisModuleConfig::AxisModuleConfig(const QMetaObject *modulePosMetaObj, QObject 
     setReadOnlyProperty("moduleName");
     setIdentityProperty("moduleName");
     init();
+    RenameManager::getIns().subscribeAxisModuleNameChanged(this, "moduleName");
 }
 
 void ModulePos::updatePosWithCurrentPos(QVariantMap axesCurrentPos)

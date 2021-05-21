@@ -1,4 +1,4 @@
-#include "xymodule.h"
+﻿#include "xymodule.h"
 
 XYModulePos::XYModulePos() : ModulePos()
 {
@@ -16,6 +16,8 @@ XYModuleConfig::XYModuleConfig(QObject *parent) : AxisModuleConfig(&XYModulePos:
          << "yAxisName";
     setEngineerAuthorities(args);
     init();
+    RenameManager::getIns().subscribeAxisNameChanged(this, "xAxisName");
+    RenameManager::getIns().subscribeAxisNameChanged(this, "yAxisName");
 }
 
 XYModule::XYModule(QString name, XYModuleConfig *xyModuleConfig, QObject *parent) : AxisModule(xyModuleConfig, parent), xyModuleConfig(xyModuleConfig)

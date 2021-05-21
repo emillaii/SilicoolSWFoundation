@@ -1,10 +1,11 @@
-#ifndef AXISCONFIG_H
+﻿#ifndef AXISCONFIG_H
 #define AXISCONFIG_H
 
 #include "commonmethod.h"
 #include "configManager/configobject.h"
 #include "configManager/configobjectarray.h"
 #include "enumhelper.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 #include "softlandingpos.h"
 
@@ -388,6 +389,7 @@ public:
         setUnit("maxVel", "mm/s");
         setUnit("maxAcc", "mm/s/s");
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "name");
     }
 
     void setOptionalIOName(QVariantList diNames, QVariantList doNames)

@@ -1,10 +1,11 @@
-#ifndef SINGLEAXIS_H
+﻿#ifndef SINGLEAXIS_H
 #define SINGLEAXIS_H
 
 #include "BasicElement/scaxis.h"
 #include "MotionManager/motionelementcontainer.h"
 #include "axismodule.h"
 #include "configManager/configobjectarray.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 #include <QObject>
 

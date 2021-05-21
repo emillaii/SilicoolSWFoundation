@@ -1,9 +1,10 @@
-#ifndef SOFTLANDINGPOS_H
+﻿#ifndef SOFTLANDINGPOS_H
 #define SOFTLANDINGPOS_H
 
 #include "configManager/configobjectarray.h"
 #include "errorHandling/silicolerror.h"
 #include "motionelementdefinition.h"
+#include "renameManager/renamemanager.h"
 
 class SCMOTIONSHARED_EXPORT SoftLandingPos : public ConfigObject
 {
@@ -27,6 +28,7 @@ public:
         addEvent("MeasureHeight");
         setEngineerAuthority("targetPos");
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
     }
 
     QString axisName() const

@@ -1,7 +1,8 @@
-#ifndef CALIBRATIONCONFIG_H
+﻿#ifndef CALIBRATIONCONFIG_H
 #define CALIBRATIONCONFIG_H
 
 #include "configManager/configobject.h"
+#include "renameManager/renamemanager.h"
 #include "sccameraconfig.h"
 #include "scvision_global.h"
 #include <QMatrix>
@@ -220,6 +221,9 @@ public:
              << "calibrationResult";
         setEngineerAuthorities(args);
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "motorXName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "motorYName");
+        RenameManager::getIns().subscribePrNameChanged(this, "locationName");
     }
 
     static EnumHelper<CalibrationFunction> &calibrationFunctionEnumInfo()

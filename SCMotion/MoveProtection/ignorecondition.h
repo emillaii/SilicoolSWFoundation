@@ -1,10 +1,11 @@
-#ifndef IGNORECONDITION_H
+﻿#ifndef IGNORECONDITION_H
 #define IGNORECONDITION_H
 
 #include "MotionManager/globalmotionelements.h"
 #include "MotionManager/motionstategetter.h"
 #include "configManager/configobject.h"
 #include "enumhelper.h"
+#include "renameManager/renamemanager.h"
 #include "rep_motionManager_source.h"
 #include "scmotion_global.h"
 #include <QObject>
@@ -85,6 +86,7 @@ public:
         setEngineerAuthority("axisName");
         setEngineerAuthority("moveDirection");
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
     }
 
     QString axisName() const

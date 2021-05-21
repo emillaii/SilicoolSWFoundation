@@ -1,4 +1,4 @@
-#ifndef MOTIONCONFIGMANAGER_H
+﻿#ifndef MOTIONCONFIGMANAGER_H
 #define MOTIONCONFIGMANAGER_H
 
 #include "AxisModule/singleaxis.h"
@@ -40,6 +40,8 @@ public:
     void setGlobalVelocityRatio(double globalVelocityRatio);
 
     void setAxisVelocityRatio(QString axisName, double ratio);
+
+    void subscribeIONameChanged();
 
     QList<QString> diNames() const
     {

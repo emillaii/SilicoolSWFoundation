@@ -1,7 +1,8 @@
-#ifndef VISIONLOCATIONCONFIG_H
+﻿#ifndef VISIONLOCATIONCONFIG_H
 #define VISIONLOCATIONCONFIG_H
 
 #include "configManager/configobject.h"
+#include "renameManager/renamemanager.h"
 #include "scvision_global.h"
 #include <QFileInfo>
 
@@ -41,6 +42,8 @@ public:
              << "maximunAngle";
         setEngineerAuthorities(args);
         init();
+        RenameManager::getIns().subscribeCameraNameChanged(this, "cameraName");
+        RenameManager::getIns().subscribePrNameChanged(this, "locationName");
     }
 
     void setOptionalCamera(QStringList cameraNames)

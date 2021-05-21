@@ -1,9 +1,10 @@
-#ifndef MOTIONELEMENTDEFINITION_H
+﻿#ifndef MOTIONELEMENTDEFINITION_H
 #define MOTIONELEMENTDEFINITION_H
 
 #include "configManager/configarray.h"
 #include "configManager/configobject.h"
 #include "motionutility.h"
+#include "renameManager/renamemanager.h"
 #include "scmotion_global.h"
 
 class SCMOTIONSHARED_EXPORT AxisModuleDefinition : public ConfigObject
@@ -29,6 +30,7 @@ public:
         setOptionalProperty("moduleType", toVariantList<QString>(typesNames));
         disableTranslate();
         init();
+        RenameManager::getIns().subscribeAxisModuleNameChanged(this, "moduleName");
     }
 
     QString moduleName() const
@@ -101,6 +103,8 @@ public:
     {
         disableTranslate();
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
+        RenameManager::getIns().subscribeAxisNameChanged(this, "masterAxisName");
     }
 
     QString axisName() const
@@ -189,6 +193,7 @@ public:
         m_softLandingPoses = new ConfigArray(ConfigElementInfo::Other, this);
         disableTranslate();
         init();
+        RenameManager::getIns().subscribeAxisNameChanged(this, "axisName");
     }
 
     ConfigArray *softLandingPoses() const
