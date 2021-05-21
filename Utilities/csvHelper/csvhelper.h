@@ -1,4 +1,4 @@
-#ifndef CSVHELPER_H
+﻿#ifndef CSVHELPER_H
 #define CSVHELPER_H
 
 #include "utilities_global.h"
@@ -147,6 +147,8 @@ public:
     }
 
     void append(const QString &fileName, const QObject *obj);
+
+    void resetAllProperties(QObject *obj, QVariant value);
 
 private:
     static QString getTitle(const QMetaObject *metaObj, int &objNameIndex);

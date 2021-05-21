@@ -1,4 +1,4 @@
-#include "csvhelper.h"
+﻿#include "csvhelper.h"
 
 CSVHelper::CSVHelper(const QMetaObject &metaObj, QObject *parent) : QObject(parent), metaObj(&metaObj)
 {
@@ -40,6 +40,23 @@ void CSVHelper::append(const QString &fileName, const QObject *obj)
     f.write(lineData.toUtf8());
     f.flush();
     f.close();
+}
+
+void CSVHelper::resetAllProperties(QObject *obj, QVariant value)
+{
+    if (qstrcmp(metaObj->className(), obj->metaObject()->className()) != 0)
+    {
+        qCritical() << "Uncompatible type!" << metaObj->className() << obj->metaObject()->className();
+        return;
+    }
+    for (int i = 0; i < metaObj->propertyCount(); i++)
+    {
+        if (i == objectNamePropIndex)
+        {
+            continue;
+        }
+        metaObj->property(i).write(obj, value);
+    }
 }
 
 QString CSVHelper::getTitle(const QMetaObject *metaObj, int &objNameIndex)
