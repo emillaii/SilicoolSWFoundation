@@ -285,17 +285,6 @@ void MasterMotionManager::renameCyl(QString oldName, QString newName)
 
 void MasterMotionManager::renameAxisModule(QString oldName, QString newName)
 {
-    for (int i = 0; i < m_meds->count(); i++)
-    {
-        auto med = m_meds->getConfig<MotionElementDefinition>(i);
-        for (int j = 0; j < med->axisModules()->count(); j++)
-        {
-            if (med->cylNames()->at(j).toString() == oldName)
-            {
-                med->cylNames()->setConfig(j, newName);
-            }
-        }
-    }
     RenameManager::getIns().renameAxisModule(oldName, newName);
 }
 
