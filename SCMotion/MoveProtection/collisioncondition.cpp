@@ -1,4 +1,4 @@
-#include "collisioncondition.h"
+﻿#include "collisioncondition.h"
 
 CollisionCondition *CollisionCondition::createInstance(CollisionCondition::Type type, QObject *parent)
 {
@@ -61,6 +61,8 @@ TwoAxisCollision::TwoAxisCollision(QObject *parent) : CollisionCondition(parent)
          << "posComposition"
          << "axis2Name";
     setEngineerAuthorities(args);
+    RenameManager::getIns().subscribeAxisNameChanged(this, "axis1Name");
+    RenameManager::getIns().subscribeAxisNameChanged(this, "axis2Name");
 }
 
 bool TwoAxisCollision::meetCondition(QString name, double targetState)

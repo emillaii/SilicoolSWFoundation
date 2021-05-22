@@ -242,6 +242,7 @@ public:
     {
         setOptionalProperty("cylName", GlobalMotionElements::getIns().cylNames());
         setEngineerAuthority("cylName");
+        RenameManager::getIns().subscribeCylNameChanged(this, "cylName");
     }
 
     QString cylName() const
@@ -288,6 +289,7 @@ public:
     {
         setOptionalProperty("diName", GlobalMotionElements::getIns().diNames());
         setEngineerAuthority("diName");
+        RenameManager::getIns().subscribeDiNameChanged(this, "diName");
     }
 
     QString diName() const

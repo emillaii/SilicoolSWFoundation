@@ -170,6 +170,7 @@ public:
         setEngineerAuthority("cylName");
         setEngineerAuthority("targetState");
         init();
+        RenameManager::getIns().subscribeCylNameChanged(this, "cylName");
     }
 
     QString cylName() const
