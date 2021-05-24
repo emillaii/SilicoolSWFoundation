@@ -1,4 +1,4 @@
-#include "elmodriver.h"
+﻿#include "elmodriver.h"
 
 ElmoDriver::ElmoDriver(QString name, QObject *parent) : SCAxis(name, parent)
 {
@@ -30,6 +30,16 @@ void ElmoDriver::setCurrent(double current)
             QThread::msleep(1);
         }
     });
+}
+
+double ElmoDriver::getCurrent()
+{
+    QString rsp;
+    if (!getResponse("IQ", rsp))
+    {
+        return 0;
+    }
+    return rsp.toDouble();
 }
 
 void ElmoDriver::elmoMoveTo(double targetPos)

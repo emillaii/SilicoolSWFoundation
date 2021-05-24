@@ -1,4 +1,4 @@
-#ifndef ELMODRIVER_H
+﻿#ifndef ELMODRIVER_H
 #define ELMODRIVER_H
 
 #include "BasicElement/scaxis.h"
@@ -14,6 +14,7 @@ public:
     ~ElmoDriver() override;
 
     Q_INVOKABLE void setCurrent(double current);
+    Q_INVOKABLE double getCurrent();
     Q_INVOKABLE void elmoMoveTo(double targetPos);
 
     // SCAxis interface
