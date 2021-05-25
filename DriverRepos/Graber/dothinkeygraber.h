@@ -9,6 +9,7 @@
 #include "errorHandling/silicolerror.h"
 #include "qimage.h"
 
+
 #define MAX_DEV 4
 
 class DothinkeyGraber : public SCGraber

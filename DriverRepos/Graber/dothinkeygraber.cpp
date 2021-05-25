@@ -105,11 +105,15 @@ void DothinkeyGraber::openDevice()
     {
         throw SilicolAbort(tr("device name is null! please enumerate device first!"));
     }
-    if (m_devName[m_devID] != m_currentDevName)
+    QString m_devname = m_devName[m_devID];
+    if(!m_devname.contains(m_currentDevName))
     {
         throw SilicolAbort(tr("device name mismatch!"));
     }
-
+//    if (m_devName[m_devID] != m_currentDevName)
+//    {
+//        throw SilicolAbort(tr("device name mismatch!"));
+//    }
     m_CameraChannels[m_devID].CloseCameraChannel();
     int iDevID = -1;
     if (OpenDevice(m_devName[m_devID], &iDevID, m_devID) == DT_ERROR_OK)
@@ -339,11 +343,16 @@ void DothinkeyGraber::setDeviceName(QString deviceName)
     for (int i = 0; i < m_devNum; i++)
     {
         QString tmp = reinterpret_cast<char*>(m_devName[i]);
-        if (deviceName == tmp)
+        if(tmp.contains(deviceName))
         {
-            m_devID = i;
+             m_devID = i;
         }
+//        if (deviceName == tmp)
+//        {
+//            m_devID = i;
+//        }
     }
+    m_currentDevName = deviceName;
 }
 
 BOOL DothinkeyGraber::SetVoltageMclk(SensorTab CurrentSensor, int iDevID, float Mclk, float Avdd, float Dvdd, float Dovdd, float Afvcc, float vpp)
