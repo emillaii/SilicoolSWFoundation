@@ -28,6 +28,7 @@ private:
 class SMACAxisConfig : public ConfigObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString initCom READ initCom WRITE setInitCom NOTIFY initComChanged)
     Q_PROPERTY(QString clipCom READ clipCom WRITE setClipCom NOTIFY clipComChanged)
     Q_PROPERTY(QString extentedCom READ extentedCom WRITE setExtentedCom NOTIFY extentedComChanged)
 public:
@@ -35,6 +36,12 @@ public:
     {
         init();
     }
+
+    QString initCom() const
+    {
+        return m_initCom;
+    }
+
     QString clipCom() const
     {
         return m_clipCom;
@@ -46,6 +53,15 @@ public:
     }
 
 public slots:
+    void setInitCom(QString initCom)
+    {
+        if (m_initCom == initCom)
+            return;
+
+        m_initCom = initCom;
+        emit initComChanged(m_initCom);
+    }
+
     void setClipCom(QString clipCom)
     {
         if (m_clipCom == clipCom)
@@ -65,11 +81,14 @@ public slots:
     }
 
 signals:
+    void initComChanged(QString initCom);
+
     void clipComChanged(QString clipCom);
 
     void extentedComChanged(QString extentedCom);
 
 private:
+    QString m_initCom;
     QString m_clipCom;
     QString m_extentedCom;
 };

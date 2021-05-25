@@ -8,7 +8,7 @@ SmacAxis::SmacAxis(SMACDriver *driver, SMACAxisConfig *smacAxisConfig, QObject *
 
 void SmacAxis::init()
 {
-    smacDriver->sendComand("0SG50,SI180,SD200,IL8000,SV200000,SA2000,SQ8000,SC4000,SE2000");
+    smacDriver->sendComand(axisConfig->initCom());
 }
 
 void SmacAxis::enableMotion()
