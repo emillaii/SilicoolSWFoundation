@@ -74,7 +74,8 @@ bool XtAxis::isInPos() noexcept
 {
     if (inposDI != nullptr)
     {
-        return inposDI->get();
+        bool res = inposDI->get();
+        return xtAxisConfig->reverseInposInput() ? !res : res;
     }
     return true;
 }
@@ -82,8 +83,10 @@ bool XtAxis::isInPos() noexcept
 bool XtAxis::isRunning() noexcept
 {
     int isRun = 1;
+    double vel = 0;
     Get_Cur_Axis_State(masterAxisId, isRun);
-    return isRun;
+    Get_Cur_Axis_Vel(masterAxisId, vel);
+    return isRun || !qFuzzyCompare(vel, 0);
 }
 
 void XtAxis::stopImpl() noexcept

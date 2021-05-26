@@ -1,4 +1,4 @@
-#ifndef SCAXIS_H
+﻿#ifndef SCAXIS_H
 #define SCAXIS_H
 
 #include "MotionManager/motionelementcontainer.h"
@@ -279,6 +279,7 @@ protected:
     void checkIsRunning();
     void checkInLimitRange(double targetPos) const;
     void setHasHome(bool value);
+    void setCheckRunningDelayAfterMove(int delayMs);
 
     ///
     /// \brief initImpl
@@ -394,7 +395,7 @@ private:
 
 private:
     const double MinStep = 0.00001;
-    const int CheckRunningDelayAfterMove = 3;
+    int checkRunningDelayAfterMove = 3;
 
     bool isConnectConfigChangedSignal = false;
 

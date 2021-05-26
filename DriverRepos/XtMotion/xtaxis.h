@@ -17,6 +17,7 @@ class XtAxisConfig : public AxisConfig
 
     Q_PROPERTY(bool reverseAlarmInput READ reverseAlarmInput WRITE setReverseAlarmInput NOTIFY reverseAlarmInputChanged)
     Q_PROPERTY(bool reverseReadyInput READ reverseReadyInput WRITE setReverseReadyInput NOTIFY reverseReadyInputChanged)
+    Q_PROPERTY(bool reverseInposInput READ reverseInposInput WRITE setReverseInposInput NOTIFY reverseInposInputChanged)
 
 public:
     Q_INVOKABLE XtAxisConfig(QObject *parent = nullptr) : AxisConfig(parent)
@@ -32,6 +33,11 @@ public:
     bool reverseReadyInput() const
     {
         return m_reverseReadyInput;
+    }
+
+    bool reverseInposInput() const
+    {
+        return m_reverseInposInput;
     }
 
 public slots:
@@ -53,14 +59,26 @@ public slots:
         emit reverseReadyInputChanged(m_reverseReadyInput);
     }
 
+    void setReverseInposInput(bool reverseInposInput)
+    {
+        if (m_reverseInposInput == reverseInposInput)
+            return;
+
+        m_reverseInposInput = reverseInposInput;
+        emit reverseInposInputChanged(m_reverseInposInput);
+    }
+
 signals:
     void reverseAlarmInputChanged(bool reverseAlarmInput);
 
     void reverseReadyInputChanged(bool reverseReadyInput);
 
+    void reverseInposInputChanged(bool reverseInposInput);
+
 private:
     bool m_reverseAlarmInput = false;
     bool m_reverseReadyInput = false;
+    bool m_reverseInposInput = false;
 };
 
 class XtAxis : public SCAxis

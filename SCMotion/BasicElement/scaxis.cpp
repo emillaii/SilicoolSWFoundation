@@ -1,4 +1,4 @@
-#include "scaxis.h"
+﻿#include "scaxis.h"
 
 SCAxis::Direction SCAxis::oppositeDir(SCAxis::Direction dir)
 {
@@ -368,7 +368,7 @@ void SCAxis::tryToMove(double targetPos, uint checkInterval, int stepCount, doub
 
 void SCAxis::waitStopped()
 {
-    int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
+    int remainedDelay = checkRunningDelayAfterMove - axisMoveTimer.elapsedMs();
     if (remainedDelay > 0)
     {
         QThread::msleep(remainedDelay);
@@ -388,7 +388,7 @@ void SCAxis::waitStopped()
 
 void SCAxis::waitProfilerStopped(double targetPos)
 {
-    int remainedDelay = CheckRunningDelayAfterMove - axisMoveTimer.elapsedMs();
+    int remainedDelay = checkRunningDelayAfterMove - axisMoveTimer.elapsedMs();
     if (remainedDelay > 0)
     {
         QThread::msleep(remainedDelay);
@@ -1189,6 +1189,11 @@ void SCAxis::setHasHome(bool value)
     }
 
     m_hasHome = value;
+}
+
+void SCAxis::setCheckRunningDelayAfterMove(int delayMs)
+{
+    checkRunningDelayAfterMove = delayMs;
 }
 
 void SCAxis::waitSettling(int window, double precision, int timeout)
