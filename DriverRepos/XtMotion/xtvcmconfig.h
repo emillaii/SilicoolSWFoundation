@@ -19,6 +19,7 @@ public:
     Q_PROPERTY(int canID READ canID WRITE setCanID NOTIFY canIDChanged)
     Q_PROPERTY(int homeDirection READ homeDirection WRITE setHomeDirection NOTIFY homeDirectionChanged)
     Q_PROPERTY(int runDirection READ runDirection WRITE setRunDirection NOTIFY runDirectionChanged)
+    Q_PROPERTY(bool reverseFeedbackPos READ reverseFeedbackPos WRITE setReverseFeedbackPos NOTIFY reverseFeedbackPosChanged)
     Q_PROPERTY(double homeOffset READ homeOffset WRITE setHomeOffset NOTIFY homeOffsetChanged)
     Q_PROPERTY(HomeMode homeMode READ homeMode WRITE setHomeMode NOTIFY homeModeChanged)
     Q_PROPERTY(double touchLimitCurrent READ touchLimitCurrent WRITE setTouchLimitCurrent NOTIFY touchLimitCurrentChanged)
@@ -137,6 +138,11 @@ public:
     int fslDetectionInterval() const
     {
         return m_fslDetectionInterval;
+    }
+
+    bool reverseFeedbackPos() const
+    {
+        return m_reverseFeedbackPos;
     }
 
 public slots:
@@ -310,6 +316,15 @@ public slots:
         emit fslDetectionIntervalChanged(m_fslDetectionInterval);
     }
 
+    void setReverseFeedbackPos(bool reverseFeedbackPos)
+    {
+        if (m_reverseFeedbackPos == reverseFeedbackPos)
+            return;
+
+        m_reverseFeedbackPos = reverseFeedbackPos;
+        emit reverseFeedbackPosChanged(m_reverseFeedbackPos);
+    }
+
 signals:
     void canIDChanged(int canID);
 
@@ -347,6 +362,8 @@ signals:
 
     void fslDetectionIntervalChanged(int fslDetectionInterval);
 
+    void reverseFeedbackPosChanged(bool reverseFeedbackPos);
+
 private:
     int m_canID = 0;
     double m_homeOffset = 0;
@@ -366,6 +383,7 @@ private:
     int m_fslWindowLen = 10;
     double m_fslInPosError = 0.002;
     int m_fslDetectionInterval = 1;
+    bool m_reverseFeedbackPos = false;
 };
 
 #endif    // XTVCMCONFIG_H

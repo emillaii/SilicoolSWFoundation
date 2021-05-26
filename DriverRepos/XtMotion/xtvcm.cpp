@@ -413,10 +413,10 @@ double XtVcm::getFeedbackPosImpl() noexcept
         if (res == 1)
         {
             pos = round(pos * 100000) / 100000;
-//            if (isDirectionOpposite)
-//            {
-//                pos = -pos;
-//            }
+            if (vcmConfig->reverseFeedbackPos())
+            {
+                pos = -pos;
+            }
             return pos;
         }
         if (++currentTimes > 20)

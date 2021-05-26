@@ -135,7 +135,7 @@ void XtDispenser::setCurveParam(int axisCount, QVector<int> &axis)
 void XtDispenser::generalDispenseImpl(QVector<PathEndPoint> &dispensePath)
 {
     QVector<int> axis;
-    setCurveParam(3, axis);
+    setCurveParam(2, axis);
     int pointIndex = 0;
     int res = 0;
     auto generaDispenserConfig = dispenserConfig()->generalDispenserConfig();
@@ -146,7 +146,7 @@ void XtDispenser::generalDispenseImpl(QVector<PathEndPoint> &dispensePath)
             throw SilicolAbort("Unimplemented path type: ArcPath");
         }
 
-        res = XT_Controler_Extend::Append_Line_Pos(curveId, 3, axis.data(), dispensePath[i].dataPtr(),
+        res = XT_Controler_Extend::Append_Line_Pos(curveId, 2, axis.data(), dispensePath[i].dataPtr(),
                                                    dispensePath[i].maxVel, dispensePath[i].endVel, 0, pointIndex);
         if (1 != res)
         {

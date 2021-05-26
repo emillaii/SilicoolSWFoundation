@@ -18,6 +18,7 @@ class XtAxisConfig : public AxisConfig
     Q_PROPERTY(bool reverseAlarmInput READ reverseAlarmInput WRITE setReverseAlarmInput NOTIFY reverseAlarmInputChanged)
     Q_PROPERTY(bool reverseReadyInput READ reverseReadyInput WRITE setReverseReadyInput NOTIFY reverseReadyInputChanged)
     Q_PROPERTY(bool reverseInposInput READ reverseInposInput WRITE setReverseInposInput NOTIFY reverseInposInputChanged)
+    Q_PROPERTY(double maxJerk READ maxJerk WRITE setMaxJerk NOTIFY maxJerkChanged)
 
 public:
     Q_INVOKABLE XtAxisConfig(QObject *parent = nullptr) : AxisConfig(parent)
@@ -38,6 +39,11 @@ public:
     bool reverseInposInput() const
     {
         return m_reverseInposInput;
+    }
+
+    double maxJerk() const
+    {
+        return m_maxJerk;
     }
 
 public slots:
@@ -68,6 +74,15 @@ public slots:
         emit reverseInposInputChanged(m_reverseInposInput);
     }
 
+    void setMaxJerk(double maxJerk)
+    {
+        if (qFuzzyCompare(m_maxJerk, maxJerk))
+            return;
+
+        m_maxJerk = maxJerk;
+        emit maxJerkChanged(m_maxJerk);
+    }
+
 signals:
     void reverseAlarmInputChanged(bool reverseAlarmInput);
 
@@ -75,10 +90,13 @@ signals:
 
     void reverseInposInputChanged(bool reverseInposInput);
 
+    void maxJerkChanged(double maxJerk);
+
 private:
     bool m_reverseAlarmInput = false;
     bool m_reverseReadyInput = false;
     bool m_reverseInposInput = false;
+    double m_maxJerk = 10000;
 };
 
 class XtAxis : public SCAxis
@@ -96,14 +114,9 @@ public:
         return masterAxisId;
     }
 
-    double maxAcc() const override
-    {
-        return m_maxAcc;
-    }
-
     double maxJerk() const
     {
-        return m_maxJerk;
+        return xtAxisConfig->maxJerk();
     }
 
     // SCAxis interface
@@ -114,18 +127,6 @@ public:
     virtual bool isInPos() noexcept override;
     virtual bool isRunning() noexcept override;
     virtual void stopImpl() noexcept override;
-    virtual double positiveLimit() const override
-    {
-        return m_positiveLimit;
-    }
-    virtual double negativeLimit() const override
-    {
-        return m_negativeLimit;
-    }
-    virtual double maxVelocity() const override
-    {
-        return m_maxVel;
-    }
     virtual double getCurrentVel() noexcept override;
 
 protected:
@@ -159,11 +160,6 @@ private:
     XtDI *alarmDI = nullptr;
     XtDI *readyDI = nullptr;
     XtAxisConfig *xtAxisConfig = nullptr;
-    double m_maxVel;
-    double m_maxAcc;
-    double m_maxJerk;
-    double m_positiveLimit;
-    double m_negativeLimit;
     static int axisCount;
     static int threadResource;
     static int calculationSlotResource;

@@ -4,7 +4,10 @@ int XtAxis::axisCount = -1;
 int XtAxis::threadResource = 0;
 int XtAxis::calculationSlotResource = 0;
 
-XtAxis::XtAxis(QString name, QObject *parent) : SCAxis(name, parent) {}
+XtAxis::XtAxis(QString name, QObject *parent) : SCAxis(name, parent)
+{
+    setCheckRunningDelayAfterMove(10);
+}
 
 int XtAxis::generateNewAxisID()
 {
@@ -83,10 +86,11 @@ bool XtAxis::isInPos() noexcept
 bool XtAxis::isRunning() noexcept
 {
     int isRun = 1;
-    double vel = 0;
+//    double vel = 0;
     Get_Cur_Axis_State(masterAxisId, isRun);
-    Get_Cur_Axis_Vel(masterAxisId, vel);
-    return isRun || !qFuzzyCompare(vel, 0);
+//    Get_Cur_Axis_Vel(masterAxisId, vel);
+//    return isRun || !qFuzzyCompare(vel, 0);
+    return isRun;
 }
 
 void XtAxis::stopImpl() noexcept
@@ -176,12 +180,7 @@ void XtAxis::initImpl()
         readyDI = new XtDI(readyDiName, readyDiID, this);
     }
 
-    m_maxVel = Profile_Get_Axis_Vel(slaverAxisId);
-    m_maxAcc = Profile_Get_Axis_Acc(slaverAxisId);
-    m_maxJerk = Profile_Get_Axis_Jerk(slaverAxisId);
-
-    m_positiveLimit = Profile_Get_Axis_MaxPos(slaverAxisId);
-    m_negativeLimit = Profile_Get_Axis_MinPos(slaverAxisId);
+    SET_MAX_JERK(threadId, masterAxisId, xtAxisConfig->maxJerk());
 
     int tmp_masterId = Profile_Get_Axis_Master(slaverAxisId);
     if (tmp_masterId > 0 && tmp_masterId != masterAxisId)
@@ -194,7 +193,6 @@ void XtAxis::initImpl()
         masterAxisId = tmp_masterId;
         WaitForAllInsFinish(threadId);
     }
-    SET_MAX_JERK(threadId, masterAxisId, m_maxJerk);
 }
 
 void XtAxis::homeImpl()
@@ -281,12 +279,12 @@ double XtAxis::getFeedbackPosImpl() noexcept
 
 void XtAxis::scaleMaxAccImpl(double ratio)
 {
-    SET_MAX_ACC(threadId, masterAxisId, m_maxAcc * ratio);
+    SET_MAX_ACC(threadId, masterAxisId, xtAxisConfig->maxAcc() * ratio);
 }
 
 void XtAxis::scaleMaxVelImpl(double ratio)
 {
-    SET_MAX_VEL(threadId, masterAxisId, m_maxVel * ratio);
+    SET_MAX_VEL(threadId, masterAxisId, xtAxisConfig->maxVel() * ratio);
 }
 
 bool XtAxis::bindToMasterAxisImpl(bool bind)
