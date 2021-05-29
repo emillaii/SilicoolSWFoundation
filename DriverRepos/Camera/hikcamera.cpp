@@ -1,4 +1,4 @@
-#include "hikcamera.h"
+﻿#include "hikcamera.h"
 
 HikCamera::HikCamera(QString cameraName, CameraConfig *cameraConfig, QObject *parent) : SCCamera(cameraName, cameraConfig, parent)
 {
@@ -173,7 +173,8 @@ void HikCamera::openCamera(MV_CC_DEVICE_INFO *pstDeviceInfo)
     }
     HIK_RESULT_HANDLE(MV_CC_SetTriggerMode(m_hDevHandle, MV_TRIGGER_MODE_ON))
     HIK_RESULT_HANDLE(MV_CC_SetTriggerSource(m_hDevHandle, MV_TRIGGER_SOURCE_SOFTWARE))
-    HIK_RESULT_HANDLE(MV_CC_SetGrabStrategy(m_hDevHandle, MV_GrabStrategy_UpcomingImage))
+    auto grabStrategy = pstDeviceInfo->nTLayerType == MV_GIGE_DEVICE ? MV_GrabStrategy_UpcomingImage : MV_GrabStrategy_LatestImagesOnly;
+    HIK_RESULT_HANDLE(MV_CC_SetGrabStrategy(m_hDevHandle, grabStrategy))
     HIK_RESULT_HANDLE(MV_CC_SetFloatValue(m_hDevHandle, "ExposureTime", config()->exposureTime()))
     mallocBufferForDriver();
     StartGrabbing();
