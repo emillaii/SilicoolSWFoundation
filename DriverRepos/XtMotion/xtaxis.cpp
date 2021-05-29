@@ -6,7 +6,7 @@ int XtAxis::calculationSlotResource = 0;
 
 XtAxis::XtAxis(QString name, QObject *parent) : SCAxis(name, parent)
 {
-    setCheckRunningDelayAfterMove(10);
+    setCheckRunningDelayAfterMove(20);
 }
 
 int XtAxis::generateNewAxisID()
