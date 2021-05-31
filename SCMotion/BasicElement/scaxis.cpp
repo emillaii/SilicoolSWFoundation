@@ -148,16 +148,6 @@ void SCAxis::disable()
     {
         qCWarning(motionCate()) << tr("Disable %1 while running! Try to stop axis first!").arg(name());
         stop();
-        QElapsedTimer timer;
-        timer.start();
-        while (isRunning())
-        {
-            if (timer.elapsed() > 300)
-            {
-                break;
-            }
-            QThread::msleep(10);
-        }
     }
     else
     {
@@ -177,7 +167,7 @@ void SCAxis::clearAlarm()
     enable();
 }
 
-void SCAxis::stop()
+void SCAxis::stop(bool bWaitStopped)
 {
     m_hasStop = true;
     stopImpl();
@@ -187,6 +177,10 @@ void SCAxis::stop()
         {
             startHomeDo->set(false);
         }
+    }
+    if (bWaitStopped)
+    {
+        waitStopped();
     }
 }
 
@@ -892,7 +886,7 @@ void SCAxis::waitSoftLandDownFinished(double vel, double targetPos, double force
 
                 if (timer.elapsed() > timeout)
                 {
-                    stop();
+                    stop(false);
                     throw ActionError("Axis", QObject::tr("Axis %1 wait soft land down finished timeout!").arg(name()));
                 }
             }
@@ -923,7 +917,7 @@ void SCAxis::waitSoftLandUpFinished(int timeout)
 
                 if (timer.elapsed() > timeout)
                 {
-                    stop();
+                    stop(false);
                     throw ActionError("Axis", QObject::tr("Axis %1 wait soft land up finished timeout!").arg(name()));
                 }
             }

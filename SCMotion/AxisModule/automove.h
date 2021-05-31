@@ -1,6 +1,7 @@
-#ifndef AUTOMOVE_H
+﻿#ifndef AUTOMOVE_H
 #define AUTOMOVE_H
 
+#include "BasicElement/scaxis.h"
 #include "axismodule.h"
 #include "scmotion_global.h"
 
@@ -15,6 +16,19 @@ private:
     AxisModule *targetModule;
     QString targetPos;
     bool waitDone;
+    bool isDisable = false;
+};
+
+class SCMOTIONSHARED_EXPORT AutoStop
+{
+public:
+    AutoStop(SCAxis *targetAxis, bool waitStopped);
+    void disable();
+    ~AutoStop();
+
+private:
+    SCAxis *targetAxis;
+    bool waitStopped;
     bool isDisable = false;
 };
 

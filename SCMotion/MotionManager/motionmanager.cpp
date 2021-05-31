@@ -1,4 +1,4 @@
-#include "motionmanager.h"
+﻿#include "motionmanager.h"
 
 InstructionExecutor::InstructionExecutor(MotionManager *motionManager,
                                          QString uuid,
@@ -194,7 +194,7 @@ void MotionManager::homeMotors(QStringList homeSeq)
 
 bool MotionManager::getLocalVacuumState(QString vacuumName)
 {
-    if(vacuumMap.contains(vacuumName))
+    if (vacuumMap.contains(vacuumName))
     {
         return vacuumMap[vacuumName]->get();
     }
@@ -204,7 +204,7 @@ bool MotionManager::getLocalVacuumState(QString vacuumName)
 
 bool MotionManager::getLocalDOState(QString doName)
 {
-    if(doMap.contains(doName))
+    if (doMap.contains(doName))
     {
         return doMap[doName]->get();
     }
@@ -716,7 +716,7 @@ void MotionManager::stopAllAxis()
     }
     foreach (auto axis, axisMap.values())
     {
-        axis->stop();
+        axis->stop(false);
     }
 }
 

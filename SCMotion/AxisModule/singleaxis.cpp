@@ -65,6 +65,19 @@ void SingleAxis::waitLessThanPos(QString posName)
     axis()->waitLessThanPos(pos->pos(), pos->precision());
 }
 
+void SingleAxis::forceMoveTo(QString posName, bool waitDone)
+{
+    qCInfo(motionCate(), N_FUNC_ARG(posName));
+
+    SingleAxisPos *pos = sAxisConfig->getPos<SingleAxisPos>(posName);
+    setNextPosVelAcc(pos);
+    m_axis->absForceMove(pos->pos());
+    if (waitDone)
+    {
+        m_axis->waitArrivedPos(pos->pos(), pos->precision());
+    }
+}
+
 QVariantMap SingleAxis::getModuleCurrentPos()
 {
     QVariantMap axesCurrentPos;

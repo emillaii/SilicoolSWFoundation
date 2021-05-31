@@ -151,7 +151,7 @@ public:
 
     Q_INVOKABLE void clearAlarm();
 
-    void stop();
+    void stop(bool waitStopped = true);
     Q_INVOKABLE void stopAndResetState();
 
     virtual double positiveLimit() const

@@ -1,4 +1,4 @@
-#ifndef GTAXIS_H
+﻿#ifndef GTAXIS_H
 #define GTAXIS_H
 
 #include "BasicElement/scaxis.h"
@@ -97,6 +97,8 @@ private:
     const int AxisStatusCacheInvalidTime = 1;
     long axisStatusCache = 0;
     qint64 lastUpdateAxisStatusCacheTime = 0;
+
+    double lastJogAcc = NAN;
 };
 
 #endif    // GTAXIS_H

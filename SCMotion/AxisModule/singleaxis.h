@@ -167,6 +167,7 @@ public:
     bool lessThanPos(QString posName);
     void waitGreaterThanPos(QString posName);
     void waitLessThanPos(QString posName);
+    void forceMoveTo(QString posName, bool waitDone = true);
 
     // AxisModule interface
 protected:

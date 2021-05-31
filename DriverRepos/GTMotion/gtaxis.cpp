@@ -1,4 +1,4 @@
-#include "gtaxis.h"
+﻿#include "gtaxis.h"
 
 GTAxis::GTAxis(QString name, QObject *parent) : SCAxis(name, parent) {}
 
@@ -274,7 +274,11 @@ void GTAxis::velocityMoveImpl(Direction dir, double vel, double acc)
         checkResult1(GTN_GetJogPrm(coreNo, index, &jogParam));
         jogParam.acc = acc * gtAxisConfig->scale() / AccCoeff;
         jogParam.dec = gtAxisConfig->maxAcc() * gtAxisConfig->scale() * gtAxisConfig->stopAccRatio() / AccCoeff;
-        checkResult1(GTN_SetJogPrm(coreNo, index, &jogParam));
+        if (!qFuzzyCompare(jogParam.acc, lastJogAcc))
+        {
+            checkResult1(GTN_SetJogPrm(coreNo, index, &jogParam));
+            lastJogAcc = jogParam.acc;
+        }
     }
     catch (SilicoolException &se)
     {
