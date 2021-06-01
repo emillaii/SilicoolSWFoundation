@@ -1,4 +1,4 @@
-#include "pressuremonitor.h"
+﻿#include "pressuremonitor.h"
 
 PressureMonitor::PressureMonitor(QObject *parent) : Worker(WorkerName::PressureMonitor, parent) {}
 

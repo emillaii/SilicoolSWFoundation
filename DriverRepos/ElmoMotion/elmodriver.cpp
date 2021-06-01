@@ -320,12 +320,12 @@ double ElmoDriver::getCurrentInLimitRange(double current)
 {
     if (current > elmoConfig->maxCurrent())
     {
-        qCritical(motionCate()) << tr("电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
+        qCritical(motionCate()) << tr(u8"电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
         return elmoConfig->maxCurrent();
     }
     if (current < elmoConfig->maxCurrent() * -1)
     {
-        qCritical(motionCate()) << tr("电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
+        qCritical(motionCate()) << tr(u8"电流超过限制! 给定值：%1, 限制值：%2").arg(current).arg(elmoConfig->maxCurrent());
         return elmoConfig->maxCurrent() * -1;
     }
     return current;

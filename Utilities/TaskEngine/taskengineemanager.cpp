@@ -1,4 +1,4 @@
-#include "taskengineemanager.h"
+﻿#include "taskengineemanager.h"
 
 TaskEngineeManager::TaskEngineeManager(QObject *parent, int nTaskEnginee) : QObject(parent), nTaskEnginee(nTaskEnginee)
 {
@@ -171,7 +171,7 @@ bool TaskEngineeManager::checkWorkerInited(QObject *target)
     Worker *worker = qobject_cast<Worker *>(target);
     if (worker != nullptr && !worker->isInit())
     {
-        UIOperation::getIns()->showError(tr("%1未初始化!").arg(worker->workerName()));
+        UIOperation::getIns()->showError(tr(u8"%1未初始化!").arg(worker->workerName()));
         return false;
     }
     return true;

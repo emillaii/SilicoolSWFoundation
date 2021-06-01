@@ -80,7 +80,8 @@ void MasterMotionManager::setContextProperty(QQmlApplicationEngine &engine)
 
 void MasterMotionManager::generateMotionElementUILayoutConfigFile()
 {
-    if (!UIOperation::getIns()->okCancelConfirm(tr("此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(meUILayoutsConfigFileName)))
+    if (!UIOperation::getIns()->okCancelConfirm(
+            tr(u8"此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(meUILayoutsConfigFileName)))
     {
         return;
     }
@@ -128,7 +129,7 @@ void MasterMotionManager::generateMotionElementUILayoutConfigFile()
 void MasterMotionManager::generateAxisPageHomeSeqConfigFile()
 {
     if (!UIOperation::getIns()->okCancelConfirm(
-            tr("此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(axisPageHomeSeqConfigFileName)))
+            tr(u8"此操作将自动生成%1. \r\n若该文件已存在，将被覆盖. \r\n请确认！").arg(axisPageHomeSeqConfigFileName)))
     {
         return;
     }

@@ -1,4 +1,4 @@
-#include "dispatcher.h"
+﻿#include "dispatcher.h"
 
 ShowBuzyStatusHelper::ShowBuzyStatusHelper(Dispatcher *dispatcher, QString buzyContent) : dispatcher(dispatcher)
 {
@@ -250,7 +250,7 @@ void Dispatcher::checkAllWorkerHandledEvent()
     }
     if (!remaindWorkers.isEmpty())
     {
-        qCDebug(smCate()) << tr("以下模块还未处理完该事件:") << combineString(",", remaindWorkers);
+        qCDebug(smCate()) << tr(u8"以下模块还未处理完该事件:") << combineString(",", remaindWorkers);
     }
     if (allWorkersHandledEvent)
     {
