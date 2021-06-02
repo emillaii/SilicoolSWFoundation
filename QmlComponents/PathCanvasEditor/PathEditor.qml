@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick 2.7
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
@@ -86,8 +86,8 @@ Item {
         nameFilters: ["图像文件 (*.jpg || *.bmp || *.png)"]
         onAccepted: {
             pathEditorConfig.setImageDir(folder)
-            canvas.imageUrl = loadImageDialog.fileUrl
-            var result = pointsTable.testModel.checkImageSize(canvas.imageUrl)
+            canvas.resetImgUrl(loadImageDialog.fileUrl)
+            var result = pointsTable.testModel.checkImageSize(loadImageDialog.fileUrl)
             canvas.inputWidth = result["width"]
             canvas.inputHeight = result["height"]
             canvas.requestPaint()
@@ -110,7 +110,7 @@ Item {
             fileName =  fileName.replace(".json", "")
             fileName += "_resultPath.jpg"
             canvas.save(fileName)
-            pointsTable.testModel.saveRawImage(canvas.imageUrl, fileUrl)
+            pointsTable.testModel.saveRawImage(canvas.imageUrl(), fileUrl)
         }
     }
 

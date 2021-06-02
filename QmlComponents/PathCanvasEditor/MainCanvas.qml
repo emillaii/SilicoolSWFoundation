@@ -1,11 +1,14 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 
 Canvas{
     id:canvas
     property real radius: 4
     property var arrpoints : []  //Store the normalized point from 0 to 1
     property var selectedPointIndex: 0
-    property var imageUrl: "file:///C:/test.jpg"
+
+    property var __imageUrl: ""
+    property bool __imageValid: false
+
     property bool isPressed: false
 
     property real imageOffsetX: 0
@@ -76,13 +79,22 @@ Canvas{
         }
     }
 
-    Component.onCompleted: {
-        var image = loadImage(imageUrl)
+    onImageLoaded: {
+        __imageValid = true
+        requestPaint()
     }
 
-    onImageLoaded: {
-        console.log('finish')
-        requestPaint()
+    function imageUrl(){
+        return __imageUrl;
+    }
+
+    function resetImgUrl(url){
+        if(__imageUrl){
+            unloadImage(__imageUrl)
+            __imageValid = false
+        }
+        loadImage(url)
+        __imageUrl = url
     }
 
     function clear() {
@@ -112,7 +124,9 @@ Canvas{
         var sw = canvas.inputWidth/canvas.scaleFactor
         var sh = canvas.inputHeight/canvas.scaleFactor
 
-        context.drawImage(imageUrl, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
+        if(__imageValid){
+            context.drawImage(__imageUrl, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
+        }
 
         if(arrpoints.length > 0){
 
