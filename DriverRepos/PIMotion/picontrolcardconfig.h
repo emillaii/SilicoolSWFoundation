@@ -12,6 +12,7 @@ class PIControlCardConfig : public ConfigObject
     Q_PROPERTY(QString ip READ ip WRITE setIp NOTIFY ipChanged)
     Q_PROPERTY(int port READ port WRITE setPort NOTIFY portChanged)
     Q_PROPERTY(int controllerID READ controllerID WRITE setControllerID NOTIFY controllerIDChanged)
+    Q_PROPERTY(QString ksd READ ksd WRITE setksd NOTIFY ksdChanged)
 
 public:
     Q_INVOKABLE PIControlCardConfig(QObject *parent = nullptr) : ConfigObject(parent)
@@ -32,6 +33,11 @@ public:
     int controllerID() const
     {
         return m_controllerID;
+    }
+
+    QString ksd() const
+    {
+        return m_ksd;
     }
 
 public slots:
@@ -63,6 +69,15 @@ public slots:
         emit controllerIDChanged(m_controllerID);
     }
 
+    void setksd(QString ksd)
+    {
+        if (m_ksd == ksd)
+            return;
+
+        m_ksd = ksd;
+        emit ksdChanged(m_ksd);
+    }
+
 signals:
 
     void ipChanged(QString ip);
@@ -71,11 +86,14 @@ signals:
 
     void controllerIDChanged(int controllerID);
 
+    void ksdChanged(QString ksd);
+
 private:
 
     QString m_ip = "";
     int m_port = -1;
     int m_controllerID =-1;
+    QString m_ksd = "0,0,0,0,0,0";
 };
 
 class PICardConfigManager
