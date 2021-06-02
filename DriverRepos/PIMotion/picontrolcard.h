@@ -25,6 +25,8 @@ public:
     virtual void dispose() override;
     int getControllerID();
 private:
+    bool setKSD(QString ksd);
+private:
     bool isConnect = false;
     int m_controllerID = -1;
 };
