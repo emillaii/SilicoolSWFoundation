@@ -12,7 +12,8 @@ class PIControlCardConfig : public ConfigObject
     Q_PROPERTY(QString ip READ ip WRITE setIp NOTIFY ipChanged)
     Q_PROPERTY(int port READ port WRITE setPort NOTIFY portChanged)
     Q_PROPERTY(int controllerID READ controllerID WRITE setControllerID NOTIFY controllerIDChanged)
-    Q_PROPERTY(QString ksd READ ksd WRITE setksd NOTIFY ksdChanged)
+    Q_PROPERTY(QString coordName READ coordName WRITE setCoordName NOTIFY coordNameChanged)
+    Q_PROPERTY(QString coord READ coord WRITE setCoord NOTIFY coordChanged)
 
 public:
     Q_INVOKABLE PIControlCardConfig(QObject *parent = nullptr) : ConfigObject(parent)
@@ -35,9 +36,14 @@ public:
         return m_controllerID;
     }
 
-    QString ksd() const
+    QString coordName() const
     {
-        return m_ksd;
+        return m_coordName;
+    }
+
+    QString coord() const
+    {
+        return m_coord;
     }
 
 public slots:
@@ -69,13 +75,22 @@ public slots:
         emit controllerIDChanged(m_controllerID);
     }
 
-    void setksd(QString ksd)
+    void setCoordName(QString coordName)
     {
-        if (m_ksd == ksd)
+        if (m_coordName == coordName)
             return;
 
-        m_ksd = ksd;
-        emit ksdChanged(m_ksd);
+        m_coordName = coordName;
+        emit coordNameChanged(m_coordName);
+    }
+
+    void setCoord(QString coord)
+    {
+        if (m_coord == coord)
+            return;
+
+        m_coord = coord;
+        emit coordChanged(m_coord);
     }
 
 signals:
@@ -86,14 +101,17 @@ signals:
 
     void controllerIDChanged(int controllerID);
 
-    void ksdChanged(QString ksd);
+    void coordNameChanged(QString coordName);
+
+    void coordChanged(QString coord);
 
 private:
 
     QString m_ip = "";
     int m_port = -1;
     int m_controllerID =-1;
-    QString m_ksd = "0,0,0,0,0,0";
+    QString m_coordName ="UOACOORD";
+    QString m_coord = "0,0,0,0,0,0";
 };
 
 class PICardConfigManager
