@@ -91,6 +91,7 @@
         <file>AlarmViewer/AlarmsViewer.qml</file>
         <file>AlarmViewer/PopupAlarmViewer.qml</file>
         <file>HeightMap.qml</file>
+        <file>HelpMenu.qml</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
