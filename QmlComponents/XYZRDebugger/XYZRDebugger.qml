@@ -1,4 +1,4 @@
-import QtQuick 2.12
+﻿import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../CustomizedUIElement"
@@ -37,7 +37,8 @@ Item {
     Window{
         id: windowXYZR
 
-        flags: Qt.FramelessWindowHint
+        flags: Qt.Dialog
+        title: xyzrDebuggerConfig.debuggerName
 
         function resize(){
             width = xyzrContent.implicitWidth + 2
@@ -104,45 +105,12 @@ Item {
                             windowXYZR.resize()
                         }
                     }
-                    Label{
-                        text: xyzrDebuggerConfig.debuggerName
-                        height: 150
-                        horizontalAlignment: Qt.AlignHCenter
-                        verticalAlignment: Qt.AlignVCenter
-                        MouseArea{
-                            property var clickedPos: "0,0"
-                            anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton
-                            onPressed: {
-                                clickedPos = Qt.point(mouse.x, mouse.y)
-                            }
-                            onPositionChanged: {
-                                if(containsMouse){
-                                    var delta = Qt.point(mouse.x - clickedPos.x, mouse.y - clickedPos.y)
-                                    windowXYZR.x += delta.x
-                                    windowXYZR.y += delta.y
-                                }
-                            }
-                        }
-                    }
                     CheckBox{
                         id: ckbUseKeyControl
                         text: qsTr("使用键盘控制")
                         checked: false
                         ToolTip.text: qsTr("上下左右键控制XY，WSAD键控制ZR")
                         ToolTip.visible: hovered
-                    }
-                    ToolButton{
-                        implicitWidth: 40
-                        implicitHeight: 40
-                        display: AbstractButton.IconOnly
-                        icon.source: "qrc:/commonicons/close.png"
-                        icon.color: "transparent"
-                        icon.width: implicitWidth
-                        icon.height: implicitHeight
-                        onClicked: {
-                            windowXYZR.close()
-                        }
                     }
                 }
 
