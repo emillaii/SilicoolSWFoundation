@@ -16,19 +16,27 @@
 class PIControlCard : public ControlCard
 {
     Q_OBJECT
+private:
+    PIControlCard(QObject *parent = nullptr):ControlCard (parent){}
+
 public:
-    PIControlCard(QObject *parent = nullptr);
+    static PIControlCard *getIns()
+    {
+        static PIControlCard instance;
+        return &instance;
+    }
 
 public:
     virtual void preInit() override {}
     virtual void postInit() override;
     virtual void dispose() override;
     int getControllerID();
-private:
-    bool setCoord(QString coordName, QString coord);
+public:
+    Q_INVOKABLE void setCoord();
 private:
     bool isConnect = false;
     int m_controllerID = -1;
+    PIControlCardConfig *piCoreCfg;
 };
 
 #endif // PICONTROLCARD_H

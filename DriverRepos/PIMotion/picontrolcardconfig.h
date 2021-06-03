@@ -130,7 +130,7 @@ public:
         return  instance;
     }
 
-    ConfigObjectArray *getPICoreCfgArr() const
+    ConfigObjectArray *getPICoreCfgArry() const
     {
         return piCoreCfg;
     }
