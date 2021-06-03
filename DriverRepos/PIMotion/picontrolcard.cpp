@@ -29,9 +29,9 @@ void PIControlCard::postInit()
     qInfo() << tr("connect to PI successful!! control ID: %1").arg(m_controllerID);
     isConnect = true;
 
-    if(!setKSD(piCoreCfg->ksd()))
+    if(!setCoord(piCoreCfg->coordName(), piCoreCfg->coord()))
     {
-        throw SilicolAbort("KSD command error,please check!", EX_LOCATION);
+        throw SilicolAbort("Set PI coord failed, please check command!", EX_LOCATION);
     }
 }
 
@@ -45,33 +45,46 @@ int PIControlCard::getControllerID()
     return m_controllerID;
 }
 
-bool PIControlCard::setKSD(QString ksd)
+bool PIControlCard::setCoord(QString coordName, QString coord)
 {
-    if(!ksd.contains(","))
+    if(coordName == "")
     {
-        qWarning()<< "ksd com do not contains [,]!";
+        qWarning()<< "coordName is null!";
+        return false;
+    }
+    if(!coord.contains(","))
+    {
+        qWarning()<< "coord com do not contains [,]!";
         return false;
     }
 
-    QStringList ksdCom = ksd.split(",");
-    if(ksdCom.count() != 6)
+    QStringList coordCom = coord.split(",");
+    if(coordCom.count() != 6)
     {
-        qWarning()<< "ksd com values is not 6!";
+        qWarning()<< "coord com values is not 6!";
         return false;
     }
     double center[6] = {0,0,0,0,0,0};
     bool qstringCastToDoubleFlag = false;
     double castValue = -1;
-    for (int i = 0; i< ksdCom.count(); i++)
+    for (int i = 0; i< coordCom.count(); i++)
     {
         qstringCastToDoubleFlag = false;
-        castValue = ksdCom[i].toDouble(&qstringCastToDoubleFlag);
+        castValue = coordCom[i].toDouble(&qstringCastToDoubleFlag);
         if(!qstringCastToDoubleFlag)
         {
-            qWarning()<< "ksd cast QString to Double failed! QString: "<< ksdCom[i];
+            qWarning()<< "coord cast QString to Double failed! QString: "<< coordCom[i];
+            return false;
         }
         center[i] = castValue;
     }
-    return  PI_KSD(m_controllerID, "SCAOA_CoordSystem", "X Y Z U V W", center) == 0;
+
+    if(!PI_KSD(m_controllerID, coordName.toUtf8(), "X Y Z U V W", center))
+    {
+        qWarning()<< "perform PI_KSD creat a new coordinate failed!";
+        return false;
+    }
+
+    return PI_KEN(m_controllerID, coordName.toUtf8());
 }
 
