@@ -1,10 +1,13 @@
-#ifndef MOTIONSTATEPUBLISHER_H
+﻿#ifndef MOTIONSTATEPUBLISHER_H
 #define MOTIONSTATEPUBLISHER_H
 
 #include "motionmanager.h"
+#include <QMutex>
+#include <QMutexLocker>
 #include <QThread>
 
 #define SUB_ELEMENT(name, elementType, definedNames, nameContainer)                                                                                  \
+    QMutexLocker t(&locker);                                                                                                                         \
     if (!definedNames.contains(name))                                                                                                                \
     {                                                                                                                                                \
         qCCritical(motionCate()) << QString("Undefined %1: %2").arg(elementType).arg(name);                                                          \
@@ -13,6 +16,18 @@
     if (!nameContainer.contains(name))                                                                                                               \
     {                                                                                                                                                \
         nameContainer.append(name);                                                                                                                  \
+        tryStart();                                                                                                                                  \
+    }
+
+#define UNSUB_ELEMENT(name, nameContainer)                                                                                                           \
+    QMutexLocker t(&locker);                                                                                                                         \
+    if (nameContainer.contains(name))                                                                                                                \
+    {                                                                                                                                                \
+        nameContainer.removeAll(name);                                                                                                               \
+        if (subscribedVacuums.count() == 0 && subscribedCylinders.count() == 0 && subscribedDis.count() == 0 && subscribedDos.count() == 0)          \
+        {                                                                                                                                            \
+            isRun = false;                                                                                                                           \
+        }                                                                                                                                            \
     }
 
 class MotionStatePublisher : public QThread
@@ -38,6 +53,12 @@ public slots:
     void subscribeVacuumState(QString vacuumName);
     void subscribeDIState(QString diName);
     void subscribeDOState(QString doName);
+
+    void unSubscribeCylinderState(QString cylName);
+    void unSubscribeVacuumState(QString vacuumName);
+    void unSubscribeDIState(QString diName);
+    void unSubscribeDOState(QString doName);
+
     void dispose();
 
     // QThread interface
@@ -45,7 +66,13 @@ protected:
     virtual void run() override;
 
 private:
+    void tryStart();
+
+private:
     bool isRun = false;
+    bool isMotionInited = false;
+
+    QMutex locker;
 
     QList<QString> definedCylinders;
     QList<QString> definedVacuums;

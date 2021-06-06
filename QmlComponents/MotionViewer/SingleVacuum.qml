@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import MotionElement 1.0
@@ -44,7 +44,9 @@ Frame{
     Connections{
         target: motionStatePublisher
         onVacuumStatePublished: {
-            __vacuumState = state[name]
+            try{
+                __vacuumState = state[name]
+            }catch(e){}
         }
     }
 

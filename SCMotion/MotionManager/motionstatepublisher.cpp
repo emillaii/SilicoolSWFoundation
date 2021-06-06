@@ -1,4 +1,4 @@
-#include "motionstatepublisher.h"
+﻿#include "motionstatepublisher.h"
 
 MotionStatePublisher::MotionStatePublisher(const QList<QString> &definedCylinders,
                                            const QList<QString> &definedVacuums,
@@ -8,18 +8,15 @@ MotionStatePublisher::MotionStatePublisher(const QList<QString> &definedCylinder
     : QThread(parent), definedCylinders(definedCylinders), definedVacuums(definedVacuums), definedDis(definedDis), definedDos(definedDos)
 {
     connect(&MotionManager::getIns(), &MotionManager::inited, this, [this] {
-        if (subscribedVacuums.count() > 0 || subscribedCylinders.count() > 0 || subscribedDis.count() > 0 || subscribedDos.count() > 0)
-        {
-            isRun = true;
-            start();
-        }
+        isMotionInited = true;
+        tryStart();
     });
-    connect(
-        &MotionManager::getIns(), &MotionManager::beforeDisposing, this, &MotionStatePublisher::dispose, Qt::DirectConnection);
+    connect(&MotionManager::getIns(), &MotionManager::beforeDisposing, this, &MotionStatePublisher::dispose, Qt::DirectConnection);
 }
 
 void MotionStatePublisher::dispose()
 {
+    isMotionInited = false;
     isRun = false;
 }
 
@@ -48,45 +45,68 @@ void MotionStatePublisher::subscribeDOState(QString doName)
     SUB_ELEMENT(doName, "DO", definedDos, subscribedDos)
 }
 
+void MotionStatePublisher::unSubscribeCylinderState(QString cylName)
+{
+    UNSUB_ELEMENT(cylName, subscribedCylinders)
+}
+
+void MotionStatePublisher::unSubscribeVacuumState(QString vacuumName)
+{
+    UNSUB_ELEMENT(vacuumName, subscribedVacuums)
+}
+
+void MotionStatePublisher::unSubscribeDIState(QString diName)
+{
+    UNSUB_ELEMENT(diName, subscribedDis)
+}
+
+void MotionStatePublisher::unSubscribeDOState(QString doName)
+{
+    UNSUB_ELEMENT(doName, subscribedDos)
+}
+
 void MotionStatePublisher::run()
 {
     while (isRun)
     {
-        if (subscribedCylinders.count() > 0)
         {
-            QVariantMap cylStates;
-            foreach (auto cylName, subscribedCylinders)
+            QMutexLocker t(&locker);
+            if (subscribedCylinders.count() > 0)
             {
-                cylStates[cylName] = MotionManager::getIns().getCylinderCurrentState(cylName);
+                QVariantMap cylStates;
+                foreach (auto cylName, subscribedCylinders)
+                {
+                    cylStates[cylName] = MotionManager::getIns().getCylinderCurrentState(cylName);
+                }
+                emit cylStatesPublished(cylStates);
             }
-            emit cylStatesPublished(cylStates);
-        }
-        if(subscribedVacuums.count() > 0)
-        {
-            QVariantMap states;
-            foreach (auto name, subscribedVacuums)
+            if (subscribedVacuums.count() > 0)
             {
-                states[name] = MotionManager::getIns().getLocalVacuumState(name);
+                QVariantMap states;
+                foreach (auto name, subscribedVacuums)
+                {
+                    states[name] = MotionManager::getIns().getLocalVacuumState(name);
+                }
+                emit vacuumStatePublished(states);
             }
-            emit vacuumStatePublished(states);
-        }
-        if(subscribedDis.count() > 0)
-        {
-            QVariantMap states;
-            foreach (auto name, subscribedDis)
+            if (subscribedDis.count() > 0)
             {
-                states[name] = MotionManager::getIns().getDiCurrentState(name);
+                QVariantMap states;
+                foreach (auto name, subscribedDis)
+                {
+                    states[name] = MotionManager::getIns().getDiCurrentState(name);
+                }
+                emit diStatePublished(states);
             }
-            emit diStatePublished(states);
-        }
-        if(subscribedDos.count() > 0)
-        {
-            QVariantMap states;
-            foreach (auto name, subscribedDos)
+            if (subscribedDos.count() > 0)
             {
-                states[name] = MotionManager::getIns().getLocalDOState(name);
+                QVariantMap states;
+                foreach (auto name, subscribedDos)
+                {
+                    states[name] = MotionManager::getIns().getLocalDOState(name);
+                }
+                emit doStatePublished(states);
             }
-            emit doStatePublished(states);
         }
 
         for (int i = 0; i < 10; i++)
@@ -96,6 +116,18 @@ void MotionStatePublisher::run()
             {
                 return;
             }
+        }
+    }
+}
+
+void MotionStatePublisher::tryStart()
+{
+    if (isMotionInited && !isRunning())
+    {
+        if (subscribedVacuums.count() > 0 || subscribedCylinders.count() > 0 || subscribedDis.count() > 0 || subscribedDos.count() > 0)
+        {
+            isRun = true;
+            start();
         }
     }
 }
