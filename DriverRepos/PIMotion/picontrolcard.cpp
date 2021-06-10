@@ -1,7 +1,5 @@
 ﻿#include "picontrolcard.h"
 
-PIControlCard::PIControlCard(QObject *parent) : ControlCard(parent) {}
-
 void PIControlCard::postInit()
 {
     if(isConnect)
@@ -14,7 +12,7 @@ void PIControlCard::postInit()
         isConnect = false;
     }
 
-    PIControlCardConfig *piCoreCfg = PICardConfigManager::getIns().getPICoreCfg();
+    piCoreCfg = PICardConfigManager::getIns().getPICoreCfg();
     if(piCoreCfg->ip()== "" || piCoreCfg->port()== -1)
     {
         throw SilicolAbort("PI Hexapos ip or port error!", EX_LOCATION);
@@ -28,11 +26,6 @@ void PIControlCard::postInit()
     piCoreCfg->setControllerID(m_controllerID);
     qInfo() << tr("connect to PI successful!! control ID: %1").arg(m_controllerID);
     isConnect = true;
-
-    if(!setCoord(piCoreCfg->coordName(), piCoreCfg->coord()))
-    {
-        throw SilicolAbort("Set PI coord failed, please check command!", EX_LOCATION);
-    }
 }
 
 void PIControlCard::dispose()
@@ -45,24 +38,29 @@ int PIControlCard::getControllerID()
     return m_controllerID;
 }
 
-bool PIControlCard::setCoord(QString coordName, QString coord)
+void PIControlCard::setCoord()
 {
+    QString coordName =piCoreCfg->coordName();
+    QString coord = piCoreCfg->coord();
+
+    if(!isConnect)
+    {
+        throw SilicolAbort("Please connect PI controller first!");
+    }
+
     if(coordName == "")
     {
-        qWarning()<< "coordName is null!";
-        return false;
+        throw SilicolAbort("coordName is null!");
     }
     if(!coord.contains(","))
     {
-        qWarning()<< "coord com do not contains [,]!";
-        return false;
+        throw SilicolAbort("coord com do not contains [,]!");
     }
 
     QStringList coordCom = coord.split(",");
     if(coordCom.count() != 6)
     {
-        qWarning()<< "coord com values is not 6!";
-        return false;
+        throw SilicolAbort("coord com values is not 6!");
     }
     double center[6] = {0,0,0,0,0,0};
     bool qstringCastToDoubleFlag = false;
@@ -73,18 +71,28 @@ bool PIControlCard::setCoord(QString coordName, QString coord)
         castValue = coordCom[i].toDouble(&qstringCastToDoubleFlag);
         if(!qstringCastToDoubleFlag)
         {
-            qWarning()<< "coord cast QString to Double failed! QString: "<< coordCom[i];
-            return false;
+            throw SilicolAbort("coord cast QString to Double failed !");
+            return;
         }
         center[i] = castValue;
     }
 
     if(!PI_KSD(m_controllerID, coordName.toUtf8(), "X Y Z U V W", center))
     {
-        qWarning()<< "perform PI_KSD creat a new coordinate failed!";
-        return false;
+        PI_KEN(m_controllerID, "DEMO");
+    }
+    else
+    {
+       PI_KEN(m_controllerID, coordName.toUtf8());
+       return;
     }
 
-    return PI_KEN(m_controllerID, coordName.toUtf8());
+    if(!PI_KSD(m_controllerID, coordName.toUtf8(), "X Y Z U V W", center))
+    {
+        qWarning()<< "perform PI_KSD creat a new coordinate failed!";
+        return ;
+    }
+
+    PI_KEN(m_controllerID, coordName.toUtf8());
 }
 
