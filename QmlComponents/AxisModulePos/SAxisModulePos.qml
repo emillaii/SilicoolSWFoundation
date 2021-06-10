@@ -1,24 +1,33 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../ConfigManager"
 import ConfigElementType 1.0
 
-GroupBox{
+Frame{
     property string moduleName: ""
     property string posName: ""
+    property string title: ""
 
-    RowLayout{
-        ConfigRow{
-            id: posViewer
-            configName: "pos"
-            txtWidth: 90
+    ColumnLayout{
+        spacing: 1
+        Label{
+            text: title
         }
 
-        ModulePosEvent{
-            id: btns
+        RowLayout{
+            ConfigRow{
+                id: posViewer
+                configName: "pos"
+                txtWidth: 90
+            }
+
+            ModulePosEvent{
+                id: btns
+            }
         }
     }
+
     Component.onCompleted: {
         if(title == ""){
             title = moduleName + "_" + posName
