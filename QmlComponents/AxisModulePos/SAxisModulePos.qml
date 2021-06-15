@@ -9,6 +9,9 @@ Frame{
     property string posName: ""
     property string title: ""
 
+    topPadding: 8
+    bottomPadding: 2
+
     ColumnLayout{
         spacing: 1
         Label{

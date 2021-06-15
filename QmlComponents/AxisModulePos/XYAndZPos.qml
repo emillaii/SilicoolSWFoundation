@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../ConfigManager"
@@ -17,6 +17,9 @@ GroupBox{
 
     property bool moveXyBtnVisible: true
     property bool moveZBtnVisible: true
+
+    topPadding: 20
+    bottomPadding: 2
 
     ColumnLayout{
         RowLayout{
