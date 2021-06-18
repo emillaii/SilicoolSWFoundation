@@ -58,10 +58,7 @@ protected:
         // Todo
         qCritical() << "UnImplemented function...";
     }
-    virtual void scaleMaxVelImpl(double ratio) override {
-        // Todo
-        qCritical() << "UnImplemented function...";
-    }
+    virtual void scaleMaxVelImpl(double ratio) override ;
     void clearPosImpl(){
         // Todo
         qCritical() << "UnImplemented function...";

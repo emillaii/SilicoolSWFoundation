@@ -138,11 +138,20 @@ double PIAxis::getFeedbackPosImpl() noexcept
 
     if(PI_qPOS(m_controllerID, piAxisConfig->piAxisName().toUtf8(), dPos) != TRUE)
     {
-        throw SilicolAbort(tr("excute PI_qPOS() failed in %1 moveToImpl() !").arg(piAxisConfig->piAxisName()));
+        //throw SilicolAbort(tr("excute PI_qPOS() failed in %1 moveToImpl() !").arg(piAxisConfig->piAxisName()));
+        return false;
     }
 
     const int Precision = 100000;
     return round(dPos[0] * Precision) / Precision;
+}
+
+void PIAxis::scaleMaxVelImpl(double ratio)
+{
+    if(PI_VLS(m_controllerID, piAxisConfig->maxVel() * piAxisConfig->scale() * ratio) != TRUE)
+    {
+        throw SilicolAbort(tr("excute PI_VLS() failed in %1 scaleMaxVelImpl() !").arg(piAxisConfig->piAxisName()));
+    }
 }
 
 void PIAxis::refrenceIfNeed()
