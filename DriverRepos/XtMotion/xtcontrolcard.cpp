@@ -59,7 +59,7 @@ void XtControlCard::dispose()
     {
         //  关不掉
         XT_Controler_Extend::Profile_DeInit_Controller();
-        XT_Controler::CloseMotionControlerServer();
+//        XT_Controler::CloseMotionControlerServer();
         XT_Controler::ReleaseDevice();
         isInit = false;
     }
