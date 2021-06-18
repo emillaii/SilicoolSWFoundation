@@ -42,9 +42,9 @@ bool ACSAxis::isInPos() noexcept
 
 bool ACSAxis::isRunning() noexcept
 {
-    int state = ACSC_MST_INPOS;
-    checkACSCom(acsc_GetMotorState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetMotorState");
-    return state & ACSC_MST_MOVE || state & ACSC_MST_ACC;
+    int state = ACSC_AST_MOVE;
+    checkACSCom(acsc_GetAxisState(hComm, acsAxisConfig->index(), &state, nullptr), "acsc_GetAxisState");
+    return state & ACSC_AST_MOVE;
 }
 
 double ACSAxis::getCurrentVel() noexcept
