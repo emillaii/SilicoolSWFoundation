@@ -5,6 +5,7 @@
 #include "acsaxisconfig.h"
 #include "ACSC.h"
 #include "acscardconfig.h"
+#include "acserrorhandle.h"
 
 #define VelCoeff (1)
 #define AccCoeff (1)
@@ -69,8 +70,7 @@ protected:
     }
     void velocityMoveImpl(Direction dir, double vel, double acc)override;
     void scaleMaxVelImpl(double ratio);
-private:
-    void checkACSCom(int errCode, QString msg);
+
 private:
     ACSAxisConfig *acsAxisConfig = nullptr;
     HANDLE hComm;

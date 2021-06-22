@@ -142,10 +142,3 @@ void ACSAxis::scaleMaxVelImpl(double ratio)
     checkACSCom(acsc_SetVelocity(hComm, acsAxisConfig->index(), acsAxisConfig->maxVel()*acsAxisConfig->scale() / VelCoeff * ratio, NULL), "acsc_SetVelocity");
 }
 
-void ACSAxis::checkACSCom(int errCode, QString msg)
-{
-    if (errCode == 0)                                                                                            \
-    {                                                                                                                  \
-        qCritical(motionCate()) << msg << "failed! Error code:" << errCode;                                                    \
-    }
-}
