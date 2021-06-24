@@ -86,11 +86,11 @@ bool XtAxis::isInPos() noexcept
 bool XtAxis::isRunning() noexcept
 {
     int isRun = 1;
-//    double vel = 0;
+    double vel = 0;
     Get_Cur_Axis_State(masterAxisId, isRun);
-//    Get_Cur_Axis_Vel(masterAxisId, vel);
-//    return isRun || !qFuzzyCompare(vel, 0);
-    return isRun;
+    Get_Cur_Axis_Vel(masterAxisId, vel);
+    return isRun || !qFuzzyCompare(vel, 0);
+//    return isRun;
 }
 
 void XtAxis::stopImpl() noexcept
